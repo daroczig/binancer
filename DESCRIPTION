@@ -8,3 +8,6 @@ Maintainer: Gergely Daroczi <daroczig@rapporter.net>
 Description: Client to the Binance API
 License: AGPL
 RoxygenNote: 6.0.1
+Imports:
+  data.table,
+  httr
