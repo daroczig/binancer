@@ -62,3 +62,19 @@ signature <- function(params) {
     params <- paste(mapply(paste, params, names(params), sep = '=', USE.NAMES = FALSE), collapse = '&')
     hmac(binance_secret(), params, algo = 'sha256')
 }
+
+
+#' Request the Binance API
+#' @param endpoint string
+#' @param method HTTP request method
+#' @param params list
+#' @return R object
+#' @keywords internal
+#' @importFrom httr GET content
+binance_query <- function(endpoint, method = 'GET', params) {
+
+    content(GET('https://api.binance.com',
+                path  = endpoint,
+                query = params))
+
+}

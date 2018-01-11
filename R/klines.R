@@ -4,17 +4,19 @@
 #' @param limit int
 #' @return data.table
 #' @export
-#' @importFrom httr GET content
 #' @importFrom data.table rbindlist
+#' @examples \dontrun{
+#' get_klines('ETHUSDT')
+#' }
 get_klines <- function(symbol, interval, limit = 500) {
 
     interval <- match.arg(interval)
 
-    klines <- content(GET('https://api.binance.com',
-                          path = 'api/v1/klines',
-                          query = list(symbol   = symbol,
-                                       interval = interval,
-                                       limit    = limit)))
+    klines <- binance_query(
+        endpoint = 'api/v1/klines',
+        params   = list(symbol   = symbol,
+                        interval = interval,
+                        limit    = limit))
 
     klines <- rbindlist(klines)
     ## drop last dummy column

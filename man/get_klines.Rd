@@ -20,3 +20,8 @@ data.table
 \description{
 Get kline/candlestick data
 }
+\examples{
+\dontrun{
+get_klines('ETHUSDT')
+}
+}
