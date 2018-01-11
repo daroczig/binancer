@@ -6,7 +6,9 @@
 #' @export
 #' @importFrom httr GET content
 #' @importFrom data.table rbindlist
-get_klines <- function(symbol, interval, limit) {
+get_klines <- function(symbol, interval, limit = 500) {
+
+    interval <- match.arg(interval)
 
     klines <- content(GET('https://api.binance.com',
                           path = 'api/v1/klines',
