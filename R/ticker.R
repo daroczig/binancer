@@ -1,4 +1,4 @@
-#' Get latest prices on all symbols
+#' Get latest Binance conversion rates and USD prices on all symbol pairs
 #' @return data.table
 #' @export
 #' @importFrom data.table rbindlist
@@ -24,4 +24,12 @@ binance_ticker_all_prices <- function() {
 
     prices[, .(symbol, price, from, from_usd, to, to_usd)]
 
+}
+
+
+#' Get all currently valid symbol names from Binance
+#' @return character vector
+#' @export
+binance_symbols <- function() {
+    binance_ticker_all_prices()$symbol
 }
