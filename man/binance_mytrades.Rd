@@ -4,10 +4,14 @@
 \alias{binance_mytrades}
 \title{Get all trades on the Binance account}
 \usage{
-binance_mytrades(symbol)
+binance_mytrades(symbol, limit = 500, from_id)
 }
 \arguments{
 \item{symbol}{string}
+
+\item{limit}{number of trades to fetch}
+
+\item{from_id}{optional trade id to fetch from}
 }
 \value{
 data.table
