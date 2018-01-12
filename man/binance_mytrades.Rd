@@ -17,6 +17,7 @@ Get all trades on the Binance account
 }
 \examples{
 \dontrun{
-binance_mytrades('ETH')
+binance_mytrades('ARKETH')
+binance_mytrades(c('ARKBTC', 'ARKETH'))
 }
 }

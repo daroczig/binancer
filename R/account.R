@@ -13,18 +13,27 @@ binance_account <- function() {
 #' @export
 #' @importFrom data.table as.data.table
 #' @examples \dontrun{
-#' binance_mytrades('ETH')
+#' binance_mytrades('ARKETH')
+#' binance_mytrades(c('ARKBTC', 'ARKETH'))
 #' }
 #' @importFrom snakecase to_snake_case
 binance_mytrades <- function(symbol) {
+
+    if (length(symbol) > 1) {
+        return(rbindlist(lapply(symbol, binance_mytrades), fill = TRUE))
+    }
 
     trades <- binance_query(
         endpoint = 'api/v3/myTrades',
         params = list(symbol = symbol),
         sign = TRUE)
 
-    ## return with snake_case column names
     trades <- rbindlist(trades)
+    if (nrow(trades) == 0) {
+        return(data.table())
+    }
+
+    ## return with snake_case column names
     setnames(trades, to_snake_case(names(trades)))
 
 }
