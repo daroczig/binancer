@@ -4,7 +4,8 @@
 \alias{binance_query}
 \title{Request the Binance API}
 \usage{
-binance_query(endpoint, method = "GET", params = list(), sign = FALSE)
+binance_query(endpoint, method = "GET", params = list(), sign = FALSE,
+  retry = method == "GET", retries = 0)
 }
 \arguments{
 \item{endpoint}{string}
@@ -12,6 +13,12 @@ binance_query(endpoint, method = "GET", params = list(), sign = FALSE)
 \item{method}{HTTP request method}
 
 \item{params}{list}
+
+\item{sign}{if signature required}
+
+\item{retry}{allow retrying the query on failure}
+
+\item{retries}{internal counter of previous retries}
 }
 \value{
 R object

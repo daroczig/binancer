@@ -12,4 +12,5 @@ Imports:
   data.table,
   httr,
   digest,
-  snakecase
+  snakecase,
+  futile.logger

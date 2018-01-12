@@ -74,10 +74,18 @@ binance_sign <- function(params) {
 #' @param endpoint string
 #' @param method HTTP request method
 #' @param params list
+#' @param sign if signature required
+#' @param retry allow retrying the query on failure
+#' @param retries internal counter of previous retries
 #' @return R object
 #' @keywords internal
 #' @importFrom httr GET content config add_headers
-binance_query <- function(endpoint, method = 'GET', params = list(), sign = FALSE) {
+#' @importFrom futile.logger flog.error
+binance_query <- function(endpoint, method = 'GET',
+                          params = list(), sign = FALSE,
+                          retry = method == 'GET', retries = 0) {
+
+    method <- match.arg(method)
 
     if (isTRUE(sign)) {
         params <- binance_sign(params)
@@ -86,6 +94,20 @@ binance_query <- function(endpoint, method = 'GET', params = list(), sign = FALS
         config <- config()
     }
 
-    content(GET('https://api.binance.com', config = config, path = endpoint, query = params))
+    res <- tryCatch(
+        content(GET('https://api.binance.com', config = config, path = endpoint, query = params)),
+        error = function(e) e)
+
+    if (inherits(res, 'error')) {
+        if (isTRUE(retry) & retries < 4) {
+            mc <- match.call()
+            mc$retries <- mc$retries + 1
+            flog.error('Binance query to %s failed for the %sst/nd/rd/th time, retrying',
+                       endpoint, mc$retries)
+            eval(mc, envir = parent.frame())
+        }
+    }
+
+    res
 
 }
