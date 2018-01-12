@@ -2,7 +2,7 @@
 % Please edit documentation in R/account.R
 \name{binance_account}
 \alias{binance_account}
-\title{Get current account information, including balances}
+\title{Get current Binance account information, including balances}
 \usage{
 binance_account()
 }
@@ -10,5 +10,5 @@ binance_account()
 data.table
 }
 \description{
-Get current account information, including balances
+Get current Binance account information, including balances
 }

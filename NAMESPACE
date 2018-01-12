@@ -2,6 +2,7 @@
 
 export(binance_account)
 export(binance_credentials)
+export(binance_mytrades)
 export(get_klines)
 importFrom(data.table,as.data.table)
 importFrom(data.table,rbindlist)
@@ -10,3 +11,4 @@ importFrom(httr,GET)
 importFrom(httr,add_headers)
 importFrom(httr,config)
 importFrom(httr,content)
+importFrom(snakecase,to_snake_case)
