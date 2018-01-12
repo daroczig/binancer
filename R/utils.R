@@ -66,7 +66,6 @@ binance_sign <- function(params) {
             mapply(paste, names(params), params, sep = '=', USE.NAMES = FALSE),
             collapse = '&'),
         algo = 'sha256')
-    futile.logger::flog.info(jsonlite::toJSON(params))
     params
 }
 
