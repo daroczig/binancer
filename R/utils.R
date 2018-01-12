@@ -58,9 +58,16 @@ binance_check_credentials <- function() {
 #' @examples \dontrun{
 #' signature(list(foo = 'bar', z = 4))
 #' }
-signature <- function(params) {
-    params <- paste(mapply(paste, params, names(params), sep = '=', USE.NAMES = FALSE), collapse = '&')
-    hmac(binance_secret(), params, algo = 'sha256')
+binance_sign <- function(params) {
+    params$timestamp <- timestamp()
+    params$signature <- hmac(
+        key = binance_secret(),
+        object = paste(
+            mapply(paste, names(params), params, sep = '=', USE.NAMES = FALSE),
+            collapse = '&'),
+        algo = 'sha256')
+    futile.logger::flog.info(jsonlite::toJSON(params))
+    params
 }
 
 
@@ -70,11 +77,16 @@ signature <- function(params) {
 #' @param params list
 #' @return R object
 #' @keywords internal
-#' @importFrom httr GET content
-binance_query <- function(endpoint, method = 'GET', params) {
+#' @importFrom httr GET content config add_headers
+binance_query <- function(endpoint, method = 'GET', params = list(), sign = FALSE) {
 
-    content(GET('https://api.binance.com',
-                path  = endpoint,
-                query = params))
+    if (isTRUE(sign)) {
+        params <- binance_sign(params)
+        config <- add_headers('X-MBX-APIKEY' = binance_key())
+    } else {
+        config <- config()
+    }
+
+    content(GET('https://api.binance.com', config = config, path = endpoint, query = params))
 
 }
