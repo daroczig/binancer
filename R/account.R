@@ -6,6 +6,17 @@ binance_account <- function() {
     as.data.table(binance_query(endpoint = 'api/v3/account', sign = TRUE))
 }
 
+#' Get current Binance balances in a nice table
+#' @return data.table
+#' @export
+#' @importFrom data.table rbindlist
+binance_balances <- function() {
+    balances <- rbindlist(binance_account()$balances)
+    balances[, free := as.numeric(free)]
+    balances[, locked := as.numeric(locked)]
+    as.data.table(balances)
+}
+
 
 #' Get all trades on the Binance account
 #' @param symbol string
