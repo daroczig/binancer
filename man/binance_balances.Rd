@@ -4,7 +4,10 @@
 \alias{binance_balances}
 \title{Get current Binance balances in a nice table}
 \usage{
-binance_balances()
+binance_balances(threhsold = 0)
+}
+\arguments{
+\item{threhsold}{filter out symbols with less then this number of coins}
 }
 \value{
 data.table

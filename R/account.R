@@ -10,11 +10,13 @@ binance_account <- function() {
 #' @return data.table
 #' @export
 #' @importFrom data.table rbindlist
-binance_balances <- function() {
+#' @param threhsold filter out symbols with less then this number of coins
+binance_balances <- function(threhsold = 0) {
     balances <- rbindlist(binance_account()$balances)
     balances[, free := as.numeric(free)]
     balances[, locked := as.numeric(locked)]
-    as.data.table(balances)
+    balances[, total := free + locked]
+    as.data.table(balances)[total >= threhsold]
 }
 
 
