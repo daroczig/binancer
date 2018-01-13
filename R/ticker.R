@@ -12,15 +12,17 @@ binance_ticker_all_prices <- function() {
     prices <- prices[symbol != '123456']
 
     ## split from/to
-    prices[, from := sub('(ETH|BTC|USD|BNB)$', '', symbol)]
-    prices[, to := sub('.*(ETH|BTC|USD|BNB)$', '\\1', symbol)]
+    prices[, from := sub('(ETH|BTC|USDT|BNB)$', '', symbol)]
+    prices[, to := sub('.*(ETH|BTC|USDT|BNB)$', '\\1', symbol)]
 
     ## add computed price in USD
     prices[grepl('ETH$', symbol), to_usd := prices[symbol == 'ETHUSDT', price]]
     prices[grepl('BTC$', symbol), to_usd := prices[symbol == 'BTCUSDT', price]]
     prices[grepl('USDT$', symbol), to_usd := price]
     prices[grepl('BNB$', symbol), to_usd := prices[symbol == 'BNBUSDT', price]]
-    prices[, from_usd := price * to_usd]
+
+    prices[grepl('USDT$', symbol), from_usd := price]
+    prices[!grepl('USDT$', symbol), from_usd := price * to_usd]
 
     prices[, .(symbol, price, from, from_usd, to, to_usd)]
 
