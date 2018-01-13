@@ -4,10 +4,12 @@
 \alias{binance_balances}
 \title{Get current Binance balances in a nice table}
 \usage{
-binance_balances(threhsold = 0)
+binance_balances(threshold = -1, usdt = FALSE)
 }
 \arguments{
-\item{threhsold}{filter out symbols with less then this number of coins}
+\item{threshold}{show assets with greater number of coins}
+
+\item{usd}{to include balance in USDT too}
 }
 \value{
 data.table

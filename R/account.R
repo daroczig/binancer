@@ -10,13 +10,26 @@ binance_account <- function() {
 #' @return data.table
 #' @export
 #' @importFrom data.table rbindlist
-#' @param threhsold filter out symbols with less then this number of coins
-binance_balances <- function(threhsold = 0) {
+#' @param threshold show assets with greater number of coins
+#' @param usd to include balance in USDT too
+binance_balances <- function(threshold = -1, usdt = FALSE) {
+
     balances <- rbindlist(binance_account()$balances)
     balances[, free := as.numeric(free)]
     balances[, locked := as.numeric(locked)]
     balances[, total := free + locked]
-    as.data.table(balances)[total >= threhsold]
+
+    if (isTRUE(usdt)) {
+
+        balances <- merge(
+            balances, binance_coins_prices(),
+            by.x = 'asset', by.y = 'symbol', all.x = TRUE, all.y = FALSE)
+        balances[, usd := usd * total]
+
+    }
+
+    as.data.table(balances)[total > threshold]
+
 }
 
 
