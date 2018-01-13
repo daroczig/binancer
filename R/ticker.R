@@ -33,3 +33,10 @@ binance_ticker_all_prices <- function() {
 binance_symbols <- function() {
     binance_ticker_all_prices()$symbol
 }
+
+#' Get all currently valid coin names from Binance
+#' @return character vector
+#' @export
+binance_coins <- function() {
+    sort(unique(sub('(ETH|BTC|USDT|BNB)$', '', symbols)))
+}
