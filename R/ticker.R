@@ -38,5 +38,5 @@ binance_symbols <- function() {
 #' @return character vector
 #' @export
 binance_coins <- function() {
-    sort(unique(sub('(ETH|BTC|USDT|BNB)$', '', symbols)))
+    sort(unique(sub('(ETH|BTC|USDT|BNB)$', '', binance_symbols())))
 }
