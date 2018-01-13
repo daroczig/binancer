@@ -40,3 +40,11 @@ binance_symbols <- function() {
 binance_coins <- function() {
     sort(unique(sub('(ETH|BTC|USDT|BNB)$', '', binance_symbols())))
 }
+
+
+#' Get all currently valid coin names from Binance along with the USDT prices
+#' @return data.table
+#' @export
+binance_coins_prices <- function(unit = 'USDT') {
+    unique(binance_ticker_all_prices(), by = 'from')[, .(symbol, usd = from_usd)]
+}
