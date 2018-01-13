@@ -46,5 +46,5 @@ binance_coins <- function() {
 #' @return data.table
 #' @export
 binance_coins_prices <- function(unit = 'USDT') {
-    unique(binance_ticker_all_prices(), by = 'from')[, .(from, usd = from_usd)]
+    unique(binance_ticker_all_prices(), by = 'from')[, .(symbol = from, usd = from_usd)]
 }
