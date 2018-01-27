@@ -1,4 +1,4 @@
-#' Get kline/candlestick data
+#' Get kline/candlestick data from Binance
 #' @param symbol string
 #' @param interval enum
 #' @param limit int

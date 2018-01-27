@@ -13,4 +13,5 @@ Imports:
   httr,
   digest,
   snakecase,
-  futile.logger
+  futile.logger,
+  jsonlite
