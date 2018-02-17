@@ -110,7 +110,7 @@ binance_query <- function(endpoint, method = 'GET',
 #' @param limit int
 #' @return data.table
 #' @export
-#' @importFrom data.table rbindlist
+#' @importFrom data.table rbindlist data.table
 #' @examples \dontrun{
 #' get_klines('ETHUSDT')
 #' }
@@ -150,7 +150,7 @@ binance_klines <- function(symbol, interval, limit = 500) {
 
     ## return
     klines[, symbol := symbol]
-    klines
+    data.table(klines)
 
 }
 
