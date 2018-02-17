@@ -1,5 +1,5 @@
 credentials <- new.env()
 
 .onLoad <- function(libname, pkgname) {
-    formals(get_klines)$interval <<- INTERVALS
+    formals(binance_klines)$interval <<- INTERVALS
 }

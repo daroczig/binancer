@@ -20,7 +20,7 @@ timestamp <- function() {
 #' @importFrom futile.logger flog.error
 query <- function(base, path, method = 'GET',
                   params = list(), config = config(),
-                  rety = method == 'GET', retries = 0) {
+                  retry = method == 'GET', retries = 0) {
 
     res <- tryCatch(
         content(GET(base, config = config, path = path, query = params)),
@@ -30,8 +30,8 @@ query <- function(base, path, method = 'GET',
         if (isTRUE(retry) & retries < 4) {
             mc <- match.call()
             mc$retries <- mc$retries + 1
-            flog.error('Binance query to %s failed for the %sst/nd/rd/th time, retrying',
-                       endpoint, mc$retries)
+            flog.error('Query to %s/%s failed for the %sst/nd/rd/th time, retrying',
+                       base, path, mc$retries)
             eval(mc, envir = parent.frame())
         }
     }

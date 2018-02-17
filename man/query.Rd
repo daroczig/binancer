@@ -5,7 +5,7 @@
 \title{Request the Binance API}
 \usage{
 query(base, path, method = "GET", params = list(), config = config(),
-  rety = method == "GET", retries = 0)
+  retry = method == "GET", retries = 0)
 }
 \arguments{
 \item{base}{URL}
@@ -18,9 +18,9 @@ query(base, path, method = "GET", params = list(), config = config(),
 
 \item{config}{httr::config}
 
-\item{retries}{internal counter of previous retries}
-
 \item{retry}{allow retrying the query on failure}
+
+\item{retries}{internal counter of previous retries}
 }
 \value{
 R object

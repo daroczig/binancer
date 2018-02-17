@@ -114,7 +114,7 @@ binance_query <- function(endpoint, method = 'GET',
 #' @examples \dontrun{
 #' get_klines('ETHUSDT')
 #' }
-get_klines <- function(symbol, interval, limit = 500) {
+binance_klines <- function(symbol, interval, limit = 500) {
 
     interval <- match.arg(interval)
 

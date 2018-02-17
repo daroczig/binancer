@@ -13,12 +13,20 @@ huobi_query <- function(endpoint, method = 'GET',
     method <- match.arg(method)
     config <- config()
 
-    fromJSON(rawToChar(query(
+    res <- tryCatch(query(
         base = 'https://api.huobi.pro',
         path = endpoint,
         method = method,
         params = params,
-        config = config)))
+        config = config))
+
+    ## parse on success
+    if (inherits(res, 'raw')) {
+        return(fromJSON(rawToChar(res)))
+    }
+
+    ## return error message
+    stop(res$`err-msg`)
 
 }
 
@@ -37,6 +45,6 @@ huobi_klines <- function(symbol,
     huobi_query(
         endpoint = 'market/history/kline',
         method = 'GET',
-        params = match.call()[[-1]])
+        params = as.list(match.call())[-1])
 
 }
