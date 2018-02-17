@@ -39,7 +39,7 @@ binance_balances <- function(threshold = -1, usdt = FALSE) {
 #' @param from_id optional trade id to fetch from
 #' @return data.table
 #' @export
-#' @importFrom data.table as.data.table
+#' @importFrom data.table as.data.table setnames
 #' @examples \dontrun{
 #' binance_mytrades('ARKETH')
 #' binance_mytrades(c('ARKBTC', 'ARKETH'))
