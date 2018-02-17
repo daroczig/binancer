@@ -33,8 +33,11 @@ binance_ticker_all_prices <- function() {
 #' @return character vector
 #' @export
 binance_symbols <- function() {
-    binance_ticker_all_prices()$symbol
+    unlist(sapply(
+        binance_query(endpoint = '/api/v1/exchangeInfo')$symbols,
+        `[`, 'symbol'), use.names = FALSE)
 }
+
 
 #' Get all currently valid coin names from Binance
 #' @return character vector
