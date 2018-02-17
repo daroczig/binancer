@@ -108,21 +108,32 @@ binance_query <- function(endpoint, method = 'GET',
 #' @param symbol string
 #' @param interval enum
 #' @param limit int
+#' @param start_time POSIX timestamp
+#' @param end_time POSIX timestamp
 #' @return data.table
 #' @export
 #' @importFrom data.table rbindlist data.table
 #' @examples \dontrun{
-#' get_klines('ETHUSDT')
+#' binance_klines('ETHUSDT')
+#' binance_klines('ETHUSDT', interval = '1h', limit = 24*7)
+#' binance_klines('ETHUSDT', interval = '1h',
+#'     start_time = as.POSIXct('2018-01-01'), end_time = as.POSIXct('2018-01-08'))
 #' }
-binance_klines <- function(symbol, interval, limit = 500) {
+binance_klines <- function(symbol, interval, limit = 500, start_time, end_time) {
 
     interval <- match.arg(interval)
 
-    klines <- binance_query(
-        endpoint = 'api/v1/klines',
-        params   = list(symbol   = symbol,
-                        interval = interval,
-                        limit    = limit))
+    params <- list(symbol   = symbol,
+                   interval = interval,
+                   limit    = limit)
+    if (!missing(start_time)) {
+        params$startTime <- format(as.numeric(start_time) * 1e3, scientific = FALSE)
+    }
+    if (!missing(end_time)) {
+        params$endTime <- format(as.numeric(end_time) * 1e3, scientific = FALSE)
+    }
+
+    klines <- binance_query(endpoint = 'api/v1/klines', params = params)
 
     klines <- rbindlist(klines)
     ## drop last dummy column

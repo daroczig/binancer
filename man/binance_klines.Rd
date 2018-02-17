@@ -5,7 +5,8 @@
 \title{Get kline/candlestick data from Binance}
 \usage{
 binance_klines(symbol, interval = c("1m", "3m", "5m", "15m", "30m", "1h",
-  "2h", "4h", "6h", "8h", "12h", "1d", "3d", "1w", "1M"), limit = 500)
+  "2h", "4h", "6h", "8h", "12h", "1d", "3d", "1w", "1M"), limit = 500,
+  start_time, end_time)
 }
 \arguments{
 \item{symbol}{string}
@@ -13,6 +14,10 @@ binance_klines(symbol, interval = c("1m", "3m", "5m", "15m", "30m", "1h",
 \item{interval}{enum}
 
 \item{limit}{int}
+
+\item{start_time}{POSIX timestamp}
+
+\item{end_time}{POSIX timestamp}
 }
 \value{
 data.table
@@ -22,6 +27,9 @@ Get kline/candlestick data from Binance
 }
 \examples{
 \dontrun{
-get_klines('ETHUSDT')
+binance_klines('ETHUSDT')
+binance_klines('ETHUSDT', interval = '1h', limit = 24*7)
+binance_klines('ETHUSDT', interval = '1h',
+    start_time = as.POSIXct('2018-01-01'), end_time = as.POSIXct('2018-01-08'))
 }
 }
