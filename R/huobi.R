@@ -2,24 +2,16 @@
 #' @param endpoint string
 #' @param method HTTP request method
 #' @param params list
-#' @param sign if signature required
 #' @param retry allow retrying the query on failure
 #' @return R object
 #' @keywords internal
 #' @importFrom jsonlite fromJSON
 huobi_query <- function(endpoint, method = 'GET',
-                          params = list(), sign = FALSE,
+                          params = list(),
                           retry = method == 'GET') {
 
     method <- match.arg(method)
-
-    if (isTRUE(sign)) {
-        ## TODO
-        params <- binance_sign(params)
-        config <- add_headers('X-MBX-APIKEY' = binance_key())
-    } else {
-        config <- config()
-    }
+    config <- config()
 
     fromJSON(rawToChar(query(
         base = 'https://api.huobi.pro',
@@ -47,12 +39,4 @@ huobi_klines <- function(symbol,
         method = 'GET',
         params = match.call()[[-1]])
 
-}
-
-
-#' Get Huobi accountid
-#' @return string
-#' @export
-huobi_accountid <- function() {
-    huobi_query(endpoint = 'v1/account/accounts', sign = TRUE)
 }

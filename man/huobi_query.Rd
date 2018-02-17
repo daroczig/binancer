@@ -4,8 +4,8 @@
 \alias{huobi_query}
 \title{Request the Huobi API}
 \usage{
-huobi_query(endpoint, method = "GET", params = list(), sign = FALSE,
-  retry = method == "GET")
+huobi_query(endpoint, method = "GET", params = list(), retry = method ==
+  "GET")
 }
 \arguments{
 \item{endpoint}{string}
@@ -13,8 +13,6 @@ huobi_query(endpoint, method = "GET", params = list(), sign = FALSE,
 \item{method}{HTTP request method}
 
 \item{params}{list}
-
-\item{sign}{if signature required}
 
 \item{retry}{allow retrying the query on failure}
 }
