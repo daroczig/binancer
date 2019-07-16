@@ -18,7 +18,7 @@ timestamp <- function() {
 #' @return R object
 #' @keywords internal
 #' @importFrom httr GET POST content config add_headers
-#' @importFrom futile.logger flog.error
+#' @importFrom logger log_error
 #' @importFrom utils getFromNamespace
 query <- function(base, path, method = c('GET', 'POST'),
                   params = list(), body = FALSE, config = config(),
@@ -35,8 +35,9 @@ query <- function(base, path, method = c('GET', 'POST'),
         if (isTRUE(retry) & retries < 4) {
             mc <- match.call()
             mc$retries <- mc$retries + 1
-            flog.error('Query to %s/%s failed for the %sst/nd/rd/th time, retrying',
-                       base, path, mc$retries)
+            log_error(sprintf(
+                'Query to %s/%s failed for the %sst/nd/rd/th time, retrying',
+                base, path, mc$retries))
             eval(mc, envir = parent.frame())
         }
     }
