@@ -10,20 +10,25 @@ timestamp <- function() {
 #' @param base URL
 #' @param path string
 #' @param method HTTP request method
-#' @param params list
+#' @param params URL parameters provided as a list
+#' @param body body of the request
 #' @param config httr::config
 #' @param retry allow retrying the query on failure
 #' @param retries internal counter of previous retries
 #' @return R object
 #' @keywords internal
-#' @importFrom httr GET content config add_headers
+#' @importFrom httr GET POST content config add_headers
 #' @importFrom futile.logger flog.error
-query <- function(base, path, method = 'GET',
-                  params = list(), config = config(),
+#' @importFrom utils getFromNamespace
+query <- function(base, path, method = c('GET', 'POST'),
+                  params = list(), body = FALSE, config = config(),
                   retry = method == 'GET', retries = 0) {
 
+    method <- match.arg(method)
+    METHOD <- getFromNamespace(method, ns = 'httr')
+
     res <- tryCatch(
-        content(GET(base, config = config, path = path, query = params)),
+        content(METHOD(base, config = config, path = path, query = params, body = body)),
         error = function(e) e)
 
     if (inherits(res, 'error')) {

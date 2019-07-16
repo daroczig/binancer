@@ -73,14 +73,12 @@ binance_sign <- function(params) {
 
 #' Request the Binance API
 #' @param endpoint string
-#' @param method HTTP request method
-#' @param params list
+#' @inheritParams query
 #' @param sign if signature required
-#' @param retry allow retrying the query on failure
 #' @return R object
 #' @keywords internal
-binance_query <- function(endpoint, method = 'GET',
-                          params = list(), sign = FALSE,
+binance_query <- function(endpoint, method = c('GET', 'POST'),
+                          params = list(), body = FALSE, sign = FALSE,
                           retry = method == 'GET') {
 
     method <- match.arg(method)

@@ -4,15 +4,17 @@
 \alias{binance_query}
 \title{Request the Binance API}
 \usage{
-binance_query(endpoint, method = "GET", params = list(), sign = FALSE,
-  retry = method == "GET")
+binance_query(endpoint, method = c("GET", "POST"), params = list(),
+  body = FALSE, sign = FALSE, retry = method == "GET")
 }
 \arguments{
 \item{endpoint}{string}
 
 \item{method}{HTTP request method}
 
-\item{params}{list}
+\item{params}{URL parameters provided as a list}
+
+\item{body}{body of the request}
 
 \item{sign}{if signature required}
 
