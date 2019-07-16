@@ -4,8 +4,8 @@
 \alias{huobi_query}
 \title{Request the Huobi API}
 \usage{
-huobi_query(endpoint, method = "GET", params = list(), retry = method ==
-  "GET")
+huobi_query(endpoint, method = "GET", params = list(), retry = method
+  == "GET")
 }
 \arguments{
 \item{endpoint}{string}

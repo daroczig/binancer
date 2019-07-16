@@ -4,8 +4,8 @@
 \alias{huobi_klines}
 \title{Get kline/candlestick data from Huobi}
 \usage{
-huobi_klines(symbol, period = c("1min", "5min", "15min", "30min", "60min",
-  "1day", "1mon", "1week", "1year"), size = 500)
+huobi_klines(symbol, period = c("1min", "5min", "15min", "30min",
+  "60min", "1day", "1mon", "1week", "1year"), size = 500)
 }
 \arguments{
 \item{symbol}{string}
