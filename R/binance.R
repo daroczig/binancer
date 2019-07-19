@@ -182,8 +182,8 @@ binance_ticker_all_prices <- function() {
     prices <- prices[symbol != '123456']
 
     ## split from/to
-    prices[, from := sub('(ETH|BTC|USDT|BNB)$', '', symbol)]
-    prices[, to := sub('.*(ETH|BTC|USDT|BNB)$', '\\1', symbol)]
+    prices[, from := sub('(BTC|ETH|BNB|USDT|TUSD|PAX|USDC|XRP|USDS)$', '', symbol)]
+    prices[, to := sub('.*(BTC|ETH|BNB|USDT|TUSD|PAX|USDC|XRP|USDS)$', '\\1', symbol)]
 
     ## add computed price in USD
     prices[grepl('ETH$', symbol), to_usd := prices[symbol == 'ETHUSDT', price]]
@@ -213,7 +213,7 @@ binance_symbols <- function() {
 #' @return character vector
 #' @export
 binance_coins <- function() {
-    sort(unique(sub('(ETH|BTC|USDT|BNB)$', '', binance_symbols())))
+    sort(unique(sub('(BTC|ETH|BNB|USDT|TUSD|PAX|USDC|XRP|USDS)$', '', binance_symbols())))
 }
 
 
