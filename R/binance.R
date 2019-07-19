@@ -134,7 +134,7 @@ binance_klines <- function(symbol, interval, limit = 500, start_time, end_time) 
     klines <- binance_query(endpoint = 'api/v1/klines', params = params)
 
     klines <- rbindlist(klines)
-    ## drop last dummy column
+    # drop last dummy column
     klines <- klines[, -12]
     names(klines) <- c(
         'open_time',
@@ -157,7 +157,7 @@ binance_klines <- function(symbol, interval, limit = 500, start_time, end_time) 
         klines[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
     }
 
-    ## return
+    # return
     klines[, symbol := symbol]
     data.table(klines)
 
@@ -250,7 +250,7 @@ binance_depth <- function(symbol, limit = 100) {
         asks[, (v) := as.numeric(get(v))]
     }
     
-    ## return
+    # return
     depth$bids <- bids
     depth$asks <- asks
     
@@ -271,14 +271,14 @@ binance_ticker_all_prices <- function() {
     prices <- rbindlist(prices)
     prices[, price := as.numeric(price)]
 
-    ## not sure what's this
+    # not sure what's this
     prices <- prices[symbol != '123456']
 
-    ## split from/to
+    # split from/to
     prices[, from := sub('(BTC|ETH|BNB|USDT|TUSD|PAX|USDC|XRP|USDS)$', '', symbol)]
     prices[, to := sub('.*(BTC|ETH|BNB|USDT|TUSD|PAX|USDC|XRP|USDS)$', '\\1', symbol)]
 
-    ## add computed price in USD
+    # add computed price in USD
     prices[grepl('BTC$', symbol), to_usd := prices[symbol == 'BTCUSDT', price]]
     prices[grepl('ETH$', symbol), to_usd := prices[symbol == 'ETHUSDT', price]]
     prices[grepl('BNB$', symbol), to_usd := prices[symbol == 'BNBUSDT', price]]
@@ -404,7 +404,7 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
         return(data.table())
     }
 
-    ## return with snake_case column names
+    # return with snake_case column names
     setnames(trades, to_snake_case(names(trades)))
 
 }
