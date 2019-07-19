@@ -97,7 +97,7 @@ binance_query <- function(endpoint, method = c('GET', 'POST', 'PUT', 'DELETE'),
         params = params,
         config = config)
 
-    weight <- headers(res)$`x-mbx-used-weight`
+    binance.weight <<- headers(res)$`x-mbx-used-weight`
     res <- content(res)
 }
 
