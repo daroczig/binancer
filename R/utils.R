@@ -17,7 +17,7 @@ timestamp <- function() {
 #' @param retries internal counter of previous retries
 #' @return R object
 #' @keywords internal
-#' @importFrom httr GET POST PUT DELETE content config add_headers headers
+#' @importFrom httr GET POST PUT DELETE content config headers add_headers
 #' @importFrom logger log_error
 #' @importFrom utils getFromNamespace
 query <- function(base, path, method = c('GET', 'POST', 'PUT', 'DELETE'),
