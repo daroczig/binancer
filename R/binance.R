@@ -412,19 +412,25 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
 #' @param symbol string
 #' @param side enum
 #' @param type enum
+#' @param timeInForce enum
 #' @param quantity number
+#' @param price number
+#' @param icebergQty number
 #' @return data.table
 #' @export
 #' @examples \dontrun{
 #' binance_mytrades('ARKETH')
 #' binance_mytrades(c('ARKBTC', 'ARKETH'))
 #' }
-binance_order_test <- function(symbol, side, type = c('LIMIT', 'MARKET'), quantity) {
+binance_order_test <- function(symbol, side = c('BUY', "SELL"), type = c('LIMIT', 'MARKET'), timeInForce = 'GTC', quantity, price, icebergQty) {
     
     params <- list(symbol   = symbol,
                    side     = side,
                    type     = type,
-                   quantity = quantity)
+                   timeInForce = timeInForce,
+                   quantity = quantity,
+                   price    = price,
+                   icebergQty = icebergQty)
     
     b_order <- binance_query(endpoint = 'api/v3/order/test', method = 'POST', params = params, sign = TRUE)
 }
