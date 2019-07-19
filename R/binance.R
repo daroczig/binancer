@@ -4,8 +4,8 @@ BINANCE <- list(
         '1h', '2h', '4h', '6h', '8h', '12h',
         '1d', '3d', '1w', '1M'))
 
-## #############################################################################
-## Utils
+
+# Utils -------------------------------------------------------------------
 
 #' Look up Binance API secret stored in the environment
 #' @return string
@@ -101,8 +101,8 @@ binance_query <- function(endpoint, method = c('GET', 'POST', 'PUT', 'DELETE'),
     res <- content(res)
 }
 
-## #############################################################################
-## Stats
+
+# Stats -------------------------------------------------------------------
 
 #' Get kline/candlestick data from Binance
 #' @param symbol string
@@ -166,8 +166,7 @@ binance_klines <- function(symbol, interval, limit = 500, start_time, end_time) 
 }
 
 
-## #############################################################################
-## Ticker data
+# Ticker data -------------------------------------------------------------
 
 #' Get latest Binance conversion rates and USD prices on all symbol pairs
 #' @return data.table
@@ -227,8 +226,7 @@ binance_coins_prices <- function(unit = 'USDT') {
 }
 
 
-## #############################################################################
-## Account info
+# Account info ------------------------------------------------------------
 
 #' Get current Binance account information, including balances
 #' @return data.table
