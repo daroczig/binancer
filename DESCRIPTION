@@ -1,7 +1,7 @@
 Package: binancer
 Type: Package
 Title: Binance API client
-Version: 1.0
+Version: 1.0.0.9000
 Date: 2018-01-11
 Author: Gergely Daroczi <daroczig@rapporter.net>
 Maintainer: Gergely Daroczi <daroczig@rapporter.net>
