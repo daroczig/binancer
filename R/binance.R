@@ -219,6 +219,7 @@ binance_coins <- function() {
 #' Get all currently valid coin names from Binance along with the USDT prices
 #' @return data.table
 #' @export
+#' @param unit to set quote asset
 binance_coins_prices <- function(unit = 'USDT') {
     unique(binance_ticker_all_prices(), by = 'from')[, .(symbol = from, usd = from_usd)]
 }
@@ -240,7 +241,7 @@ binance_account <- function() {
 #' @export
 #' @importFrom data.table rbindlist
 #' @param threshold show assets with greater number of coins
-#' @param usd to include balance in USDT too
+#' @param usdt to include balance in USDT too
 binance_balances <- function(threshold = -1, usdt = FALSE) {
 
     balances <- rbindlist(binance_account()$balances)
