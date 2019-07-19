@@ -31,6 +31,9 @@ query <- function(base, path, method = c('GET', 'POST', 'PUT', 'DELETE'),
         METHOD(base, config = config, path = path, query = params, body = body),
         error = function(e) e)
 
+    binance.weight <<- headers(res)$`x-mbx-used-weight`
+    res <- content(res)
+    
     if (inherits(res, 'error')) {
         if (isTRUE(retry) & retries < 4) {
             mc <- match.call()

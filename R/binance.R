@@ -90,15 +90,13 @@ binance_query <- function(endpoint, method = c('GET', 'POST', 'PUT', 'DELETE'),
         config <- config()
     }
 
-    res <- query(
+    query(
         base = 'https://api.binance.com',
         path = endpoint,
         method = method,
         params = params,
         config = config)
 
-    binance.weight <<- headers(res)$`x-mbx-used-weight`
-    res <- content(res)
 }
 
 
