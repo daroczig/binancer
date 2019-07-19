@@ -167,6 +167,7 @@ binance_klines <- function(symbol, interval, limit = 500, start_time, end_time) 
 #' @param symbol string
 #' @param start_time POSIX timestamp
 #' @param end_time POSIX timestamp
+#' @param limit int
 #' @return data.table
 #' @export
 #' @importFrom data.table rbindlist data.table
@@ -174,7 +175,7 @@ binance_klines <- function(symbol, interval, limit = 500, start_time, end_time) 
 #' binance_ticks('ETHUSDT')
 #' binance_ticks('ETHUSDT', start_time = as.POSIXct('2018-01-01'), end_time = as.POSIXct('2018-01-08'))
 #' }
-binance_ticks <- function(symbol, start_time, end_time) {
+binance_ticks <- function(symbol, start_time, end_time, limit = 500) {
     params <- list(symbol = symbol)
     
     if (!missing(start_time)) {
@@ -422,15 +423,24 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
 #' binance_mytrades('ARKETH')
 #' binance_mytrades(c('ARKBTC', 'ARKETH'))
 #' }
-binance_order_test <- function(symbol, side = c('BUY', "SELL"), type = c('LIMIT', 'MARKET'), timeInForce = 'GTC', quantity, price, icebergQty) {
+binance_order_test <- function(symbol, side = c('BUY', "SELL"), type = c('LIMIT', 'MARKET'), timeInForce = c('GTC', 'IOC', 'FOK'), quantity, price, icebergQty) {
     
     params <- list(symbol   = symbol,
                    side     = side,
                    type     = type,
-                   timeInForce = timeInForce,
-                   quantity = quantity,
-                   price    = price,
-                   icebergQty = icebergQty)
+                   quantity = quantity)
+    
+    if (!missing(timeInForce)) {
+        params$timeInForce = timeInForce
+    }
+    
+    if (!missing(price)) {
+        params$price = price
+    }
+    
+    if (!missing(icebergQty)) {
+        params$icebergQty = icebergQty
+    }
     
     b_order <- binance_query(endpoint = 'api/v3/order/test', method = 'POST', params = params, sign = TRUE)
 }
