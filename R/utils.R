@@ -28,7 +28,7 @@ query <- function(base, path, method = c('GET', 'POST', 'PUT', 'DELETE'),
     METHOD <- getFromNamespace(method, ns = 'httr')
 
     res <- tryCatch(
-        content(METHOD(base, config = config, path = path, query = params, body = body)),
+        METHOD(base, config = config, path = path, query = params, body = body),
         error = function(e) e)
 
     if (inherits(res, 'error')) {
