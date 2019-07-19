@@ -365,3 +365,25 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
     setnames(trades, to_snake_case(names(trades)))
 
 }
+
+#' Manage orders on the Binance account
+#' @param symbol string
+#' @param method string
+#' @param side enum
+#' @param type enum
+#' @param quantity number
+#' @return data.table
+#' @export
+#' @examples \dontrun{
+#' binance_mytrades('ARKETH')
+#' binance_mytrades(c('ARKBTC', 'ARKETH'))
+#' }
+binance_order_test <- function(symbol, side, type = 'MARKET', quantity) {
+    
+    params <- list(symbol   = symbol,
+                   side     = side,
+                   type     = type,
+                   quantity = quantity)
+    
+    b_order <- binance_query(endpoint = 'api/v3/order/test', method = 'POST', params = params, sign = TRUE)
+}
