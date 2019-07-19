@@ -271,7 +271,7 @@ binance_exchangeInfo <- function() {
 #' @export
 binance_symbols <- function() {
     unlist(sapply(
-        binance_query(endpoint = '/api/v1/exchangeInfo')$symbols,
+        binance_exchangeInfo()$symbols,
         `[`, 'symbol'), use.names = FALSE)
 }
 
