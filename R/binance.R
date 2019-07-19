@@ -260,6 +260,13 @@ binance_ticker_all_prices <- function() {
 
 }
 
+#' Get exchangeInfo from Binance
+#' @return list
+#' @export
+binance_exchangeInfo <- function() {
+    binance_query(endpoint = '/api/v1/exchangeInfo')
+}
+
 
 #' Get all currently valid symbol names from Binance
 #' @return character vector
