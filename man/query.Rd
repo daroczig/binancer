@@ -4,9 +4,9 @@
 \alias{query}
 \title{Request the Binance API}
 \usage{
-query(base, path, method = c("GET", "POST"), params = list(),
-  body = FALSE, config = config(), retry = method == "GET",
-  retries = 0)
+query(base, path, method = c("GET", "POST", "PUT", "DELETE"),
+  params = list(), body = FALSE, config = config(), retry = method
+  == "GET", retries = 0)
 }
 \arguments{
 \item{base}{URL}
