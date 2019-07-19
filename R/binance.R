@@ -77,7 +77,7 @@ binance_sign <- function(params) {
 #' @param sign if signature required
 #' @return R object
 #' @keywords internal
-binance_query <- function(endpoint, method = c('GET', 'POST'),
+binance_query <- function(endpoint, method = c('GET', 'POST', 'PUT', 'DELETE'),
                           params = list(), body = FALSE, sign = FALSE,
                           retry = method == 'GET') {
 
