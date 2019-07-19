@@ -375,7 +375,7 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
 #' binance_mytrades('ARKETH')
 #' binance_mytrades(c('ARKBTC', 'ARKETH'))
 #' }
-binance_order_test <- function(symbol, side, type = 'MARKET', quantity) {
+binance_order_test <- function(symbol, side, type = c('LIMIT', 'MARKET'), quantity) {
     
     params <- list(symbol   = symbol,
                    side     = side,
