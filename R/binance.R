@@ -368,7 +368,6 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
 
 #' Manage orders on the Binance account
 #' @param symbol string
-#' @param method string
 #' @param side enum
 #' @param type enum
 #' @param quantity number
