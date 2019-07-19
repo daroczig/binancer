@@ -165,6 +165,56 @@ binance_klines <- function(symbol, interval, limit = 500, start_time, end_time) 
 
 }
 
+#' Get tick data from Binance
+#' @param symbol string
+#' @param start_time POSIX timestamp
+#' @param end_time POSIX timestamp
+#' @return data.table
+#' @export
+#' @importFrom data.table rbindlist data.table
+#' @examples \dontrun{
+#' binance_ticks('ETHUSDT')
+#' binance_ticks('ETHUSDT', start_time = as.POSIXct('2018-01-01'), end_time = as.POSIXct('2018-01-08'))
+#' }
+binance_ticks <- function(symbol, start_time, end_time) {
+    params <- list(symbol = symbol)
+    
+    if (!missing(start_time)) {
+        params$startTime <- format(as.numeric(start_time) * 1e3, scientific = FALSE)
+    }
+    if (!missing(end_time)) {
+        if (as.numeric(difftime(end_time, start_time, units = "secs")) > 3600) {
+            end_time <- start_time + 3600
+        }
+        params$endTime <- format(as.numeric(end_time) * 1e3, scientific = FALSE)
+    }
+    
+    ticks <- binance_query(endpoint = 'api/v1/aggTrades', params = params)
+    
+    if (length(ticks) > 0) {
+        ticks <- rbindlist(ticks)
+        names(ticks) <- c(
+            'agg_tradeID',
+            'price',
+            'quantity',
+            'first_tradeID',
+            'last_tradeID',
+            'T',
+            'buyer_maker',
+            'best_price_match')
+        
+        for (v in c('price', 'quantity')) {
+            ticks[, (v) := as.numeric(get(v))]
+        }
+        
+        ticks[, T := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
+        
+        # return
+        ticks[, symbol := symbol]
+        data.table(ticks)
+    }
+}
+
 
 # Ticker data -------------------------------------------------------------
 
