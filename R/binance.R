@@ -213,6 +213,50 @@ binance_ticks <- function(symbol, start_time, end_time) {
     }
 }
 
+#' Get orderbook depth data from Binance
+#' @param symbol string
+#' @param limit int
+#' @return data.table
+#' @export
+#' @importFrom data.table rbindlist data.table
+#' @examples \dontrun{
+#' binance_depth('ETHUSDT')
+#' binance_depth('ETHUSDT', limit = 1000)
+#' }
+binance_depth <- function(symbol, limit = 100) {
+    
+    params <- list(symbol   = symbol,
+                   limit    = limit)
+
+    depth <- binance_query(endpoint = 'api/v1/depth', params = params)
+    
+    bids <- rbindlist(depth$bids)
+    asks <- rbindlist(depth$asks)
+    
+    names(bids) <- c(
+        'price',
+        'quantity')
+    
+    names(asks) <- c(
+        'price',
+        'quantity')
+    
+    for (v in names(bids)) {
+        bids[, (v) := as.numeric(get(v))]
+    }
+    
+    for (v in names(asks)) {
+        asks[, (v) := as.numeric(get(v))]
+    }
+    
+    ## return
+    depth$bids <- bids
+    depth$asks <- asks
+    
+    depth
+    
+}
+
 
 # Ticker data -------------------------------------------------------------
 
