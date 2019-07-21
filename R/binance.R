@@ -423,8 +423,11 @@ binance_mytrades <- function(symbol, limit, from_id, start_time, end_time) {
     
     trades <- binance_query(endpoint = 'api/v3/myTrades', params = params, sign = TRUE)
     trades <- rbindlist(trades)
+    
     if (nrow(trades) == 0) {
         return(data.table())
+    } else {
+        trades[, time := as.POSIXct(time/1e3, origin = '1970-01-01')]
     }
 
     # return with snake_case column names
