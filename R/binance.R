@@ -9,8 +9,7 @@ BINANCE <- list(
         '1m', '3m', '5m', '15m', '30m', 
         '1h', '2h', '4h', '6h', '8h', '12h', 
         '1d', '3d', '1w', '1M'), 
-    METHOD = c('GET', 'POST', 'PUT', 'DELETE'), 
-    DEPTH_LIMITS = c(as.integer(5, 10, 20, 50, 100, 500, 1000))
+    METHOD = c('GET', 'POST', 'PUT', 'DELETE')
     )
 
 
@@ -134,6 +133,7 @@ binance_klines <- function(symbol, interval, limit, start_time, end_time) {
                    interval = interval)
     
     if (!missing(limit)) {
+        stopifnot(limit <= 1000L)
         params$limit <- limit
     }
     if (!missing(start_time)) {
@@ -193,6 +193,7 @@ binance_ticks <- function(symbol, from_id, start_time, end_time, limit) {
     params <- list(symbol = symbol)
     
     if (!missing(limit)) {
+        stopifnot(limit <= 1000L)
         params$limit <- limit
     }
     if (!missing(from_id)) {
@@ -249,7 +250,7 @@ binance_depth <- function(symbol, limit) {
     params <- list(symbol = symbol)
 
     if (!missing(limit)) {
-        limit <- match.arg(limit)
+        stopifnot(limit %in% c(as.integer(5, 10, 20, 50, 100, 500, 1000)))
         params$limit <- limit
     }
     
@@ -407,6 +408,7 @@ binance_mytrades <- function(symbol, limit, from_id, start_time, end_time) {
     params <- list(symbol = symbol)
     
     if (!missing(limit)) {
+        stopifnot(limit <= 1000L)
         params$limit = limit
     }
     if (!missing(from_id)) {
