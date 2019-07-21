@@ -544,3 +544,19 @@ binance_cancel_order <- function(symbol, order_id, client_order_id) {
     
     binance_query(endpoint = 'api/v3/order', method = 'DELETE', params = params, sign = TRUE)
 }
+
+
+#' Fetch open orders from the Binance account
+#' @param symbol optional string
+#' @return data.table
+#' @export
+#' @examples \dontrun{
+#' binance_cancel_order('ARKETH', 8)
+#' binance_cancel_order('ARKBTC', "myOrder7")
+#' }
+binance_open_orders <- function(symbol) {
+    
+    params <- list(symbol = symbol)
+    
+    binance_query(endpoint = 'api/v3/openOrders', method = 'GET', params = params, sign = TRUE)
+}
