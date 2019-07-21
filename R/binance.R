@@ -457,7 +457,7 @@ binance_new_order <- function(symbol, side, type, timeInForce, quantity, price, 
         params$icebergQty = icebergQty
     }
     
-    if (test) {
+    if (isTRUE(test)) {
         b_order <- binance_query(endpoint = 'api/v3/order/test', method = 'POST', params = params, sign = TRUE)
     } else {
         b_order <- binance_query(endpoint = 'api/v3/order', method = 'POST', params = params, sign = TRUE)
