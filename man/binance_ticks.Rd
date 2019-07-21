@@ -4,10 +4,12 @@
 \alias{binance_ticks}
 \title{Get tick data from Binance}
 \usage{
-binance_ticks(symbol, start_time, end_time, limit = 500)
+binance_ticks(symbol, from_id, start_time, end_time, limit)
 }
 \arguments{
 \item{symbol}{string}
+
+\item{from_id}{optional number}
 
 \item{start_time}{optional POSIX timestamp}
 

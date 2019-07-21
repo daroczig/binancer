@@ -126,14 +126,16 @@ binance_query <- function(endpoint, method,
 #' binance_klines('ETHUSDT', interval = '1h',
 #'     start_time = as.POSIXct('2018-01-01'), end_time = as.POSIXct('2018-01-08'))
 #' }
-binance_klines <- function(symbol, interval, limit = 500, start_time, end_time) {
+binance_klines <- function(symbol, interval, limit, start_time, end_time) {
 
     interval <- match.arg(interval)
 
     params <- list(symbol   = symbol,
-                   interval = interval,
-                   limit    = limit)
+                   interval = interval)
     
+    if (!missing(limit)) {
+        params$limit <- limit
+    }
     if (!missing(start_time)) {
         params$startTime <- format(as.numeric(start_time) * 1e3, scientific = FALSE)
     }
@@ -175,6 +177,7 @@ binance_klines <- function(symbol, interval, limit = 500, start_time, end_time) 
 
 #' Get tick data from Binance
 #' @param symbol string
+#' @param from_id optional number
 #' @param start_time optional POSIX timestamp
 #' @param end_time optional POSIX timestamp
 #' @param limit optional int
@@ -185,11 +188,16 @@ binance_klines <- function(symbol, interval, limit = 500, start_time, end_time) 
 #' binance_ticks('ETHUSDT')
 #' binance_ticks('ETHUSDT', start_time = as.POSIXct('2018-01-01'), end_time = as.POSIXct('2018-01-08'))
 #' }
-binance_ticks <- function(symbol, start_time, end_time, limit = 500) {
+binance_ticks <- function(symbol, from_id, start_time, end_time, limit) {
     
-    params <- list(symbol = symbol,
-                   limit = limit)
+    params <- list(symbol = symbol)
     
+    if (!missing(limit)) {
+        params$limit <- limit
+    }
+    if (!missing(from_id)) {
+        params$fromId <- from_id
+    }
     if (!missing(start_time)) {
         params$startTime <- format(as.numeric(start_time) * 1e3, scientific = FALSE)
     }
@@ -236,13 +244,15 @@ binance_ticks <- function(symbol, start_time, end_time, limit = 500) {
 #' binance_depth('ETHUSDT')
 #' binance_depth('ETHUSDT', limit = 1000)
 #' }
-binance_depth <- function(symbol, limit = 100) {
+binance_depth <- function(symbol, limit) {
     
-    limit <- match.arg(limit)
-    
-    params <- list(symbol   = symbol,
-                   limit    = limit)
+    params <- list(symbol = symbol)
 
+    if (!missing(limit)) {
+        limit <- match.arg(limit)
+        params$limit <- limit
+    }
+    
     depth <- binance_query(endpoint = 'api/v1/depth', params = params)
     
     bids <- rbindlist(depth$bids)
