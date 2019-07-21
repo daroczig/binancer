@@ -9,7 +9,8 @@ BINANCE <- list(
         '1m', '3m', '5m', '15m', '30m', 
         '1h', '2h', '4h', '6h', '8h', '12h', 
         '1d', '3d', '1w', '1M'), 
-    METHOD = c('GET', 'POST', 'PUT', 'DELETE')
+    METHOD = c('GET', 'POST', 'PUT', 'DELETE'), 
+    DEPTH_LIMITS = c(5, 10, 20, 50, 100, 500, 1000)
     )
 
 
@@ -234,6 +235,8 @@ binance_ticks <- function(symbol, start_time, end_time, limit = 500) {
 #' }
 binance_depth <- function(symbol, limit = 100) {
     
+    limit <- match.arg(limit)
+    
     params <- list(symbol   = symbol,
                    limit    = limit)
 
@@ -432,6 +435,10 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
 #' binance_mytrades(c('ARKBTC', 'ARKETH'))
 #' }
 binance_new_order <- function(symbol, side, type, timeInForce, quantity, price, icebergQty, test = TRUE) {
+    
+    side <- match.arg(side)
+    type <- match.arg(type)
+    timeInForce <- match.arg(timeInForce)
     
     params <- list(symbol   = symbol,
                    side     = side,
