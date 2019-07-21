@@ -9,7 +9,7 @@ binance_depth(symbol, limit = c(5, 10, 20, 50, 100, 500, 1000))
 \arguments{
 \item{symbol}{string}
 
-\item{limit}{int}
+\item{limit}{int optional}
 }
 \value{
 data.table

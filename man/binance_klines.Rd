@@ -13,11 +13,11 @@ binance_klines(symbol, interval = c("1m", "3m", "5m", "15m", "30m", "1h",
 
 \item{interval}{enum}
 
-\item{limit}{int}
+\item{limit}{optional int}
 
-\item{start_time}{POSIX timestamp}
+\item{start_time}{optional POSIX timestamp}
 
-\item{end_time}{POSIX timestamp}
+\item{end_time}{optional POSIX timestamp}
 }
 \value{
 data.table

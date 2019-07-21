@@ -7,7 +7,7 @@
 binance_new_order(symbol, side = c("BUY", "SELL"), type = c("LIMIT",
   "MARKET", "STOP_LOSS", "STOP_LOSS_LIMIT", "TAKE_PROFIT",
   "TAKE_PROFIT_LIMIT", "LIMIT_MAKER"), timeInForce = c("GTC", "IOC",
-  "FOK"), quantity, price, icebergQty, test = TRUE)
+  "FOK"), quantity, price, stopPrice, icebergQty, test = TRUE)
 }
 \arguments{
 \item{symbol}{string}
@@ -16,13 +16,15 @@ binance_new_order(symbol, side = c("BUY", "SELL"), type = c("LIMIT",
 
 \item{type}{enum}
 
-\item{timeInForce}{enum}
+\item{timeInForce}{optional enum}
 
 \item{quantity}{number}
 
-\item{price}{number}
+\item{price}{optional number}
 
-\item{icebergQty}{number}
+\item{stopPrice}{optional number}
+
+\item{icebergQty}{optional number}
 
 \item{test}{bool}
 }

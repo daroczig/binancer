@@ -9,11 +9,11 @@ binance_ticks(symbol, start_time, end_time, limit = 500)
 \arguments{
 \item{symbol}{string}
 
-\item{start_time}{POSIX timestamp}
+\item{start_time}{optional POSIX timestamp}
 
-\item{end_time}{POSIX timestamp}
+\item{end_time}{optional POSIX timestamp}
 
-\item{limit}{int}
+\item{limit}{optional int}
 }
 \value{
 data.table
