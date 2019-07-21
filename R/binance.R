@@ -8,7 +8,8 @@ BINANCE <- list(
     INTERVALS = c(
         '1m', '3m', '5m', '15m', '30m', 
         '1h', '2h', '4h', '6h', '8h', '12h', 
-        '1d', '3d', '1w', '1M')
+        '1d', '3d', '1w', '1M'), 
+    METHOD = c('GET', 'POST', 'PUT', 'DELETE')
     )
 
 
@@ -84,7 +85,7 @@ binance_sign <- function(params) {
 #' @param sign if signature required
 #' @return R object
 #' @keywords internal
-binance_query <- function(endpoint, method = c('GET', 'POST', 'PUT', 'DELETE'),
+binance_query <- function(endpoint, method,
                           params = list(), body = FALSE, sign = FALSE,
                           retry = method == 'GET') {
 

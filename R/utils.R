@@ -20,7 +20,7 @@ timestamp <- function() {
 #' @importFrom httr GET POST PUT DELETE content config headers add_headers
 #' @importFrom logger log_error
 #' @importFrom utils getFromNamespace
-query <- function(base, path, method = c('GET', 'POST', 'PUT', 'DELETE'),
+query <- function(base, path, method,
                   params = list(), body = FALSE, config = config(),
                   retry = method == 'GET', retries = 0) {
 
