@@ -9,7 +9,8 @@ BINANCE <- list(
         '1m', '3m', '5m', '15m', '30m', 
         '1h', '2h', '4h', '6h', '8h', '12h', 
         '1d', '3d', '1w', '1M'), 
-    METHOD = c('GET', 'POST', 'PUT', 'DELETE')
+    METHOD = c('GET', 'POST', 'PUT', 'DELETE'), 
+    DEPTH_LIMITS = c(as.integer(5, 10, 20, 50, 100, 500, 1000))
     )
 
 
@@ -243,7 +244,7 @@ binance_ticks <- function(symbol, from_id, start_time, end_time, limit) {
 #' binance_depth('ETHUSDT')
 #' binance_depth('ETHUSDT', limit = 1000)
 #' }
-binance_depth <- function(symbol, limit = c(as.integer(5, 10, 20, 50, 100, 500, 1000))) {
+binance_depth <- function(symbol, limit) {
     
     params <- list(symbol = symbol)
 
