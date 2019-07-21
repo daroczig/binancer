@@ -459,6 +459,25 @@ binance_new_order <- function(symbol, side, type, timeInForce, quantity, price, 
     
     if (!missing(icebergQty)) {
         params$icebergQty = icebergQty
+        if (icebergQty > 0) {
+            stopifnot(timeInForce == 'GTC')
+        }
+    }
+    
+    if (type == 'LIMIT') {
+        stopifnot(!missing(timeInForce), !missing(price))
+    }
+    
+    if (type == 'STOP_LOSS' | type == 'TAKE_PROFIT') {
+        stopifnot(!missing(stopPrice))
+    }
+    
+    if (type == 'STOP_LOSS_LIMIT' | type == 'TAKE_PROFIT_LIMIT') {
+        stopifnot(!missing(timeInForce), !missing(price), !missing(stopPrice))
+    }
+    
+    if (type == 'LIMIT_MAKER') {
+        stopifnot(!missing(price))
     }
     
     if (isTRUE(test)) {
