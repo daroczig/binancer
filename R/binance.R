@@ -416,7 +416,7 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
 
 }
 
-#' Manage orders on the Binance account
+#' Open new order on the Binance account
 #' @param symbol string
 #' @param side enum
 #' @param type enum
@@ -430,7 +430,7 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
 #' binance_mytrades('ARKETH')
 #' binance_mytrades(c('ARKBTC', 'ARKETH'))
 #' }
-binance_order_test <- function(symbol, side, type, timeInForce, quantity, price, icebergQty) {
+binance_new_order <- function(symbol, side, type, timeInForce, quantity, price, icebergQty, test = TRUE) {
     
     params <- list(symbol   = symbol,
                    side     = side,
@@ -449,5 +449,9 @@ binance_order_test <- function(symbol, side, type, timeInForce, quantity, price,
         params$icebergQty = icebergQty
     }
     
-    b_order <- binance_query(endpoint = 'api/v3/order/test', method = 'POST', params = params, sign = TRUE)
+    if (test) {
+        b_order <- binance_query(endpoint = 'api/v3/order/test', method = 'POST', params = params, sign = TRUE)
+    } else {
+        b_order <- binance_query(endpoint = 'api/v3/order', method = 'POST', params = params, sign = TRUE)
+    }
 }
