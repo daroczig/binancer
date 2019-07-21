@@ -438,7 +438,6 @@ binance_new_order <- function(symbol, side, type, timeInForce, quantity, price, 
     
     side <- match.arg(side)
     type <- match.arg(type)
-    timeInForce <- match.arg(timeInForce)
     
     params <- list(symbol   = symbol,
                    side     = side,
@@ -446,6 +445,7 @@ binance_new_order <- function(symbol, side, type, timeInForce, quantity, price, 
                    quantity = quantity)
     
     if (!missing(timeInForce)) {
+        timeInForce <- match.arg(timeInForce)
         params$timeInForce = timeInForce
     }
     
