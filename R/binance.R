@@ -303,25 +303,14 @@ binance_ticker_all_prices <- function() {
     prices[, to := sub('.*(BTC|ETH|BNB|USDT|TUSD|PAX|USDC|XRP|USDS)$', '\\1', symbol)]
 
     # add computed price in USD
-    prices[grepl('BTC$', symbol), to_usd := prices[symbol == 'BTCUSDT', price]]
-    prices[grepl('ETH$', symbol), to_usd := prices[symbol == 'ETHUSDT', price]]
-    prices[grepl('BNB$', symbol), to_usd := prices[symbol == 'BNBUSDT', price]]
-    prices[grepl('USDT$', symbol), to_usd := price]
-    prices[grepl('TUSD$', symbol), to_usd := price]
-    prices[grepl('PAX$', symbol), to_usd := prices[symbol == 'PAXUSDT', price]]
-    prices[grepl('USDC$', symbol), to_usd := price]
-    prices[grepl('XRP$', symbol), to_usd := prices[symbol == 'XRPUSDT', price]]
-    prices[grepl('USDS$', symbol), to_usd := price]
-    
-    prices[grepl('BTC$', symbol), from_usd := price * to_usd]
-    prices[grepl('ETH$', symbol), from_usd := price * to_usd]
-    prices[grepl('BNB$', symbol), from_usd := price * to_usd]
-    prices[grepl('USDT$', symbol), from_usd := price]
-    prices[grepl('TUSD$', symbol), from_usd := price]
-    prices[grepl('PAX$', symbol), from_usd := price * to_usd]
-    prices[grepl('USDC$', symbol), from_usd := price]
-    prices[grepl('XRP$', symbol), from_usd := price * to_usd]
-    prices[grepl('USDS$', symbol), from_usd := price]
+    prices[to == 'BTC', to_usd := prices[symbol == 'BTCUSDT', price]]
+    prices[to == 'ETH', to_usd := prices[symbol == 'ETHUSDT', price]]
+    prices[to == 'BNB', to_usd := prices[symbol == 'BNBUSDT', price]]
+    prices[to == 'XRP', to_usd := prices[symbol == 'XRPUSDT', price]]
+    prices[to == 'USDT' | to == 'TUSD' | to == 'PAX' | to == 'USDC' | to == 'USDS', to_usd := 1]
+
+    prices[to == 'USDT' | to == 'TUSD' | to == 'PAX' | to == 'USDC' | to == 'USDS', from_usd := price]
+    prices[to != 'USDT' & to != 'TUSD' & to != 'PAX' & to != 'USDC' & to != 'USDS', from_usd := price * to_usd]
     
     prices[, .(symbol, price, from, from_usd, to, to_usd)]
 
