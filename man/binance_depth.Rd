@@ -4,7 +4,7 @@
 \alias{binance_depth}
 \title{Get orderbook depth data from Binance}
 \usage{
-binance_depth(symbol, limit = c(5, 10, 20, 50, 100, 500, 1000))
+binance_depth(symbol, limit)
 }
 \arguments{
 \item{symbol}{string}

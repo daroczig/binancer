@@ -448,7 +448,8 @@ binance_mytrades <- function(symbol, limit, from_id, start_time, end_time) {
 #' @export
 #' @examples \dontrun{
 #' binance_new_order('ARKETH', side = 'BUY', type = 'MARKET', quantity = 1)
-#' binance_new_order('ARKBTC', side = 'BUY', type = 'LIMIT', quantity = 1, price = 0.5, timeInForce = 'GTC')
+#' binance_new_order('ARKBTC', side = 'BUY', type = 'LIMIT', quantity = 1, 
+#'                   price = 0.5, timeInForce = 'GTC')
 #' }
 binance_new_order <- function(symbol, side, type, timeInForce, quantity, price, stopPrice, icebergQty, test = TRUE) {
     
