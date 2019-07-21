@@ -36,7 +36,7 @@ Open new order on the Binance account
 }
 \examples{
 \dontrun{
-binance_mytrades('ARKETH')
-binance_mytrades(c('ARKBTC', 'ARKETH'))
+binance_new_order('ARKETH', side = 'BUY', type = 'MARKET', quantity = 1)
+binance_new_order('ARKBTC', side = 'BUY', type = 'LIMIT', quantity = 1, price = 0.5, timeInForce = 'GTC')
 }
 }
