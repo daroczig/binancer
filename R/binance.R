@@ -386,8 +386,10 @@ binance_balances <- function(threshold = -1, usdt = FALSE) {
 
 #' Get all trades on the Binance account
 #' @param symbol string
-#' @param limit number of trades to fetch
+#' @param limit optional int number of trades to fetch
 #' @param from_id optional trade id to fetch from
+#' @param start_time optional POSIX timestamp
+#' @param end_time optional POSIX timestamp
 #' @return data.table
 #' @export
 #' @importFrom data.table as.data.table setnames
@@ -396,7 +398,7 @@ binance_balances <- function(threshold = -1, usdt = FALSE) {
 #' binance_mytrades(c('ARKBTC', 'ARKETH'))
 #' }
 #' @importFrom snakecase to_snake_case
-binance_mytrades <- function(symbol, limit = 500, from_id) {
+binance_mytrades <- function(symbol, limit, from_id, start_time, end_time) {
 
     if (length(symbol) > 1) {
         return(rbindlist(lapply(symbol, binance_mytrades), fill = TRUE))
@@ -404,10 +406,19 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
 
     params <- list(symbol = symbol)
     
+    if (!missing(limit)) {
+        params$limit = limit
+    }
     if (!missing(from_id)) {
         params$fromId = from_id
     }
-
+    if (!missing(start_time)) {
+        params$startTime <- format(as.numeric(start_time) * 1e3, scientific = FALSE)
+    }
+    if (!missing(end_time)) {
+        params$endTime <- format(as.numeric(end_time) * 1e3, scientific = FALSE)
+    }
+    
     trades <- binance_query(endpoint = 'api/v3/myTrades', params = params, sign = TRUE)
     trades <- rbindlist(trades)
     if (nrow(trades) == 0) {
@@ -418,6 +429,7 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
     setnames(trades, to_snake_case(names(trades)))
 
 }
+
 
 #' Open new order on the Binance account
 #' @param symbol string
