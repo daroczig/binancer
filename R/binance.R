@@ -428,6 +428,7 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
 #' @param quantity number
 #' @param price number
 #' @param icebergQty number
+#' @param test bool
 #' @return data.table
 #' @export
 #' @examples \dontrun{
