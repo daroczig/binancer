@@ -250,7 +250,7 @@ binance_depth <- function(symbol, limit) {
     params <- list(symbol = symbol)
 
     if (!missing(limit)) {
-        stopifnot(limit %in% c(as.integer(5, 10, 20, 50, 100, 500, 1000)))
+        stopifnot(limit %in% c(5, 10, 20, 50, 100, 500, 1000))
         params$limit <- limit
     }
     
