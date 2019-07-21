@@ -9,8 +9,7 @@ BINANCE <- list(
         '1m', '3m', '5m', '15m', '30m', 
         '1h', '2h', '4h', '6h', '8h', '12h', 
         '1d', '3d', '1w', '1M'), 
-    METHOD = c('GET', 'POST', 'PUT', 'DELETE'), 
-    DEPTH_LIMITS = c(5, 10, 20, 50, 100, 500, 1000)
+    METHOD = c('GET', 'POST', 'PUT', 'DELETE')
     )
 
 
@@ -86,7 +85,7 @@ binance_sign <- function(params) {
 #' @param sign if signature required
 #' @return R object
 #' @keywords internal
-binance_query <- function(endpoint, method,
+binance_query <- function(endpoint, method = 'GET',
                           params = list(), body = FALSE, sign = FALSE,
                           retry = method == 'GET') {
 
@@ -244,7 +243,7 @@ binance_ticks <- function(symbol, from_id, start_time, end_time, limit) {
 #' binance_depth('ETHUSDT')
 #' binance_depth('ETHUSDT', limit = 1000)
 #' }
-binance_depth <- function(symbol, limit) {
+binance_depth <- function(symbol, limit = c(as.integer(5, 10, 20, 50, 100, 500, 1000))) {
     
     params <- list(symbol = symbol)
 
@@ -427,6 +426,7 @@ binance_mytrades <- function(symbol, limit, from_id, start_time, end_time) {
 
     # return with snake_case column names
     setnames(trades, to_snake_case(names(trades)))
+    trades
 
 }
 
@@ -558,5 +558,5 @@ binance_open_orders <- function(symbol) {
     
     params <- list(symbol = symbol)
     
-    binance_query(endpoint = 'api/v3/openOrders', method = 'GET', params = params, sign = TRUE)
+    binance_query(endpoint = 'api/v3/openOrders', params = params, sign = TRUE)
 }
