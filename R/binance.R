@@ -313,7 +313,6 @@ binance_ticker_all_prices <- function() {
     prices[to != 'USDT' & to != 'TUSD' & to != 'PAX' & to != 'USDC' & to != 'USDS', from_usd := price * to_usd]
     
     prices[, .(symbol, price, from, from_usd, to, to_usd)]
-
 }
 
 #' Get exchangeInfo from Binance
@@ -375,16 +374,13 @@ binance_balances <- function(threshold = -1, usdt = FALSE) {
     balances[, total := free + locked]
 
     if (isTRUE(usdt)) {
-
         balances <- merge(
             balances, binance_coins_prices(),
             by.x = 'asset', by.y = 'symbol', all.x = TRUE, all.y = FALSE)
         balances[, usd := usd * total]
-
     }
 
     as.data.table(balances)[total > threshold]
-
 }
 
 
@@ -407,6 +403,7 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
     }
 
     params <- list(symbol = symbol)
+    
     if (!missing(from_id)) {
         params$fromId = from_id
     }
@@ -435,13 +432,26 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
 #' @return data.table
 #' @export
 #' @examples \dontrun{
-#' binance_mytrades('ARKETH')
-#' binance_mytrades(c('ARKBTC', 'ARKETH'))
+#' binance_new_order('ARKETH', side = 'BUY', type = 'MARKET', quantity = 1)
+#' binance_new_order('ARKBTC', side = 'BUY', type = 'LIMIT', quantity = 1, price = 0.5, timeInForce = 'GTC')
 #' }
 binance_new_order <- function(symbol, side, type, timeInForce, quantity, price, stopPrice, icebergQty, test = TRUE) {
     
     side <- match.arg(side)
     type <- match.arg(type)
+    
+    if (type == 'LIMIT') {
+        stopifnot(!missing(timeInForce), !missing(price))
+    }
+    if (type == 'STOP_LOSS' | type == 'TAKE_PROFIT') {
+        stopifnot(!missing(stopPrice))
+    }
+    if (type == 'STOP_LOSS_LIMIT' | type == 'TAKE_PROFIT_LIMIT') {
+        stopifnot(!missing(timeInForce), !missing(price), !missing(stopPrice))
+    }
+    if (type == 'LIMIT_MAKER') {
+        stopifnot(!missing(price))
+    }
     
     params <- list(symbol   = symbol,
                    side     = side,
@@ -452,37 +462,73 @@ binance_new_order <- function(symbol, side, type, timeInForce, quantity, price, 
         timeInForce <- match.arg(timeInForce)
         params$timeInForce = timeInForce
     }
-    
-    if (!missing(price)) {
-        params$price = price
-    }
-    
     if (!missing(icebergQty)) {
         params$icebergQty = icebergQty
         if (icebergQty > 0) {
             stopifnot(timeInForce == 'GTC')
         }
     }
-    
-    if (type == 'LIMIT') {
-        stopifnot(!missing(timeInForce), !missing(price))
+    if (!missing(price)) {
+        params$price = price
     }
-    
-    if (type == 'STOP_LOSS' | type == 'TAKE_PROFIT') {
-        stopifnot(!missing(stopPrice))
-    }
-    
-    if (type == 'STOP_LOSS_LIMIT' | type == 'TAKE_PROFIT_LIMIT') {
-        stopifnot(!missing(timeInForce), !missing(price), !missing(stopPrice))
-    }
-    
-    if (type == 'LIMIT_MAKER') {
-        stopifnot(!missing(price))
-    }
-    
+
     if (isTRUE(test)) {
-        b_order <- binance_query(endpoint = 'api/v3/order/test', method = 'POST', params = params, sign = TRUE)
+        binance_query(endpoint = 'api/v3/order/test', method = 'POST', params = params, sign = TRUE)
     } else {
-        b_order <- binance_query(endpoint = 'api/v3/order', method = 'POST', params = params, sign = TRUE)
+        binance_query(endpoint = 'api/v3/order', method = 'POST', params = params, sign = TRUE)
     }
+}
+
+
+#' Query order on the Binance account
+#' @param symbol string
+#' @param order_id optional number
+#' @param client_order_id optional string
+#' @return data.table
+#' @export
+#' @examples \dontrun{
+#' binance_query_order('ARKETH', 8)
+#' binance_query_order('ARKBTC', "myOrder7")
+#' }
+binance_query_order <- function(symbol, order_id, client_order_id) {
+    
+    stopifnot(!missing(order_id) | !missing(client_order_id))
+    
+    params <- list(symbol = symbol)
+    
+    if (!missing(order_id)) {
+        params$orderId = order_id
+    }
+    if (!missing(client_order_id)) {
+        params$origClientOrderId = client_order_id
+    }
+    
+    binance_query(endpoint = 'api/v3/order', method = 'GET', params = params, sign = TRUE)
+}
+
+
+#' Cancel order on the Binance account
+#' @param symbol string
+#' @param order_id optional number
+#' @param client_order_id optional string
+#' @return data.table
+#' @export
+#' @examples \dontrun{
+#' binance_cancel_order('ARKETH', 8)
+#' binance_cancel_order('ARKBTC', "myOrder7")
+#' }
+binance_cancel_order <- function(symbol, order_id, client_order_id) {
+    
+    stopifnot(!missing(order_id) | !missing(client_order_id))
+    
+    params <- list(symbol = symbol)
+    
+    if (!missing(order_id)) {
+        params$orderId = order_id
+    }
+    if (!missing(client_order_id)) {
+        params$origClientOrderId = client_order_id
+    }
+    
+    binance_query(endpoint = 'api/v3/order', method = 'DELETE', params = params, sign = TRUE)
 }
