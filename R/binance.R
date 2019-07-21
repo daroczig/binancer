@@ -1,8 +1,15 @@
 BINANCE <- list(
+    TYPE = c('LIMIT', 'MARKET', 
+             'STOP_LOSS', 'STOP_LOSS_LIMIT', 
+             'TAKE_PROFIT', 'TAKE_PROFIT_LIMIT', 
+             'LIMIT_MAKER'), 
+    SIDE = c('BUY', "SELL"), 
+    TIMEINFORCE = c('GTC', 'IOC', 'FOK'), 
     INTERVALS = c(
-        '1m', '3m', '5m', '15m', '30m',
-        '1h', '2h', '4h', '6h', '8h', '12h',
-        '1d', '3d', '1w', '1M'))
+        '1m', '3m', '5m', '15m', '30m', 
+        '1h', '2h', '4h', '6h', '8h', '12h', 
+        '1d', '3d', '1w', '1M')
+    )
 
 
 # Utils -------------------------------------------------------------------
@@ -423,7 +430,7 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
 #' binance_mytrades('ARKETH')
 #' binance_mytrades(c('ARKBTC', 'ARKETH'))
 #' }
-binance_order_test <- function(symbol, side = c('BUY', "SELL"), type = c('LIMIT', 'MARKET'), timeInForce = c('GTC', 'IOC', 'FOK'), quantity, price, icebergQty) {
+binance_order_test <- function(symbol, side, type, timeInForce, quantity, price, icebergQty) {
     
     params <- list(symbol   = symbol,
                    side     = side,
