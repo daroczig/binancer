@@ -114,9 +114,9 @@ binance_query <- function(endpoint, method,
 #' Get kline/candlestick data from Binance
 #' @param symbol string
 #' @param interval enum
-#' @param limit int
-#' @param start_time POSIX timestamp
-#' @param end_time POSIX timestamp
+#' @param limit optional int
+#' @param start_time optional POSIX timestamp
+#' @param end_time optional POSIX timestamp
 #' @return data.table
 #' @export
 #' @importFrom data.table rbindlist data.table
@@ -133,6 +133,7 @@ binance_klines <- function(symbol, interval, limit = 500, start_time, end_time) 
     params <- list(symbol   = symbol,
                    interval = interval,
                    limit    = limit)
+    
     if (!missing(start_time)) {
         params$startTime <- format(as.numeric(start_time) * 1e3, scientific = FALSE)
     }
@@ -174,9 +175,9 @@ binance_klines <- function(symbol, interval, limit = 500, start_time, end_time) 
 
 #' Get tick data from Binance
 #' @param symbol string
-#' @param start_time POSIX timestamp
-#' @param end_time POSIX timestamp
-#' @param limit int
+#' @param start_time optional POSIX timestamp
+#' @param end_time optional POSIX timestamp
+#' @param limit optional int
 #' @return data.table
 #' @export
 #' @importFrom data.table rbindlist data.table
@@ -185,7 +186,9 @@ binance_klines <- function(symbol, interval, limit = 500, start_time, end_time) 
 #' binance_ticks('ETHUSDT', start_time = as.POSIXct('2018-01-01'), end_time = as.POSIXct('2018-01-08'))
 #' }
 binance_ticks <- function(symbol, start_time, end_time, limit = 500) {
-    params <- list(symbol = symbol)
+    
+    params <- list(symbol = symbol,
+                   limit = limit)
     
     if (!missing(start_time)) {
         params$startTime <- format(as.numeric(start_time) * 1e3, scientific = FALSE)
@@ -225,7 +228,7 @@ binance_ticks <- function(symbol, start_time, end_time, limit = 500) {
 
 #' Get orderbook depth data from Binance
 #' @param symbol string
-#' @param limit int
+#' @param limit int optional
 #' @return data.table
 #' @export
 #' @importFrom data.table rbindlist data.table
@@ -424,10 +427,11 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
 #' @param symbol string
 #' @param side enum
 #' @param type enum
-#' @param timeInForce enum
+#' @param timeInForce optional enum
 #' @param quantity number
-#' @param price number
-#' @param icebergQty number
+#' @param price optional number
+#' @param stopPrice optional number
+#' @param icebergQty optional number
 #' @param test bool
 #' @return data.table
 #' @export
@@ -435,7 +439,7 @@ binance_mytrades <- function(symbol, limit = 500, from_id) {
 #' binance_mytrades('ARKETH')
 #' binance_mytrades(c('ARKBTC', 'ARKETH'))
 #' }
-binance_new_order <- function(symbol, side, type, timeInForce, quantity, price, icebergQty, test = TRUE) {
+binance_new_order <- function(symbol, side, type, timeInForce, quantity, price, stopPrice, icebergQty, test = TRUE) {
     
     side <- match.arg(side)
     type <- match.arg(type)
