@@ -42,5 +42,7 @@ query <- function(base, path, method,
         }
     }
 
-    res
+    binance.weight <<- headers(res)$`x-mbx-used-weight`
+    res <- content(res)
+    
 }
