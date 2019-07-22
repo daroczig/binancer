@@ -98,13 +98,16 @@ binance_query <- function(endpoint, method = 'GET',
         config <- config()
     }
 
-    query(
+    res <- query(
         base = 'https://api.binance.com',
         path = endpoint,
         method = method,
         params = params,
         config = config)
 
+    binance.weight <<- headers(res)$`x-mbx-used-weight`
+    res <- content(res)
+    
 }
 
 
@@ -323,6 +326,14 @@ binance_exchangeInfo <- function() {
     binance_query(endpoint = '/api/v1/exchangeInfo')
 }
 
+binance_markets <- function() {
+    symbols_df <- t(as.data.frame(sapply(exchangeInfo()$symbols, `[`)))
+    symbols_dt <- as.data.table(symbols_df)
+    symbols_dtm <- symbols_dt[, -c(7, 11)]
+    symbols_dtmt <- as.data.table(t(rbindlist(symbols_dtm)))
+    colnames(symbols_dtmt) <- colnames(symbols_df)[-c(7, 11)]
+    symbols_dtmt
+}
 
 #' Get all currently valid symbol names from Binance
 #' @return character vector
