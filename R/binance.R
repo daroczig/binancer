@@ -324,6 +324,9 @@ binance_ticker_all_prices <- function() {
 binance_exchangeInfo <- function() {
     res <- binance_query(endpoint = '/api/v1/exchangeInfo', content_as = "text")
     res <- fromJSON(res)
+    res$serverTime <- as.POSIXct(res$serverTime/1e3, origin = '1970-01-01')
+    res$rateLimits <- as.data.table(res$rateLimits)
+    res$symbols <- as.data.table(res$symbols)
 }
 
 #' Get all currently valid symbol names from Binance
