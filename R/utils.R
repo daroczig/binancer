@@ -43,7 +43,7 @@ query <- function(base, path, method,
         }
     }
 
-    binance.weight <<- headers(res)$`x-mbx-used-weight`
+    binance.weight <<- as.integer(headers(res)$`x-mbx-used-weight`)
     res <- content(res, as = content_as)
     
 }
