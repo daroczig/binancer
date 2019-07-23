@@ -166,6 +166,8 @@ binance_klines <- function(symbol, interval, limit, start_time, end_time) {
         klines[, (v) := as.numeric(get(v))]
     }
 
+    klines[, trades := as.integer(trades)]
+    
     for (v in c('open_time', 'close_time')) {
         klines[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
     }
@@ -228,7 +230,7 @@ binance_ticks <- function(symbol, from_id, start_time, end_time, limit) {
             ticks[, (v) := as.numeric(get(v))]
         }
         
-        ticks[, T := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
+        ticks[, T := as.POSIXct(T/1e3, origin = '1970-01-01')]
         
         # return
         ticks[, symbol := symbol]
