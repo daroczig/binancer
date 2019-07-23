@@ -162,12 +162,10 @@ binance_klines <- function(symbol, interval, limit, start_time, end_time) {
         'taker_buy_base_asset_volume',
         'taker_buy_quote_asset_volume')
 
-    for (v in names(klines)) {
+    for (v in setdiff(names(klines), c("open_time", "close_time", "trades"))) {
         klines[, (v) := as.numeric(get(v))]
     }
 
-    klines[, trades := as.integer(trades)]
-    
     for (v in c('open_time', 'close_time')) {
         klines[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
     }
