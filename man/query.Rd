@@ -6,7 +6,7 @@
 \usage{
 query(base, path, method = c("GET", "POST", "PUT", "DELETE"),
   params = list(), body = FALSE, config = config(), retry = method
-  == "GET", retries = 0)
+  == "GET", retries = 0, content_as)
 }
 \arguments{
 \item{base}{URL}
@@ -24,6 +24,8 @@ query(base, path, method = c("GET", "POST", "PUT", "DELETE"),
 \item{retry}{allow retrying the query on failure}
 
 \item{retries}{internal counter of previous retries}
+
+\item{content_as}{parameter to httr::content}
 }
 \value{
 R object

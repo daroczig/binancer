@@ -87,7 +87,7 @@ binance_sign <- function(params) {
 #' @keywords internal
 binance_query <- function(endpoint, method = 'GET',
                           params = list(), body = FALSE, sign = FALSE,
-                          retry = method == 'GET') {
+                          retry = method == 'GET', content_as = 'parsed') {
 
     method <- match.arg(method)
 
@@ -103,7 +103,8 @@ binance_query <- function(endpoint, method = 'GET',
         path = endpoint,
         method = method,
         params = params,
-        config = config)
+        config = config,
+        content_as = content_as)
 
 }
 
@@ -319,8 +320,10 @@ binance_ticker_all_prices <- function() {
 #' Get exchangeInfo from Binance
 #' @return list
 #' @export
+#' @importFrom jsonlite fromJSON
 binance_exchangeInfo <- function() {
-    binance_query(endpoint = '/api/v1/exchangeInfo')
+    res <- binance_query(endpoint = '/api/v1/exchangeInfo', content_as = "text")
+    res <- fromJSON(res)
 }
 
 binance_markets <- function() {

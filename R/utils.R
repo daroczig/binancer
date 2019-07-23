@@ -15,6 +15,7 @@ timestamp <- function() {
 #' @param config httr::config
 #' @param retry allow retrying the query on failure
 #' @param retries internal counter of previous retries
+#' @param content_as parameter to httr::content
 #' @return R object
 #' @keywords internal
 #' @importFrom httr GET POST PUT DELETE content config headers add_headers
@@ -22,11 +23,11 @@ timestamp <- function() {
 #' @importFrom utils getFromNamespace
 query <- function(base, path, method,
                   params = list(), body = FALSE, config = config(),
-                  retry = method == 'GET', retries = 0) {
+                  retry = method == 'GET', retries = 0, content_as) {
 
     method <- match.arg(method)
     METHOD <- getFromNamespace(method, ns = 'httr')
-
+    
     res <- tryCatch(
         METHOD(base, config = config, path = path, query = params, body = body),
         error = function(e) e)
@@ -43,6 +44,6 @@ query <- function(base, path, method,
     }
 
     binance.weight <<- headers(res)$`x-mbx-used-weight`
-    res <- content(res)
+    res <- content(res, as = content_as)
     
 }

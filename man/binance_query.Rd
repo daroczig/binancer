@@ -6,7 +6,7 @@
 \usage{
 binance_query(endpoint, method = c("GET", "POST", "PUT", "DELETE"),
   params = list(), body = FALSE, sign = FALSE, retry = method ==
-  "GET")
+  "GET", content_as = "parsed")
 }
 \arguments{
 \item{endpoint}{string}
@@ -20,6 +20,8 @@ binance_query(endpoint, method = c("GET", "POST", "PUT", "DELETE"),
 \item{sign}{if signature required}
 
 \item{retry}{allow retrying the query on failure}
+
+\item{content_as}{parameter to httr::content}
 }
 \value{
 R object
