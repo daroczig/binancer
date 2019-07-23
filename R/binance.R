@@ -329,15 +329,19 @@ binance_exchangeInfo <- function() {
     res$serverTime <- as.POSIXct(res$serverTime/1e3, origin = '1970-01-01')
     res$rateLimits <- as.data.table(res$rateLimits)
     res$symbols <- as.data.table(res$symbols)
+    res
 }
 
 #' Get all currently valid symbol names from Binance
 #' @return character vector
 #' @export
-binance_symbols <- function() {
-    unlist(sapply(
-        binance_exchangeInfo()$symbols,
-        `[`, 'symbol'), use.names = FALSE)
+#' @param all optional bool include non-trading symbols
+binance_symbols <- function(all = FALSE) {
+    if (isTRUE(all)) {
+        binance_exchangeInfo()$symbols$symbol
+    } else {
+        binance_exchangeInfo()$symbols[status == 'TRADING', symbol]
+    }
 }
 
 
