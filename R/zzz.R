@@ -5,6 +5,6 @@ credentials <- new.env()
     formals(binance_new_order)$side <<- BINANCE$SIDE
     formals(binance_new_order)$type <<- BINANCE$TYPE
     formals(binance_new_order)$timeInForce <<- BINANCE$TIMEINFORCE
-    formals(binance_query)$method <<- BINANCE$METHOD
-    formals(query)$method <<- BINANCE$METHOD
+    formals(binance_query)$method <<- BINANCE$METHODS
+    #formals(query)$method <<- BINANCE$METHODS
 }

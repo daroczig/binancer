@@ -22,16 +22,16 @@ timestamp <- function() {
 #' @importFrom logger log_error
 #' @importFrom utils getFromNamespace
 query <- function(base, path, method,
-                  params = list(), body = FALSE, config = config(),
+                  params = list(), body = NULL, config = config(),
                   retry = method == 'GET', retries = 0, content_as) {
 
-    method <- match.arg(method)
+    #method <- match.arg(method)
     METHOD <- getFromNamespace(method, ns = 'httr')
     
     res <- tryCatch(
         METHOD(base, config = config, path = path, query = params, body = body),
         error = function(e) e)
-
+    
     if (inherits(res, 'error')) {
         if (isTRUE(retry) & retries < 4) {
             mc <- match.call()
