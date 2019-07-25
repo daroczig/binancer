@@ -3,7 +3,7 @@ BINANCE <- list(
              'STOP_LOSS', 'STOP_LOSS_LIMIT', 
              'TAKE_PROFIT', 'TAKE_PROFIT_LIMIT', 
              'LIMIT_MAKER'), 
-    SIDE = c('BUY', "SELL"), 
+    SIDE = c('BUY', 'SELL'), 
     TIMEINFORCE = c('GTC', 'IOC', 'FOK'), 
     INTERVALS = c(
         '1m', '3m', '5m', '15m', '30m', 
@@ -162,7 +162,7 @@ binance_klines <- function(symbol, interval, limit, start_time, end_time) {
         'taker_buy_base_asset_volume',
         'taker_buy_quote_asset_volume')
 
-    for (v in setdiff(names(klines), c("open_time", "close_time", "trades"))) {
+    for (v in setdiff(names(klines), c('open_time', 'close_time', 'trades'))) {
         klines[, (v) := as.numeric(get(v))]
     }
 
@@ -204,7 +204,7 @@ binance_ticks <- function(symbol, from_id, start_time, end_time, limit) {
         params$startTime <- format(as.numeric(start_time) * 1e3, scientific = FALSE)
     }
     if (!missing(end_time)) {
-        if (as.numeric(difftime(end_time, start_time, units = "secs")) > 3600) {
+        if (as.numeric(difftime(end_time, start_time, units = 'secs')) > 3600) {
             end_time <- start_time + 3600
         }
         params$endTime <- format(as.numeric(end_time) * 1e3, scientific = FALSE)
@@ -366,7 +366,7 @@ binance_avg_price <- function(symbol) {
 #' @export
 #' @importFrom jsonlite fromJSON
 binance_exchangeInfo <- function() {
-    res <- binance_query(endpoint = '/api/v1/exchangeInfo', content_as = "text")
+    res <- binance_query(endpoint = '/api/v1/exchangeInfo', content_as = 'text')
     res <- fromJSON(res)
     res$serverTime <- as.POSIXct(res$serverTime/1e3, origin = '1970-01-01')
     res$rateLimits <- as.data.table(res$rateLimits)
@@ -384,32 +384,32 @@ binance_get_filters <- function(symbol) {
     symb <- symbol
     filters <- as.data.table(binance_exchangeInfo()$symbols[symbol == symb, filters][[1]])
     
-    for (v in setdiff(names(filters), c("filterType", "avgPriceMins", "applyToMarket", "limit", "maxNumAlgoOrders"))) {
+    for (v in setdiff(names(filters), c('filterType', 'avgPriceMins', 'applyToMarket', 'limit', 'maxNumAlgoOrders'))) {
         filters[, (v) := as.numeric(get(v))]
     }
     
-    stopifnot(avg_price$mins == filters[filterType == "PERCENT_PRICE", avgPriceMins], 
-              avg_price$mins == filters[filterType == "MIN_NOTIONAL", avgPriceMins])
+    stopifnot(avg_price$mins == filters[filterType == 'PERCENT_PRICE', avgPriceMins], 
+              avg_price$mins == filters[filterType == 'MIN_NOTIONAL', avgPriceMins])
     
-    min_price <- avg_price$price * filters[filterType == "PERCENT_PRICE", multiplierDown]
-    min_price <- max(min_price, filters[filterType == "PRICE_FILTER", minPrice])
+    min_price <- avg_price$price * filters[filterType == 'PERCENT_PRICE', multiplierDown]
+    min_price <- max(min_price, filters[filterType == 'PRICE_FILTER', minPrice])
     
-    max_price <- avg_price$price * filters[filterType == "PERCENT_PRICE", multiplierUp]
-    max_price <- min(max_price, filters[filterType == "PRICE_FILTER", maxPrice])
+    max_price <- avg_price$price * filters[filterType == 'PERCENT_PRICE', multiplierUp]
+    max_price <- min(max_price, filters[filterType == 'PRICE_FILTER', maxPrice])
     
-    min_lot <- filters[filterType == "MIN_NOTIONAL", minNotional] / avg_price$price
-    min_lot <- max(min_lot, filters[filterType == "LOT_SIZE", minQty])
+    min_lot <- filters[filterType == 'MIN_NOTIONAL', minNotional] / avg_price$price
+    min_lot <- max(min_lot, filters[filterType == 'LOT_SIZE', minQty])
     
-    max_lot <- filters[filterType == "LOT_SIZE", maxQty]
+    max_lot <- filters[filterType == 'LOT_SIZE', maxQty]
     
     c(min_price = min_price,
       max_price = max_price,
       min_lot = min_lot,
       max_lot = max_lot,
-      min_tick = filters[filterType == "PRICE_FILTER", minPrice],
-      tick_size = filters[filterType == "PRICE_FILTER", tickSize],
-      min_step = filters[filterType == "LOT_SIZE", minQty],
-      step_size = filters[filterType == "LOT_SIZE", stepSize]
+      min_tick = filters[filterType == 'PRICE_FILTER', minPrice],
+      tick_size = filters[filterType == 'PRICE_FILTER', tickSize],
+      min_step = filters[filterType == 'LOT_SIZE', minQty],
+      step_size = filters[filterType == 'LOT_SIZE', stepSize]
     )
 }
 
@@ -613,7 +613,7 @@ binance_new_order <- function(symbol, side, type, timeInForce, quantity, price, 
 #' @export
 #' @examples \dontrun{
 #' binance_query_order('ARKETH', 8)
-#' binance_query_order('ARKBTC', "myOrder7")
+#' binance_query_order('ARKBTC', 'myOrder7')
 #' }
 binance_query_order <- function(symbol, order_id, client_order_id) {
     
@@ -650,7 +650,7 @@ binance_query_order <- function(symbol, order_id, client_order_id) {
 #' @export
 #' @examples \dontrun{
 #' binance_cancel_order('ARKETH', 8)
-#' binance_cancel_order('ARKBTC', "myOrder7")
+#' binance_cancel_order('ARKBTC', 'myOrder7')
 #' }
 binance_cancel_order <- function(symbol, order_id, client_order_id) {
     
@@ -685,7 +685,7 @@ binance_cancel_order <- function(symbol, order_id, client_order_id) {
 #' @export
 #' @examples \dontrun{
 #' binance_cancel_order('ARKETH', 8)
-#' binance_cancel_order('ARKBTC', "myOrder7")
+#' binance_cancel_order('ARKBTC', 'myOrder7')
 #' }
 binance_open_orders <- function(symbol) {
     

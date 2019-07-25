@@ -22,6 +22,6 @@ Query order on the Binance account
 \examples{
 \dontrun{
 binance_query_order('ARKETH', 8)
-binance_query_order('ARKBTC', "myOrder7")
+binance_query_order('ARKBTC', 'myOrder7')
 }
 }
