@@ -318,6 +318,34 @@ binance_ticker_all_prices <- function() {
 }
 
 
+#' 24 hour rolling window price change statistics
+#' @param symbol optional string
+#' @return data.table
+#' @export
+#' @importFrom data.table rbindlist
+binance_ticker_24hr <- function(symbol) {
+    
+    if (!missing(symbol)) {
+        params <- list(symbol = symbol)
+        prices <- binance_query(endpoint = 'api/v1/ticker/24hr', params = params)
+        prices <- as.data.table(prices)
+    } else {
+        prices <- binance_query(endpoint = 'api/v1/ticker/24hr')
+        prices <- rbindlist(prices)
+    }
+    
+    for (v in setdiff(names(prices), c('symbol', 'openTime', 'closeTime', 'firstId', 'lastId', 'count'))) {
+        prices[, (v) := as.numeric(get(v))]
+    }
+    
+    for (v in c('openTime', 'closeTime')) {
+        prices[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
+    }
+    
+    prices
+}
+
+
 #' Get current average price for a symbol
 #' @param symbol string
 #' @return data.table
