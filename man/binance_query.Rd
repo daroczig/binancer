@@ -5,7 +5,7 @@
 \title{Request the Binance API}
 \usage{
 binance_query(endpoint, method = c("GET", "POST", "PUT", "DELETE"),
-  params = list(), body = FALSE, sign = FALSE, retry = method ==
+  params = list(), body = NULL, sign = FALSE, retry = method ==
   "GET", content_as = "parsed")
 }
 \arguments{
