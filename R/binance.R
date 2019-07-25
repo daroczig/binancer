@@ -9,7 +9,7 @@ BINANCE <- list(
         '1m', '3m', '5m', '15m', '30m', 
         '1h', '2h', '4h', '6h', '8h', '12h', 
         '1d', '3d', '1w', '1M'), 
-    METHOD = c('GET', 'POST', 'PUT', 'DELETE')
+    METHODS = c('GET', 'POST', 'PUT', 'DELETE')
     )
 
 
@@ -86,7 +86,7 @@ binance_sign <- function(params) {
 #' @return R object
 #' @keywords internal
 binance_query <- function(endpoint, method = 'GET',
-                          params = list(), body = FALSE, sign = FALSE,
+                          params = list(), body = NULL, sign = FALSE,
                           retry = method == 'GET', content_as = 'parsed') {
 
     method <- match.arg(method)
@@ -317,6 +317,22 @@ binance_ticker_all_prices <- function() {
     prices[, .(symbol, price, from, from_usd, to, to_usd)]
 }
 
+
+#' Get current average price for a symbol
+#' @param symbol string
+#' @return data.table
+#' @export
+#' @importFrom jsonlite fromJSON
+binance_avg_price <- function(symbol) {
+    
+    params <- list(symbol = symbol)
+    
+    res <- binance_query(endpoint = '/api/v3/avgPrice', params = params)
+    res <- as.data.table(res)
+    res[, price := as.numeric(price)]
+    res
+}
+
 #' Get exchangeInfo from Binance
 #' @return list
 #' @export
@@ -329,6 +345,46 @@ binance_exchangeInfo <- function() {
     res$symbols <- as.data.table(res$symbols)
     res
 }
+
+#' Compute current filters for a symbol
+#' @param symbol string
+#' @return vector
+#' @export
+binance_get_filters <- function(symbol) {
+    avg_price <- binance_avg_price(symbol)
+    # workaround the problem in data.table when variable has the same name as column
+    symb <- symbol
+    filters <- as.data.table(binance_exchangeInfo()$symbols[symbol == symb, filters][[1]])
+    
+    for (v in setdiff(names(filters), c("filterType", "avgPriceMins", "applyToMarket", "limit", "maxNumAlgoOrders"))) {
+        filters[, (v) := as.numeric(get(v))]
+    }
+    
+    stopifnot(avg_price$mins == filters[filterType == "PERCENT_PRICE", avgPriceMins], 
+              avg_price$mins == filters[filterType == "MIN_NOTIONAL", avgPriceMins])
+    
+    min_price <- avg_price$price * filters[filterType == "PERCENT_PRICE", multiplierDown]
+    min_price <- max(min_price, filters[filterType == "PRICE_FILTER", minPrice])
+    
+    max_price <- avg_price$price * filters[filterType == "PERCENT_PRICE", multiplierUp]
+    max_price <- min(max_price, filters[filterType == "PRICE_FILTER", maxPrice])
+    
+    min_lot <- filters[filterType == "MIN_NOTIONAL", minNotional] / avg_price$price
+    min_lot <- max(min_lot, filters[filterType == "LOT_SIZE", minQty])
+    
+    max_lot <- filters[filterType == "LOT_SIZE", maxQty]
+    
+    c(min_price = min_price,
+      max_price = max_price,
+      min_lot = min_lot,
+      max_lot = max_lot,
+      min_tick = filters[filterType == "PRICE_FILTER", minPrice],
+      tick_size = filters[filterType == "PRICE_FILTER", tickSize],
+      min_step = filters[filterType == "LOT_SIZE", minQty],
+      step_size = filters[filterType == "LOT_SIZE", stepSize]
+    )
+}
+
 
 #' Get all currently valid symbol names from Binance
 #' @return character vector
@@ -501,10 +557,23 @@ binance_new_order <- function(symbol, side, type, timeInForce, quantity, price, 
     }
 
     if (isTRUE(test)) {
-        binance_query(endpoint = 'api/v3/order/test', method = 'POST', params = params, sign = TRUE)
+        ord <- binance_query(endpoint = 'api/v3/order/test', method = 'POST', params = params, sign = TRUE)
     } else {
-        binance_query(endpoint = 'api/v3/order', method = 'POST', params = params, sign = TRUE)
+        ord <- binance_query(endpoint = 'api/v3/order', method = 'POST', params = params, sign = TRUE)
     }
+    
+    ord <- as.data.table(ord)
+    
+    #for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty')) {
+    #    ord[, (v) := as.numeric(get(v))]
+    #}
+    
+    #for (v in c('transactTime')) {
+    #    ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
+    #}
+    
+    ord
+    
 }
 
 
@@ -531,7 +600,17 @@ binance_query_order <- function(symbol, order_id, client_order_id) {
         params$origClientOrderId = client_order_id
     }
     
-    binance_query(endpoint = 'api/v3/order', method = 'GET', params = params, sign = TRUE)
+    ord <- binance_query(endpoint = 'api/v3/order', method = 'GET', params = params, sign = TRUE)
+    ord <- as.data.table(ord)
+    
+    for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty', 'stopPrice', 'icebergQty')) {
+        ord[, (v) := as.numeric(get(v))]
+    }
+    
+    for (v in c('time', 'updateTime')) {
+        ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
+    }
+    ord
 }
 
 
@@ -558,7 +637,17 @@ binance_cancel_order <- function(symbol, order_id, client_order_id) {
         params$origClientOrderId = client_order_id
     }
     
-    binance_query(endpoint = 'api/v3/order', method = 'DELETE', params = params, sign = TRUE)
+    ord <- binance_query(endpoint = 'api/v3/order', method = 'DELETE', params = params, sign = TRUE)
+    ord <- as.data.table(ord)
+    
+#    for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty', 'stopPrice', 'icebergQty')) {
+#        ord[, (v) := as.numeric(get(v))]
+#    }
+    
+#    for (v in c('time', 'updateTime')) {
+#        ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
+#    }
+    ord
 }
 
 
@@ -574,5 +663,16 @@ binance_open_orders <- function(symbol) {
     
     params <- list(symbol = symbol)
     
-    binance_query(endpoint = 'api/v3/openOrders', params = params, sign = TRUE)
+    ord <- binance_query(endpoint = 'api/v3/openOrders', params = params, sign = TRUE)
+    ord <- rbindlist(ord)
+    
+    for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty', 'stopPrice', 'icebergQty')) {
+        ord[, (v) := as.numeric(get(v))]
+    }
+    
+    for (v in c('time', 'updateTime')) {
+        ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
+    }
+    
+    ord
 }
