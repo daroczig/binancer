@@ -17,7 +17,7 @@ Fetch open orders from the Binance account
 }
 \examples{
 \dontrun{
-binance_cancel_order('ARKETH', 8)
-binance_cancel_order('ARKBTC', 'myOrder7')
+binance_open_orders('ARKETH')
+binance_open_orders() # all symbols - binance.weight 40
 }
 }

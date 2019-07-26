@@ -25,7 +25,7 @@ Fetch all orders from the Binance account
 }
 \examples{
 \dontrun{
-binance_cancel_order('ARKETH', 8)
-binance_cancel_order('ARKBTC', 'myOrder7')
+binance_all_orders('ARKETH')
+binance_all_orders('ARKBTC', order_id = '123456')
 }
 }

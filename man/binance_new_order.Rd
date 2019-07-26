@@ -6,8 +6,8 @@
 \usage{
 binance_new_order(symbol, side = c("BUY", "SELL"), type = c("LIMIT",
   "MARKET", "STOP_LOSS", "STOP_LOSS_LIMIT", "TAKE_PROFIT",
-  "TAKE_PROFIT_LIMIT", "LIMIT_MAKER"), timeInForce = c("GTC", "IOC",
-  "FOK"), quantity, price, stopPrice, icebergQty, test = TRUE)
+  "TAKE_PROFIT_LIMIT", "LIMIT_MAKER"), time_in_force = c("GTC", "IOC",
+  "FOK"), quantity, price, stop_price, iceberg_qty, test = TRUE)
 }
 \arguments{
 \item{symbol}{string}
@@ -16,15 +16,15 @@ binance_new_order(symbol, side = c("BUY", "SELL"), type = c("LIMIT",
 
 \item{type}{enum}
 
-\item{timeInForce}{optional enum}
+\item{time_in_force}{optional enum}
 
 \item{quantity}{number}
 
 \item{price}{optional number}
 
-\item{stopPrice}{optional number}
+\item{stop_price}{optional number}
 
-\item{icebergQty}{optional number}
+\item{iceberg_qty}{optional number}
 
 \item{test}{bool}
 }
@@ -38,6 +38,6 @@ Open new order on the Binance account
 \dontrun{
 binance_new_order('ARKETH', side = 'BUY', type = 'MARKET', quantity = 1)
 binance_new_order('ARKBTC', side = 'BUY', type = 'LIMIT', quantity = 1, 
-                  price = 0.5, timeInForce = 'GTC')
+                  price = 0.5, time_in_force = 'GTC')
 }
 }

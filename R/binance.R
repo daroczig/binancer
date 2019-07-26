@@ -160,7 +160,8 @@ binance_klines <- function(symbol, interval, limit, start_time, end_time) {
         'quote_asset_volume',
         'trades',
         'taker_buy_base_asset_volume',
-        'taker_buy_quote_asset_volume')
+        'taker_buy_quote_asset_volume'
+    )
 
     for (v in setdiff(names(klines), c('open_time', 'close_time', 'trades'))) {
         klines[, (v) := as.numeric(get(v))]
@@ -172,7 +173,7 @@ binance_klines <- function(symbol, interval, limit, start_time, end_time) {
 
     # return
     klines[, symbol := symbol]
-    data.table(klines)
+    klines
 
 }
 
@@ -215,12 +216,12 @@ binance_ticks <- function(symbol, from_id, start_time, end_time, limit) {
     if (length(ticks) > 0) {
         ticks <- rbindlist(ticks)
         names(ticks) <- c(
-            'agg_tradeID',
+            'agg_trade_id',
             'price',
             'quantity',
-            'first_tradeID',
-            'last_tradeID',
-            'T',
+            'first_trade_id',
+            'last_trade_id',
+            'time',
             'buyer_maker',
             'best_price_match')
         
@@ -228,11 +229,11 @@ binance_ticks <- function(symbol, from_id, start_time, end_time, limit) {
             ticks[, (v) := as.numeric(get(v))]
         }
         
-        ticks[, T := as.POSIXct(T/1e3, origin = '1970-01-01')]
+        ticks[, time := as.POSIXct(time/1e3, origin = '1970-01-01')]
         
         # return
         ticks[, symbol := symbol]
-        data.table(ticks)
+        ticks
     }
 }
 
@@ -281,7 +282,6 @@ binance_depth <- function(symbol, limit) {
     depth$asks <- asks
     
     depth
-    
 }
 
 
@@ -449,23 +449,33 @@ binance_coins_prices <- function(unit = 'USDT') {
 
 # Account info ------------------------------------------------------------
 
-#' Get current Binance account information, including balances
+#' Get current general Binance account information, without balances
 #' @return data.table
 #' @export
 #' @importFrom data.table as.data.table
+#' @importFrom snakecase to_snake_case
 binance_account <- function() {
-    as.data.table(binance_query(endpoint = 'api/v3/account', sign = TRUE))
+    account <- binance_query(endpoint = 'api/v3/account', sign = TRUE)
+    account$balances <- NULL
+    account <- as.data.table(account)
+    
+    account$updateTime <- as.POSIXct(account$updateTime/1e3, origin = '1970-01-01')
+    
+    # return with snake_case column names
+    setnames(account, to_snake_case(names(account)))
+    account
 }
 
 #' Get current Binance balances in a nice table
-#' @param threshold show assets with greater number of coins
-#' @param usdt to include balance in USDT too
+#' @param threshold optional show assets with greater number of coins
+#' @param usdt optional to include balance in USDT too
 #' @return data.table
 #' @export
 #' @importFrom data.table rbindlist
 binance_balances <- function(threshold = -1, usdt = FALSE) {
 
-    balances <- rbindlist(binance_account()$balances)
+    balances <- binance_query(endpoint = 'api/v3/account', sign = TRUE)$balances
+    balances <- rbindlist(balances)
     balances[, free := as.numeric(free)]
     balances[, locked := as.numeric(locked)]
     balances[, total := free + locked]
@@ -477,7 +487,7 @@ binance_balances <- function(threshold = -1, usdt = FALSE) {
         balances[, usd := usd * total]
     }
 
-    as.data.table(balances)[total > threshold]
+    balances[total > threshold]
 }
 
 
@@ -537,32 +547,32 @@ binance_mytrades <- function(symbol, limit, from_id, start_time, end_time) {
 #' @param symbol string
 #' @param side enum
 #' @param type enum
-#' @param timeInForce optional enum
+#' @param time_in_force optional enum
 #' @param quantity number
 #' @param price optional number
-#' @param stopPrice optional number
-#' @param icebergQty optional number
+#' @param stop_price optional number
+#' @param iceberg_qty optional number
 #' @param test bool
 #' @return data.table
 #' @export
 #' @examples \dontrun{
 #' binance_new_order('ARKETH', side = 'BUY', type = 'MARKET', quantity = 1)
 #' binance_new_order('ARKBTC', side = 'BUY', type = 'LIMIT', quantity = 1, 
-#'                   price = 0.5, timeInForce = 'GTC')
+#'                   price = 0.5, time_in_force = 'GTC')
 #' }
-binance_new_order <- function(symbol, side, type, timeInForce, quantity, price, stopPrice, icebergQty, test = TRUE) {
+binance_new_order <- function(symbol, side, type, time_in_force, quantity, price, stop_price, iceberg_qty, test = TRUE) {
     
     side <- match.arg(side)
     type <- match.arg(type)
     
     if (type == 'LIMIT') {
-        stopifnot(!missing(timeInForce), !missing(price))
+        stopifnot(!missing(time_in_force), !missing(price))
     }
     if (type == 'STOP_LOSS' | type == 'TAKE_PROFIT') {
-        stopifnot(!missing(stopPrice))
+        stopifnot(!missing(stop_price))
     }
     if (type == 'STOP_LOSS_LIMIT' | type == 'TAKE_PROFIT_LIMIT') {
-        stopifnot(!missing(timeInForce), !missing(price), !missing(stopPrice))
+        stopifnot(!missing(time_in_force), !missing(price), !missing(stop_price))
     }
     if (type == 'LIMIT_MAKER') {
         stopifnot(!missing(price))
@@ -573,20 +583,23 @@ binance_new_order <- function(symbol, side, type, timeInForce, quantity, price, 
                    type     = type,
                    quantity = quantity)
     
-    if (!missing(timeInForce)) {
-        timeInForce <- match.arg(timeInForce)
-        params$timeInForce = timeInForce
+    if (!missing(time_in_force)) {
+        time_in_force <- match.arg(time_in_force)
+        params$timeInForce = time_in_force
     }
-    if (!missing(icebergQty)) {
-        params$icebergQty = icebergQty
-        if (icebergQty > 0) {
-            stopifnot(timeInForce == 'GTC')
+    if (!missing(iceberg_qty)) {
+        params$icebergQty = iceberg_qty
+        if (iceberg_qty > 0) {
+            stopifnot(time_in_force == 'GTC')
         }
     }
     if (!missing(price)) {
         params$price = price
     }
-
+    if (!missing(stop_price)) {
+        params$stopPrice = stop_price
+    }
+    
     if (isTRUE(test)) {
         ord <- binance_query(endpoint = 'api/v3/order/test', method = 'POST', params = params, sign = TRUE)
     } else {
@@ -615,8 +628,8 @@ binance_new_order <- function(symbol, side, type, timeInForce, quantity, price, 
 #' @return data.table
 #' @export
 #' @examples \dontrun{
-#' binance_query_order('ARKETH', 8)
-#' binance_query_order('ARKBTC', 'myOrder7')
+#' binance_query_order('ARKETH')
+#' binance_query_order('ARKBTC', client_order_id = 'myOrder7')
 #' }
 binance_query_order <- function(symbol, order_id, client_order_id) {
     
@@ -652,8 +665,8 @@ binance_query_order <- function(symbol, order_id, client_order_id) {
 #' @return data.table
 #' @export
 #' @examples \dontrun{
-#' binance_cancel_order('ARKETH', 8)
-#' binance_cancel_order('ARKBTC', 'myOrder7')
+#' binance_cancel_order('ARKETH')
+#' binance_cancel_order('ARKBTC', client_order_id = 'myOrder7')
 #' }
 binance_cancel_order <- function(symbol, order_id, client_order_id) {
     
@@ -687,8 +700,8 @@ binance_cancel_order <- function(symbol, order_id, client_order_id) {
 #' @return data.table
 #' @export
 #' @examples \dontrun{
-#' binance_cancel_order('ARKETH', 8)
-#' binance_cancel_order('ARKBTC', 'myOrder7')
+#' binance_open_orders('ARKETH')
+#' binance_open_orders() # all symbols - binance.weight 40
 #' }
 binance_open_orders <- function(symbol) {
     
@@ -723,8 +736,8 @@ binance_open_orders <- function(symbol) {
 #' @export
 #' @importFrom snakecase to_snake_case
 #' @examples \dontrun{
-#' binance_cancel_order('ARKETH', 8)
-#' binance_cancel_order('ARKBTC', 'myOrder7')
+#' binance_all_orders('ARKETH')
+#' binance_all_orders('ARKBTC', order_id = '123456')
 #' }
 binance_all_orders <- function(symbol, order_id, start_time, end_time, limit) {
     
