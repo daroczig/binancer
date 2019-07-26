@@ -368,7 +368,7 @@ binance_avg_price <- function(symbol) {
 #' @return list
 #' @export
 #' @importFrom jsonlite fromJSON
-binance_exchangeInfo <- function() {
+binance_exchange_info <- function() {
     res <- binance_query(endpoint = '/api/v1/exchangeInfo', content_as = 'text')
     res <- fromJSON(res)
     res$serverTime <- as.POSIXct(res$serverTime/1e3, origin = '1970-01-01')
@@ -385,7 +385,7 @@ binance_get_filters <- function(symbol) {
     avg_price <- binance_avg_price(symbol)
     # workaround the problem in data.table when variable has the same name as column
     symb <- symbol
-    filters <- as.data.table(binance_exchangeInfo()$symbols[symbol == symb, filters][[1]])
+    filters <- as.data.table(binance_exchange_info()$symbols[symbol == symb, filters][[1]])
     
     for (v in setdiff(names(filters), c('filterType', 'avgPriceMins', 'applyToMarket', 'limit', 'maxNumAlgoOrders'))) {
         filters[, (v) := as.numeric(get(v))]
@@ -423,9 +423,9 @@ binance_get_filters <- function(symbol) {
 #' @export
 binance_symbols <- function(all = FALSE) {
     if (isTRUE(all)) {
-        binance_exchangeInfo()$symbols$symbol
+        binance_exchange_info()$symbols$symbol
     } else {
-        binance_exchangeInfo()$symbols[status == 'TRADING', symbol]
+        binance_exchange_info()$symbols[status == 'TRADING', symbol]
     }
 }
 
