@@ -323,6 +323,7 @@ binance_ticker_all_prices <- function() {
 #' @return data.table
 #' @export
 #' @importFrom data.table rbindlist
+#' @importFrom snakecase to_snake_case
 binance_ticker_24hr <- function(symbol) {
     
     if (!missing(symbol)) {
@@ -342,6 +343,8 @@ binance_ticker_24hr <- function(symbol) {
         prices[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
     }
     
+    # return with snake_case column names
+    setnames(prices, to_snake_case(names(prices)))
     prices
 }
 
@@ -415,9 +418,9 @@ binance_get_filters <- function(symbol) {
 
 
 #' Get all currently valid symbol names from Binance
+#' @param all optional bool include non-trading symbols
 #' @return character vector
 #' @export
-#' @param all optional bool include non-trading symbols
 binance_symbols <- function(all = FALSE) {
     if (isTRUE(all)) {
         binance_exchangeInfo()$symbols$symbol
@@ -436,9 +439,9 @@ binance_coins <- function() {
 
 
 #' Get all currently valid coin names from Binance along with the USDT prices
+#' @param unit to set quote asset
 #' @return data.table
 #' @export
-#' @param unit to set quote asset
 binance_coins_prices <- function(unit = 'USDT') {
     unique(binance_ticker_all_prices(), by = 'from')[, .(symbol = from, usd = from_usd)]
 }
@@ -455,11 +458,11 @@ binance_account <- function() {
 }
 
 #' Get current Binance balances in a nice table
+#' @param threshold show assets with greater number of coins
+#' @param usdt to include balance in USDT too
 #' @return data.table
 #' @export
 #' @importFrom data.table rbindlist
-#' @param threshold show assets with greater number of coins
-#' @param usdt to include balance in USDT too
 binance_balances <- function(threshold = -1, usdt = FALSE) {
 
     balances <- rbindlist(binance_account()$balances)
@@ -478,7 +481,7 @@ binance_balances <- function(threshold = -1, usdt = FALSE) {
 }
 
 
-#' Get all trades on the Binance account
+#' Get trades for a specific symbol on the Binance account
 #' @param symbol string
 #' @param limit optional int number of trades to fetch
 #' @param from_id optional trade id to fetch from
@@ -487,11 +490,11 @@ binance_balances <- function(threshold = -1, usdt = FALSE) {
 #' @return data.table
 #' @export
 #' @importFrom data.table as.data.table setnames
+#' @importFrom snakecase to_snake_case
 #' @examples \dontrun{
 #' binance_mytrades('ARKETH')
 #' binance_mytrades(c('ARKBTC', 'ARKETH'))
 #' }
-#' @importFrom snakecase to_snake_case
 binance_mytrades <- function(symbol, limit, from_id, start_time, end_time) {
 
     if (length(symbol) > 1) {
@@ -706,5 +709,53 @@ binance_open_orders <- function(symbol) {
         ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
     }
     
+    ord
+}
+
+
+#' Fetch all orders from the Binance account
+#' @param symbol string
+#' @param order_id optional number
+#' @param start_time optional POSIX timestamp
+#' @param end_time optional POSIX timestamp
+#' @param limit optional int
+#' @return data.table
+#' @export
+#' @importFrom snakecase to_snake_case
+#' @examples \dontrun{
+#' binance_cancel_order('ARKETH', 8)
+#' binance_cancel_order('ARKBTC', 'myOrder7')
+#' }
+binance_all_orders <- function(symbol, order_id, start_time, end_time, limit) {
+    
+    params <- list(symbol   = symbol)
+    
+    if (!missing(order_id)) {
+        params$orderId <- order_id
+    }
+    if (!missing(start_time)) {
+        params$startTime <- format(as.numeric(start_time) * 1e3, scientific = FALSE)
+    }
+    if (!missing(end_time)) {
+        params$endTime <- format(as.numeric(end_time) * 1e3, scientific = FALSE)
+    }
+    if (!missing(limit)) {
+        stopifnot(limit <= 1000L)
+        params$limit <- limit
+    }
+    
+    ord <- binance_query(endpoint = 'api/v3/allOrders', params = params, sign = TRUE)
+    ord <- rbindlist(ord)
+
+    for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty', 'stopPrice', 'icebergQty')) {
+        ord[, (v) := as.numeric(get(v))]
+    }
+    
+    for (v in c('time', 'updateTime')) {
+        ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
+    }
+    
+    # return with snake_case column names
+    setnames(ord, to_snake_case(names(ord)))
     ord
 }

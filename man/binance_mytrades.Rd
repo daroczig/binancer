@@ -2,7 +2,7 @@
 % Please edit documentation in R/binance.R
 \name{binance_mytrades}
 \alias{binance_mytrades}
-\title{Get all trades on the Binance account}
+\title{Get trades for a specific symbol on the Binance account}
 \usage{
 binance_mytrades(symbol, limit, from_id, start_time, end_time)
 }
@@ -21,7 +21,7 @@ binance_mytrades(symbol, limit, from_id, start_time, end_time)
 data.table
 }
 \description{
-Get all trades on the Binance account
+Get trades for a specific symbol on the Binance account
 }
 \examples{
 \dontrun{
