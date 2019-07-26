@@ -405,7 +405,8 @@ binance_get_filters <- function(symbol) {
     
     max_lot <- filters[filterType == 'LOT_SIZE', maxQty]
     
-    c(min_price = min_price,
+    c(avg_price = avg_price$price,
+      min_price = min_price,
       max_price = max_price,
       min_lot = min_lot,
       max_lot = max_lot,
