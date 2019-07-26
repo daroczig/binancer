@@ -689,11 +689,15 @@ binance_cancel_order <- function(symbol, order_id, client_order_id) {
 #' }
 binance_open_orders <- function(symbol) {
     
-    params <- list(symbol = symbol)
-    
-    ord <- binance_query(endpoint = 'api/v3/openOrders', params = params, sign = TRUE)
-    ord <- rbindlist(ord)
-    
+    if (!missing(symbol)) {
+        params <- list(symbol = symbol)
+        ord <- binance_query(endpoint = 'api/v3/openOrders', params = params, sign = TRUE)
+        ord <- as.data.table(ord)
+    } else {
+        ord <- binance_query(endpoint = 'api/v3/openOrders', sign = TRUE)
+        ord <- rbindlist(ord)
+    }
+
     for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty', 'stopPrice', 'icebergQty')) {
         ord[, (v) := as.numeric(get(v))]
     }
