@@ -379,7 +379,7 @@ binance_exchange_info <- function() {
 
 #' Compute current filters for a symbol
 #' @param symbol string
-#' @return vector
+#' @return named vector
 #' @export
 binance_get_filters <- function(symbol) {
     avg_price <- binance_avg_price(symbol)
@@ -556,6 +556,7 @@ binance_mytrades <- function(symbol, limit, from_id, start_time, end_time) {
 #' @param test bool
 #' @return data.table
 #' @export
+#' @importFrom snakecase to_snake_case
 #' @examples \dontrun{
 #' binance_new_order('ARKETH', side = 'BUY', type = 'MARKET', quantity = 1)
 #' binance_new_order('ARKBTC', side = 'BUY', type = 'LIMIT', quantity = 1, 
@@ -602,21 +603,26 @@ binance_new_order <- function(symbol, side, type, time_in_force, quantity, price
     }
     
     if (isTRUE(test)) {
+        message("TEST")
         ord <- binance_query(endpoint = 'api/v3/order/test', method = 'POST', params = params, sign = TRUE)
     } else {
         ord <- binance_query(endpoint = 'api/v3/order', method = 'POST', params = params, sign = TRUE)
     }
     
+    ord$fills <- NULL
+    
     ord <- as.data.table(ord)
     
-    #for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty')) {
-    #    ord[, (v) := as.numeric(get(v))]
-    #}
+    for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty')) {
+        ord[, (v) := as.numeric(get(v))]
+    }
     
-    #for (v in c('transactTime')) {
-    #    ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
-    #}
+    for (v in c('transactTime')) {
+        ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
+    }
     
+    # return with snake_case column names
+    setnames(ord, to_snake_case(names(ord)))
     ord
     
 }
@@ -665,8 +671,9 @@ binance_query_order <- function(symbol, order_id, client_order_id) {
 #' @param client_order_id optional string
 #' @return data.table
 #' @export
+#' @importFrom snakecase to_snake_case
 #' @examples \dontrun{
-#' binance_cancel_order('ARKETH')
+#' binance_cancel_order('ARKETH', order_id = 123456)
 #' binance_cancel_order('ARKBTC', client_order_id = 'myOrder7')
 #' }
 binance_cancel_order <- function(symbol, order_id, client_order_id) {
@@ -685,36 +692,6 @@ binance_cancel_order <- function(symbol, order_id, client_order_id) {
     ord <- binance_query(endpoint = 'api/v3/order', method = 'DELETE', params = params, sign = TRUE)
     ord <- as.data.table(ord)
     
-#    for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty', 'stopPrice', 'icebergQty')) {
-#        ord[, (v) := as.numeric(get(v))]
-#    }
-    
-#    for (v in c('time', 'updateTime')) {
-#        ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
-#    }
-    ord
-}
-
-
-#' Fetch open orders from the Binance account
-#' @param symbol optional string
-#' @return data.table
-#' @export
-#' @examples \dontrun{
-#' binance_open_orders('ARKETH')
-#' binance_open_orders() # all symbols - binance.weight 40
-#' }
-binance_open_orders <- function(symbol) {
-    
-    if (!missing(symbol)) {
-        params <- list(symbol = symbol)
-        ord <- binance_query(endpoint = 'api/v3/openOrders', params = params, sign = TRUE)
-        ord <- as.data.table(ord)
-    } else {
-        ord <- binance_query(endpoint = 'api/v3/openOrders', sign = TRUE)
-        ord <- rbindlist(ord)
-    }
-
     for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty', 'stopPrice', 'icebergQty')) {
         ord[, (v) := as.numeric(get(v))]
     }
@@ -723,6 +700,49 @@ binance_open_orders <- function(symbol) {
         ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
     }
     
+    # return with snake_case column names
+    setnames(ord, to_snake_case(names(ord)))
+    ord
+}
+
+
+#' Fetch open orders from the Binance account
+#' @param symbol optional string
+#' @return data.table
+#' @export
+#' @importFrom snakecase to_snake_case
+#' @examples \dontrun{
+#' binance_open_orders('ARKETH')
+#' binance_open_orders() # all symbols - binance.weight 40
+#' }
+binance_open_orders <- function(symbol) {
+    
+    if (!missing(symbol)) {
+        params <- list(symbol = symbol)
+    } else {
+        params <- list()
+    }
+
+    ord <- binance_query(endpoint = 'api/v3/openOrders', params = params, sign = TRUE)
+    
+    if (is.null(names(ord))) {
+        ord <- rbindlist(ord)
+    } else {
+        ord <- as.data.table(ord)
+    }
+    
+    if (nrow(ord) > 0) {
+        for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty', 'stopPrice', 'icebergQty')) {
+            ord[, (v) := as.numeric(get(v))]
+        }
+        
+        for (v in c('time', 'updateTime')) {
+            ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
+        }
+    }
+    
+    # return with snake_case column names
+    setnames(ord, to_snake_case(names(ord)))
     ord
 }
 

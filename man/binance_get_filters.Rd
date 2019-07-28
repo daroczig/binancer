@@ -10,7 +10,7 @@ binance_get_filters(symbol)
 \item{symbol}{string}
 }
 \value{
-vector
+named vector
 }
 \description{
 Compute current filters for a symbol

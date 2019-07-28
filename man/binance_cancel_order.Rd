@@ -21,7 +21,7 @@ Cancel order on the Binance account
 }
 \examples{
 \dontrun{
-binance_cancel_order('ARKETH')
+binance_cancel_order('ARKETH', order_id = 123456)
 binance_cancel_order('ARKBTC', client_order_id = 'myOrder7')
 }
 }
