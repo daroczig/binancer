@@ -634,6 +634,7 @@ binance_new_order <- function(symbol, side, type, time_in_force, quantity, price
 #' @param client_order_id optional string
 #' @return data.table
 #' @export
+#' @importFrom snakecase to_snake_case
 #' @examples \dontrun{
 #' binance_query_order('ARKETH')
 #' binance_query_order('ARKBTC', client_order_id = 'myOrder7')
@@ -654,7 +655,8 @@ binance_query_order <- function(symbol, order_id, client_order_id) {
     ord <- binance_query(endpoint = 'api/v3/order', method = 'GET', params = params, sign = TRUE)
     ord <- as.data.table(ord)
     
-    if (nrow(ord) > 0) {
+    # ncol(ord) == 2 is error message
+    if (nrow(ord) > 0 & ncol(ord) > 2) {
         for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty', 'stopPrice', 'icebergQty')) {
             ord[, (v) := as.numeric(get(v))]
         }
@@ -662,6 +664,9 @@ binance_query_order <- function(symbol, order_id, client_order_id) {
         for (v in c('time', 'updateTime')) {
             ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
         }
+        
+        # return with snake_case column names
+        setnames(ord, to_snake_case(names(ord)))
     }
     ord
 }
@@ -694,16 +699,19 @@ binance_cancel_order <- function(symbol, order_id, client_order_id) {
     ord <- binance_query(endpoint = 'api/v3/order', method = 'DELETE', params = params, sign = TRUE)
     ord <- as.data.table(ord)
     
-    for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty', 'stopPrice', 'icebergQty')) {
-        ord[, (v) := as.numeric(get(v))]
+    # ncol(ord) == 2 is error message
+    if (nrow(ord) > 0 & ncol(ord) > 2) {
+        for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty', 'stopPrice', 'icebergQty')) {
+            ord[, (v) := as.numeric(get(v))]
+        }
+        
+        for (v in c('time', 'updateTime')) {
+            ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
+        }
+        
+        # return with snake_case column names
+        setnames(ord, to_snake_case(names(ord)))
     }
-    
-    for (v in c('time', 'updateTime')) {
-        ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
-    }
-    
-    # return with snake_case column names
-    setnames(ord, to_snake_case(names(ord)))
     ord
 }
 
