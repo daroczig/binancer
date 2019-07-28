@@ -15,3 +15,9 @@ data.table
 \description{
 24 hour rolling window price change statistics
 }
+\examples{
+\dontrun{
+binance_ticker_24hr('ARKETH')
+binance_ticker_24hr() # all symbols - binance.weight 40
+}
+}

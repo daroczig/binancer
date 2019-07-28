@@ -324,6 +324,10 @@ binance_ticker_all_prices <- function() {
 #' @export
 #' @importFrom data.table rbindlist
 #' @importFrom snakecase to_snake_case
+#' @examples \dontrun{
+#' binance_ticker_24hr('ARKETH')
+#' binance_ticker_24hr() # all symbols - binance.weight 40
+#' }
 binance_ticker_24hr <- function(symbol) {
     
     if (!missing(symbol)) {
