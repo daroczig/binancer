@@ -654,12 +654,14 @@ binance_query_order <- function(symbol, order_id, client_order_id) {
     ord <- binance_query(endpoint = 'api/v3/order', method = 'GET', params = params, sign = TRUE)
     ord <- as.data.table(ord)
     
-    for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty', 'stopPrice', 'icebergQty')) {
-        ord[, (v) := as.numeric(get(v))]
-    }
-    
-    for (v in c('time', 'updateTime')) {
-        ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
+    if (nrow(ord) > 0) {
+        for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty', 'stopPrice', 'icebergQty')) {
+            ord[, (v) := as.numeric(get(v))]
+        }
+        
+        for (v in c('time', 'updateTime')) {
+            ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
+        }
     }
     ord
 }
@@ -739,10 +741,10 @@ binance_open_orders <- function(symbol) {
         for (v in c('time', 'updateTime')) {
             ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
         }
+        
+        # return with snake_case column names
+        setnames(ord, to_snake_case(names(ord)))
     }
-    
-    # return with snake_case column names
-    setnames(ord, to_snake_case(names(ord)))
     ord
 }
 
@@ -780,16 +782,18 @@ binance_all_orders <- function(symbol, order_id, start_time, end_time, limit) {
     
     ord <- binance_query(endpoint = 'api/v3/allOrders', params = params, sign = TRUE)
     ord <- rbindlist(ord)
-
-    for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty', 'stopPrice', 'icebergQty')) {
-        ord[, (v) := as.numeric(get(v))]
-    }
     
-    for (v in c('time', 'updateTime')) {
-        ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
+    if (nrow(ord) > 0) {
+        for (v in c('price', 'origQty', 'executedQty', 'cummulativeQuoteQty', 'stopPrice', 'icebergQty')) {
+            ord[, (v) := as.numeric(get(v))]
+        }
+        
+        for (v in c('time', 'updateTime')) {
+            ord[, (v) := as.POSIXct(get(v)/1e3, origin = '1970-01-01')]
+        }
+        
+        # return with snake_case column names
+        setnames(ord, to_snake_case(names(ord)))
     }
-    
-    # return with snake_case column names
-    setnames(ord, to_snake_case(names(ord)))
     ord
 }
