@@ -401,11 +401,11 @@ binance_exchange_info <- function() {
     res
 }
 
-#' Compute current filters for a symbol
+#' Get current filters for a symbol
 #' @param symbol string
 #' @return data.table
 #' @export
-binance_get_filters <- function(symbol) {
+binance_filters <- function(symbol) {
     # workaround the problem in data.table when variable has the same name as column
     symb <- symbol
     filters <- as.data.table(binance_exchange_info()$symbols[symbol == symb, filters][[1]])
@@ -592,7 +592,7 @@ binance_new_order <- function(symbol, side, type, time_in_force, quantity, price
     }
     
     # get filters and check
-    filters <- binance_get_filters(symbol)
+    filters <- binance_filters(symbol)
     
     stopifnot(quantity >= filters[filterType == 'LOT_SIZE', minQty],
               quantity <= filters[filterType == 'LOT_SIZE', maxQty],
