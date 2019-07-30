@@ -107,7 +107,7 @@ binance_query <- function(endpoint, method = 'GET',
         content_as = content_as)
 
     if (content_as == 'parsed' & all(names(res) == c('code', 'msg'))) {
-        stop(paste(res, collapse = " "))
+        stop(paste(res, collapse = ' '))
     }
     
     res
@@ -753,7 +753,7 @@ binance_new_order <- function(symbol, side, type, time_in_force, quantity, price
     }
     
     if (isTRUE(test)) {
-        message("TEST")
+        message('TEST')
         ord <- binance_query(endpoint = 'api/v3/order/test', method = 'POST', params = params, sign = TRUE)
     } else {
         ord <- binance_query(endpoint = 'api/v3/order', method = 'POST', params = params, sign = TRUE)
