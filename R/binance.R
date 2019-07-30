@@ -307,6 +307,32 @@ binance_ticker_price <- function(symbol) {
 }
 
 
+#' Get last bids and asks for a symbol or all symbols
+#' @param symbol optional string
+#' @return data.table
+#' @export
+#' @importFrom snakecase to_snake_case
+binance_ticker_book <- function(symbol) {
+    
+    if (!missing(symbol)) {
+        params <- list(symbol = symbol)
+        res <- binance_query(endpoint = 'api/v3/ticker/bookTicker', params = params)
+        res <- as.data.table(res)
+    } else {
+        res <- binance_query(endpoint = 'api/v3/ticker/bookTicker')
+        res <- rbindlist(res)
+    }
+    
+    for (v in setdiff(names(res), 'symbol')) {
+        res[, (v) := as.numeric(get(v))]
+    }
+    
+    # return with snake_case column names
+    setnames(res, to_snake_case(names(res)))
+    res
+}
+
+
 #' Get latest Binance conversion rates and USD prices on all symbol pairs
 #' @return data.table
 #' @export
@@ -335,6 +361,26 @@ binance_ticker_all_prices <- function() {
     prices[to != 'USDT' & to != 'TUSD' & to != 'PAX' & to != 'USDC' & to != 'USDS', from_usd := price * to_usd]
     
     prices[, .(symbol, price, from, from_usd, to, to_usd)]
+}
+
+
+#' Get latest Binance bids and asks on all symbol pairs
+#' @return data.table
+#' @export
+#' @importFrom data.table rbindlist
+#' @importFrom snakecase to_snake_case
+binance_ticker_all_books <- function() {
+    
+    books <- binance_query(endpoint = 'api/v1/ticker/allBookTickers')
+    books <- rbindlist(books)
+    
+    for (v in setdiff(names(books), 'symbol')) {
+        books[, (v) := as.numeric(get(v))]
+    }
+
+    # return with snake_case column names
+    setnames(books, to_snake_case(names(books)))
+    books
 }
 
 
