@@ -83,8 +83,10 @@ binance_sign <- function(params) {
 #' @param endpoint string
 #' @inheritParams query
 #' @param sign if signature required
+#' @param content_as parameter to httr::content
 #' @return R object
 #' @keywords internal
+#' @importFrom httr headers add_headers
 binance_query <- function(endpoint, method = 'GET',
                           params = list(), body = NULL, sign = FALSE,
                           retry = method == 'GET', content_as = 'parsed') {
@@ -103,9 +105,11 @@ binance_query <- function(endpoint, method = 'GET',
         path = endpoint,
         method = method,
         params = params,
-        config = config,
-        content_as = content_as)
+        config = config)
 
+    binance.weight <<- as.integer(headers(res)$`x-mbx-used-weight`)
+    res <- content(res, as = content_as)
+    
     if (content_as == 'parsed' & length(res) == 2 & all(names(res) == c('code', 'msg'))) {
         stop(paste(res, collapse = ' '))
     }
