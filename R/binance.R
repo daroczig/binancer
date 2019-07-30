@@ -106,9 +106,11 @@ binance_query <- function(endpoint, method = 'GET',
         config = config,
         content_as = content_as)
 
-    if (all(names(res) == c('code', 'msg'))) {
+    if (content_as == 'parsed' & all(names(res) == c('code', 'msg'))) {
         stop(paste(res, collapse = " "))
     }
+    
+    res
 }
 
 
