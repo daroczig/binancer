@@ -98,7 +98,7 @@ binance_query <- function(endpoint, method = 'GET',
         config <- config()
     }
 
-    query(
+    res <- query(
         base = 'https://api.binance.com',
         path = endpoint,
         method = method,
@@ -106,6 +106,9 @@ binance_query <- function(endpoint, method = 'GET',
         config = config,
         content_as = content_as)
 
+    if (all(names(res) == c('code', 'msg'))) {
+        stop(paste(res, collapse = " "))
+    }
 }
 
 
@@ -236,6 +239,43 @@ binance_ticks <- function(symbol, from_id, start_time, end_time, limit) {
         ticks
     }
 }
+
+#' Get last trades from Binance
+#' @param symbol string
+#' @param limit optional int
+#' @return data.table
+#' @export
+#' @importFrom data.table rbindlist data.table
+#' @importFrom snakecase to_snake_case
+#' @examples \dontrun{
+#' binance_ticks('ETHUSDT')
+#' binance_ticks('ETHUSDT', start_time = as.POSIXct('2018-01-01'), end_time = as.POSIXct('2018-01-08'))
+#' }
+binance_trades <- function(symbol, limit) {
+    
+    params <- list(symbol = symbol)
+    
+    if (!missing(limit)) {
+        stopifnot(limit <= 1000L)
+        params$limit <- limit
+    }
+
+    trades <- binance_query(endpoint = 'api/v1/trades', params = params)
+    
+    trades <- rbindlist(trades)
+    
+    for (v in c('price', 'qty', 'quoteQty')) {
+        trades[, (v) := as.numeric(get(v))]
+    }
+    
+    trades[, time := as.POSIXct(time/1e3, origin = '1970-01-01')]
+    
+    trades[, symbol := symbol]
+    # return with snake_case column names
+    setnames(trades, to_snake_case(names(trades)))
+    trades
+}
+
 
 #' Get orderbook depth data from Binance
 #' @param symbol string
