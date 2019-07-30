@@ -19,7 +19,7 @@ Get last trades from Binance
 }
 \examples{
 \dontrun{
-binance_ticks('ETHUSDT')
-binance_ticks('ETHUSDT', start_time = as.POSIXct('2018-01-01'), end_time = as.POSIXct('2018-01-08'))
+binance_trades('ETHUSDT')
+binance_trades('ETHUSDT', limit = 1000)
 }
 }
