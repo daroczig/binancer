@@ -118,10 +118,10 @@ binance_query <- function(endpoint, method = 'GET',
 #' @return list
 #' @export
 binance_ping <- function() {
-    
     res <- binance_query(endpoint = '/api/v1/ping')
-    res <- as.data.table(res)
-    res[, price := as.numeric(price)]
+    if (is.list(res) & length(res) == 0) {
+        res <- 'OK'
+    }
     res
 }
 
@@ -130,9 +130,9 @@ binance_ping <- function() {
 #' @return list
 #' @export
 binance_time <- function() {
-    
     res <- binance_query(endpoint = '/api/v1/time')$serverTime
     res <- as.POSIXct(res/1e3, origin = '1970-01-01')
+    res
 }
 
 
