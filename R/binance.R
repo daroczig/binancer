@@ -106,11 +106,33 @@ binance_query <- function(endpoint, method = 'GET',
         config = config,
         content_as = content_as)
 
-    if (content_as == 'parsed' & all(names(res) == c('code', 'msg'))) {
+    if (content_as == 'parsed' & length(res) == 2 & all(names(res) == c('code', 'msg'))) {
         stop(paste(res, collapse = ' '))
     }
     
     res
+}
+
+
+#' Test connectivity to the Rest API
+#' @return list
+#' @export
+binance_ping <- function() {
+    
+    res <- binance_query(endpoint = '/api/v1/ping')
+    res <- as.data.table(res)
+    res[, price := as.numeric(price)]
+    res
+}
+
+
+#' Get the current server time from Binance
+#' @return list
+#' @export
+binance_time <- function() {
+    
+    res <- binance_query(endpoint = '/api/v1/time')$serverTime
+    res <- as.POSIXct(res/1e3, origin = '1970-01-01')
 }
 
 
