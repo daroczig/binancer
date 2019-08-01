@@ -29,7 +29,6 @@ Get kline/candlestick data from Binance
 \dontrun{
 binance_klines('ETHUSDT')
 binance_klines('ETHUSDT', interval = '1h', limit = 24*7)
-binance_klines('ETHUSDT', interval = '1h',
-    start_time = as.POSIXct('2018-01-01'), end_time = as.POSIXct('2018-01-08'))
+binance_klines('ETHUSDT', interval = '1h', start_time = '2018-01-01', end_time = '2018-01-08')
 }
 }

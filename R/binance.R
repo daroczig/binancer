@@ -156,8 +156,7 @@ binance_time <- function() {
 #' @examples \dontrun{
 #' binance_klines('ETHUSDT')
 #' binance_klines('ETHUSDT', interval = '1h', limit = 24*7)
-#' binance_klines('ETHUSDT', interval = '1h',
-#'     start_time = as.POSIXct('2018-01-01'), end_time = as.POSIXct('2018-01-08'))
+#' binance_klines('ETHUSDT', interval = '1h', start_time = '2018-01-01', end_time = '2018-01-08')
 #' }
 binance_klines <- function(symbol, interval, limit, start_time, end_time) {
 
@@ -171,10 +170,10 @@ binance_klines <- function(symbol, interval, limit, start_time, end_time) {
         params$limit <- limit
     }
     if (!missing(start_time)) {
-        params$startTime <- format(as.numeric(start_time) * 1e3, scientific = FALSE)
+        params$startTime <- format(as.numeric(as.POSIXct(start_time)) * 1e3, scientific = FALSE)
     }
     if (!missing(end_time)) {
-        params$endTime <- format(as.numeric(end_time) * 1e3, scientific = FALSE)
+        params$endTime <- format(as.numeric(as.POSIXct(end_time)) * 1e3, scientific = FALSE)
     }
 
     klines <- binance_query(endpoint = 'api/v1/klines', params = params)
@@ -221,7 +220,7 @@ binance_klines <- function(symbol, interval, limit, start_time, end_time) {
 #' @importFrom data.table rbindlist data.table
 #' @examples \dontrun{
 #' binance_ticks('ETHUSDT')
-#' binance_ticks('ETHUSDT', start_time = as.POSIXct('2018-01-01'), end_time = as.POSIXct('2018-01-08'))
+#' binance_ticks('ETHUSDT', start_time = '2018-01-01', end_time = '2018-01-08')
 #' }
 binance_ticks <- function(symbol, from_id, start_time, end_time, limit) {
     
@@ -235,13 +234,13 @@ binance_ticks <- function(symbol, from_id, start_time, end_time, limit) {
         params$fromId <- from_id
     }
     if (!missing(start_time)) {
-        params$startTime <- format(as.numeric(start_time) * 1e3, scientific = FALSE)
+        params$startTime <- format(as.numeric(as.POSIXct(start_time)) * 1e3, scientific = FALSE)
     }
     if (!missing(end_time)) {
         if (!missing(start_time)) {
             stopifnot(as.numeric(difftime(end_time, start_time, units = 'secs')) <= 3600)
         }
-        params$endTime <- format(as.numeric(end_time) * 1e3, scientific = FALSE)
+        params$endTime <- format(as.numeric(as.POSIXct(end_time)) * 1e3, scientific = FALSE)
     }
     
     ticks <- binance_query(endpoint = 'api/v1/aggTrades', params = params)
@@ -638,10 +637,10 @@ binance_mytrades <- function(symbol, limit, from_id, start_time, end_time) {
         params$fromId = from_id
     }
     if (!missing(start_time)) {
-        params$startTime <- format(as.numeric(start_time) * 1e3, scientific = FALSE)
+        params$startTime <- format(as.numeric(as.POSIXct(start_time)) * 1e3, scientific = FALSE)
     }
     if (!missing(end_time)) {
-        params$endTime <- format(as.numeric(end_time) * 1e3, scientific = FALSE)
+        params$endTime <- format(as.numeric(as.POSIXct(end_time)) * 1e3, scientific = FALSE)
     }
     
     trades <- binance_query(endpoint = 'api/v3/myTrades', params = params, sign = TRUE)
@@ -968,10 +967,10 @@ binance_all_orders <- function(symbol, order_id, start_time, end_time, limit) {
         params$orderId <- order_id
     }
     if (!missing(start_time)) {
-        params$startTime <- format(as.numeric(start_time) * 1e3, scientific = FALSE)
+        params$startTime <- format(as.numeric(as.POSIXct(start_time)) * 1e3, scientific = FALSE)
     }
     if (!missing(end_time)) {
-        params$endTime <- format(as.numeric(end_time) * 1e3, scientific = FALSE)
+        params$endTime <- format(as.numeric(as.POSIXct(end_time)) * 1e3, scientific = FALSE)
     }
     if (!missing(limit)) {
         stopifnot(limit <= 1000L)

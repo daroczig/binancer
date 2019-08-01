@@ -26,6 +26,6 @@ Get tick data from Binance
 \examples{
 \dontrun{
 binance_ticks('ETHUSDT')
-binance_ticks('ETHUSDT', start_time = as.POSIXct('2018-01-01'), end_time = as.POSIXct('2018-01-08'))
+binance_ticks('ETHUSDT', start_time = '2018-01-01', end_time = '2018-01-08')
 }
 }
