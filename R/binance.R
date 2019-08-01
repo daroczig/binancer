@@ -91,6 +91,10 @@ binance_query <- function(endpoint, method = 'GET',
                           params = list(), body = NULL, sign = FALSE,
                           retry = method == 'GET', content_as = 'parsed') {
 
+    if (exists('binance.weight')) {
+        stopifnot(binance.weight < 1200)
+    }
+    
     method <- match.arg(method)
 
     if (isTRUE(sign)) {
