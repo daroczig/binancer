@@ -238,8 +238,8 @@ binance_ticks <- function(symbol, from_id, start_time, end_time, limit) {
         params$startTime <- format(as.numeric(start_time) * 1e3, scientific = FALSE)
     }
     if (!missing(end_time)) {
-        if (as.numeric(difftime(end_time, start_time, units = 'secs')) > 3600) {
-            end_time <- start_time + 3600
+        if (!missing(start_time)) {
+            stopifnot(as.numeric(difftime(end_time, start_time, units = 'secs')) <= 3600)
         }
         params$endTime <- format(as.numeric(end_time) * 1e3, scientific = FALSE)
     }
