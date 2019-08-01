@@ -220,7 +220,7 @@ binance_klines <- function(symbol, interval, limit, start_time, end_time) {
 #' @importFrom data.table rbindlist data.table
 #' @examples \dontrun{
 #' binance_ticks('ETHUSDT')
-#' binance_ticks('ETHUSDT', start_time = '2018-01-01', end_time = '2018-01-08')
+#' binance_ticks('ETHUSDT', start_time = '2018-01-01 00:00:00', end_time = '2018-01-01 01:00:00')
 #' }
 binance_ticks <- function(symbol, from_id, start_time, end_time, limit) {
     
