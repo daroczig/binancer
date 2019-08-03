@@ -114,7 +114,7 @@ binance_query <- function(endpoint, method = 'GET',
     binance.weight <<- as.integer(headers(res)$`x-mbx-used-weight`)
     res <- content(res, as = content_as)
     
-    if (content_as == 'parsed' & length(res) == 2) {
+    if (content_as == 'parsed' & length(res) == 2 & !is.null(names(res))) {
         if (all(names(res) == c('code', 'msg'))) {
             stop(paste(res, collapse = ' '))
         }
