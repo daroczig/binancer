@@ -240,8 +240,7 @@ binance_ticks <- function(symbol, from_id, start_time, end_time, limit) {
     if (!missing(from_id)) {
         # work around RCurl issue
         # see https://github.com/daroczig/binancer/pull/9#issuecomment-517916493
-        if (from_id >= 1e5 & from_id %% 1e5 == 0) {from_id <- from_id - 1}
-        params$fromId <- from_id
+        params$fromId <- as.character(from_id)
     }
     if (!missing(start_time)) {
         params$startTime <- format(as.numeric(as.POSIXct(start_time)) * 1e3, scientific = FALSE)
