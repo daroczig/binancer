@@ -6,6 +6,7 @@
 #' @return R object
 #' @keywords internal
 #' @importFrom jsonlite fromJSON
+#' @importFrom httr content
 huobi_query <- function(endpoint, method = 'GET',
                           params = list(),
                           retry = method == 'GET') {
@@ -13,12 +14,12 @@ huobi_query <- function(endpoint, method = 'GET',
     method <- match.arg(method)
     config <- config()
 
-    res <- tryCatch(query(
+    res <- tryCatch(content(query(
         base = 'https://api.huobi.pro',
         path = endpoint,
         method = method,
         params = params,
-        config = config))
+        config = config)))
 
     ## parse on success
     if (inherits(res, 'raw')) {

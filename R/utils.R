@@ -6,7 +6,7 @@ timestamp <- function() {
 }
 
 
-#' Request the Binance API
+#' Make an API request with retries
 #' @param base URL
 #' @param path string
 #' @param method HTTP request method
@@ -15,22 +15,21 @@ timestamp <- function() {
 #' @param config httr::config
 #' @param retry allow retrying the query on failure
 #' @param retries internal counter of previous retries
-#' @return R object
+#' @return raw object returned by \code{httr}
 #' @keywords internal
-#' @importFrom httr GET POST PUT DELETE content config add_headers
+#' @importFrom httr GET POST PUT DELETE config add_headers
 #' @importFrom logger log_error
 #' @importFrom utils getFromNamespace
 query <- function(base, path, method,
                   params = list(), body = NULL, config = config(),
                   retry = method == 'GET', retries = 0) {
 
-    #method <- match.arg(method)
     METHOD <- getFromNamespace(method, ns = 'httr')
-    
+
     res <- tryCatch(
         METHOD(base, config = config, path = path, query = params, body = body),
         error = function(e) e)
-    
+
     if (inherits(res, 'error')) {
         if (isTRUE(retry) & retries < 4) {
             mc <- match.call()
@@ -42,5 +41,5 @@ query <- function(base, path, method,
         }
     }
 
-    res    
+    res
 }
