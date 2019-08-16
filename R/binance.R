@@ -10,7 +10,7 @@ BINANCE <- list(
         '1h', '2h', '4h', '6h', '8h', '12h',
         '1d', '3d', '1w', '1M'),
     METHODS = c('GET', 'POST', 'PUT', 'DELETE')
-    )
+)
 
 
 # Utils -------------------------------------------------------------------
@@ -664,7 +664,7 @@ binance_mytrades <- function(symbol, limit, from_id, start_time, end_time) {
 
     # return with snake_case column names
     setnames(trades, to_snake_case(names(trades)))
-    trades
+    data.table(trades)
 
 }
 
@@ -823,7 +823,7 @@ binance_new_order <- function(symbol, side, type, time_in_force, quantity, price
         setnames(ord, to_snake_case(names(ord)))
     }
 
-    ord
+    data.table(ord)
 }
 
 
@@ -867,7 +867,7 @@ binance_query_order <- function(symbol, order_id, client_order_id) {
         # return with snake_case column names
         setnames(ord, to_snake_case(names(ord)))
     }
-    ord
+    data.table(ord)
 }
 
 
@@ -907,7 +907,7 @@ binance_cancel_order <- function(symbol, order_id, client_order_id) {
         # return with snake_case column names
         setnames(ord, to_snake_case(names(ord)))
     }
-    ord
+    data.table(ord)
 }
 
 
@@ -998,5 +998,5 @@ binance_all_orders <- function(symbol, order_id, start_time, end_time, limit) {
         # return with snake_case column names
         setnames(ord, to_snake_case(names(ord)))
     }
-    ord
+    data.table(ord)
 }
