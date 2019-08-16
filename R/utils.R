@@ -33,7 +33,7 @@ query <- function(base, path, method,
     if (inherits(res, 'error')) {
         if (isTRUE(retry) & retries < 4) {
             mc <- match.call()
-            mc$retries <- mc$retries + 1
+            mc$retries <- retries + 1
             log_error(sprintf(
                 'Query to %s/%s failed for the %sst/nd/rd/th time, retrying',
                 base, path, mc$retries))
