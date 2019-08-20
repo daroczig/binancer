@@ -2,22 +2,26 @@
 % Please edit documentation in R/binance.R
 \name{binance_mytrades}
 \alias{binance_mytrades}
-\title{Get all trades on the Binance account}
+\title{Get trades for a specific symbol on the Binance account}
 \usage{
-binance_mytrades(symbol, limit = 500, from_id)
+binance_mytrades(symbol, limit, from_id, start_time, end_time)
 }
 \arguments{
 \item{symbol}{string}
 
-\item{limit}{number of trades to fetch}
+\item{limit}{optional int number of trades to fetch}
 
 \item{from_id}{optional trade id to fetch from}
+
+\item{start_time}{optional POSIX timestamp}
+
+\item{end_time}{optional POSIX timestamp}
 }
 \value{
 data.table
 }
 \description{
-Get all trades on the Binance account
+Get trades for a specific symbol on the Binance account
 }
 \examples{
 \dontrun{

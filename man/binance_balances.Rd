@@ -7,9 +7,9 @@
 binance_balances(threshold = -1, usdt = FALSE)
 }
 \arguments{
-\item{threshold}{show assets with greater number of coins}
+\item{threshold}{optional show assets with greater number of coins}
 
-\item{usd}{to include balance in USDT too}
+\item{usdt}{optional to include balance in USDT too}
 }
 \value{
 data.table

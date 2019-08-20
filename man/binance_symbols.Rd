@@ -4,7 +4,10 @@
 \alias{binance_symbols}
 \title{Get all currently valid symbol names from Binance}
 \usage{
-binance_symbols()
+binance_symbols(all = FALSE)
+}
+\arguments{
+\item{all}{optional bool include non-trading symbols}
 }
 \value{
 character vector

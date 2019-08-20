@@ -1,11 +1,12 @@
 Package: binancer
 Type: Package
 Title: Binance API client
-Version: 1.0
-Date: 2018-01-11
-Author: Gergely Daroczi <daroczig@rapporter.net>
-Maintainer: Gergely Daroczi <daroczig@rapporter.net>
-Description: Client to the Binance API
+Version: 1.1.0
+Date: 2019-08-20
+Authors@R: c(
+  person("Gergely", "Daroczi", email = "daroczig@rapporter.net", role = c("aut", "cre")),
+  person("David", "Andel", email = "andel@bli.uzh.ch", role = "aut"))
+Description: Client to the Binance API.
 License: AGPL
 RoxygenNote: 6.1.1
 Imports:
