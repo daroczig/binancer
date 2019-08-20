@@ -2,10 +2,11 @@
 % Please edit documentation in R/utils.R
 \name{query}
 \alias{query}
-\title{Request the Binance API}
+\title{Make an API request with retries}
 \usage{
-query(base, path, method, params = list(), body = NULL,
-  config = config(), retry = method == "GET", retries = 0)
+query(base, path, method = c("GET", "POST", "PUT", "DELETE"),
+  params = list(), body = NULL, config = config(), retry = method
+  == "GET", retries = 0)
 }
 \arguments{
 \item{base}{URL}
@@ -25,9 +26,9 @@ query(base, path, method, params = list(), body = NULL,
 \item{retries}{internal counter of previous retries}
 }
 \value{
-R object
+raw object returned by \code{httr}
 }
 \description{
-Request the Binance API
+Make an API request with retries
 }
 \keyword{internal}
