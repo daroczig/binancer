@@ -12,6 +12,7 @@ BINANCE <- list(
     METHODS = c('GET', 'POST', 'PUT', 'DELETE')
 )
 
+BINANCE_WEIGHT <- 0
 
 # Utils -------------------------------------------------------------------
 
@@ -92,11 +93,8 @@ binance_query <- function(endpoint, method = 'GET',
                           retry = method == 'GET', content_as = 'parsed') {
 
     # if Binance weight is approaching the limit of 1200, wait for the next full minute
-    # TODO fix this
-    if (exists('binance.weight')) {
-        if (binance.weight > 1159) {
-            Sys.sleep(61 - as.integer(format(Sys.time(), "%S")))
-        }
+    if (BINANCE_WEIGHT > 1159) {
+        Sys.sleep(61 - as.integer(format(Sys.time(), "%S")))
     }
 
     method <- match.arg(method)
@@ -115,7 +113,7 @@ binance_query <- function(endpoint, method = 'GET',
         params = params,
         config = config)
 
-    binance.weight <<- as.integer(headers(res)$`x-mbx-used-weight`)
+    assignInMyNamespace('BINANCE_WEIGHT', as.integer(headers(res)$`x-mbx-used-weight`))
     res <- content(res, as = content_as)
 
     if (content_as == 'parsed' & length(res) == 2 & !is.null(names(res))) {
