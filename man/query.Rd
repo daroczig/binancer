@@ -4,9 +4,16 @@
 \alias{query}
 \title{Make an API request with retries}
 \usage{
-query(base, path, method = c("GET", "POST", "PUT", "DELETE"),
-  params = list(), body = NULL, config = config(), retry = method
-  == "GET", retries = 0)
+query(
+  base,
+  path,
+  method = c("GET", "POST", "PUT", "DELETE"),
+  params = list(),
+  body = NULL,
+  config = config(),
+  retry = method == "GET",
+  retries = 0
+)
 }
 \arguments{
 \item{base}{URL}

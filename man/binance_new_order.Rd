@@ -4,10 +4,18 @@
 \alias{binance_new_order}
 \title{Open new order on the Binance account}
 \usage{
-binance_new_order(symbol, side = c("BUY", "SELL"), type = c("LIMIT",
-  "MARKET", "STOP_LOSS", "STOP_LOSS_LIMIT", "TAKE_PROFIT",
-  "TAKE_PROFIT_LIMIT", "LIMIT_MAKER"), time_in_force = c("GTC", "IOC",
-  "FOK"), quantity, price, stop_price, iceberg_qty, test = TRUE)
+binance_new_order(
+  symbol,
+  side = c("BUY", "SELL"),
+  type = c("LIMIT", "MARKET", "STOP_LOSS", "STOP_LOSS_LIMIT", "TAKE_PROFIT",
+    "TAKE_PROFIT_LIMIT", "LIMIT_MAKER"),
+  time_in_force = c("GTC", "IOC", "FOK"),
+  quantity,
+  price,
+  stop_price,
+  iceberg_qty,
+  test = TRUE
+)
 }
 \arguments{
 \item{symbol}{string}
@@ -37,7 +45,7 @@ Open new order on the Binance account
 \examples{
 \dontrun{
 binance_new_order('ARKETH', side = 'BUY', type = 'MARKET', quantity = 1)
-binance_new_order('ARKBTC', side = 'BUY', type = 'LIMIT', quantity = 1, 
+binance_new_order('ARKBTC', side = 'BUY', type = 'LIMIT', quantity = 1,
                   price = 0.5, time_in_force = 'GTC')
 }
 }

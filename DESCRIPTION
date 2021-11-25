@@ -4,11 +4,11 @@ Title: Binance API client
 Version: 1.1.0
 Date: 2019-08-20
 Authors@R: c(
-  person("Gergely", "Daroczi", email = "daroczig@rapporter.net", role = c("aut", "cre")),
+  person("Gergely", "Daróczi", email = "daroczig@rapporter.net", role = c("aut", "cre")),
   person("David", "Andel", email = "andel@bli.uzh.ch", role = "aut"))
 Description: Client to the Binance API.
 License: AGPL
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Imports:
   data.table,
   httr,
