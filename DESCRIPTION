@@ -6,6 +6,7 @@ Date: 2019-08-20
 Authors@R: c(
   person("Gergely", "Daróczi", email = "daroczig@rapporter.net", role = c("aut", "cre")),
   person("David", "Andel", email = "andel@bli.uzh.ch", role = "aut"))
+Encoding: UTF-8
 Description: Client to the Binance API.
 License: AGPL
 RoxygenNote: 7.1.1

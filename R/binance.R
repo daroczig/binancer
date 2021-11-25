@@ -86,7 +86,7 @@ binance_sign <- function(params) {
 #' @param content_as parameter to httr::content
 #' @return R object
 #' @keywords internal
-#' @importFrom httr headers add_headers
+#' @importFrom httr headers add_headers content
 binance_query <- function(endpoint, method = 'GET',
                           params = list(), body = NULL, sign = FALSE,
                           retry = method == 'GET', content_as = 'parsed') {
