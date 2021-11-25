@@ -88,6 +88,7 @@ binance_sign <- function(params) {
 #' @return R object
 #' @keywords internal
 #' @importFrom httr headers add_headers content
+#' @importFrom utils assignInMyNamespace
 binance_query <- function(endpoint, method = 'GET',
                           params = list(), body = NULL, sign = FALSE,
                           retry = method == 'GET', content_as = 'parsed') {
