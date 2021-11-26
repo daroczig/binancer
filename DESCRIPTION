@@ -7,7 +7,7 @@ Authors@R: c(
   person('Gergely', 'Daróczi', email = 'daroczig@rapporter.net', role = c('aut', 'cre')),
   person('David', 'Andel', email = 'andel@bli.uzh.ch', role = 'aut'))
 Encoding: UTF-8
-Description: R client to the 'Binance' Public Rest API for data collection on cryptocurrencies, portfolio management and trading.
+Description: R client to the 'Binance' Public Rest API for data collection on "cryptocurrencies", portfolio management and trading.
 License: AGPL
 RoxygenNote: 7.1.1
 Imports:
@@ -17,4 +17,4 @@ Imports:
   snakecase,
   logger,
   jsonlite
-URL: https://daroczig.github.io/binancer
+URL: https://daroczig.github.io/binancer/
