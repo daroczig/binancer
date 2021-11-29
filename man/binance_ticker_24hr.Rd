@@ -10,7 +10,7 @@ binance_ticker_24hr(symbol)
 \item{symbol}{optional string}
 }
 \value{
-data.table
+\code{data.table}
 }
 \description{
 24 hour rolling window price change statistics

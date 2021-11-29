@@ -10,7 +10,7 @@ binance_coins_prices(unit = "USDT")
 \item{unit}{to set quote asset}
 }
 \value{
-data.table
+\code{data.table} with \code{symbol} and \code{usd} columns
 }
 \description{
 Get all currently valid coin names from Binance along with the USDT prices

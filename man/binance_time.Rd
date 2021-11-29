@@ -7,7 +7,7 @@
 binance_time()
 }
 \value{
-list
+\code{POSIXct}
 }
 \description{
 Get the current server time from Binance

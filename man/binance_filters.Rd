@@ -10,7 +10,7 @@ binance_filters(symbol)
 \item{symbol}{string}
 }
 \value{
-data.table
+\code{data.table}
 }
 \description{
 Get current filters for a symbol

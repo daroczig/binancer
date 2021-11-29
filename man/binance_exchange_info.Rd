@@ -7,7 +7,7 @@
 binance_exchange_info()
 }
 \value{
-list
+\code{list}
 }
 \description{
 Get exchangeInfo from Binance

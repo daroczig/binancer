@@ -7,7 +7,7 @@
 binance_ticker_all_books()
 }
 \value{
-data.table
+\code{data.table}
 }
 \description{
 Get latest Binance bids and asks on all symbol pairs

@@ -11,6 +11,9 @@ binance_credentials(key, secret)
 
 \item{secret}{string}
 }
+\value{
+No return values, setting config in the package namespace.
+}
 \description{
 Sets the API key and secret to interact with the Binance API
 }

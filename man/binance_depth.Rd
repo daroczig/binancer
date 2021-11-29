@@ -12,7 +12,7 @@ binance_depth(symbol, limit)
 \item{limit}{int optional}
 }
 \value{
-data.table
+\code{data.table}
 }
 \description{
 Get orderbook depth data from Binance

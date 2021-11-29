@@ -10,7 +10,7 @@ binance_ticker_price(symbol)
 \item{symbol}{optional string}
 }
 \value{
-data.table
+\code{data.table}
 }
 \description{
 Get last price for a symbol or all symbols

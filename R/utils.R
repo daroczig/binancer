@@ -43,3 +43,4 @@ query <- function(base, path, method,
 
     res
 }
+formals(query)$method <- BINANCE$METHODS

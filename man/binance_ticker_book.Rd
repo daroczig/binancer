@@ -10,7 +10,7 @@ binance_ticker_book(symbol)
 \item{symbol}{optional string}
 }
 \value{
-data.table
+\code{data.table}
 }
 \description{
 Get last bids and asks for a symbol or all symbols

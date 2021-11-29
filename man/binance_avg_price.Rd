@@ -10,7 +10,7 @@ binance_avg_price(symbol)
 \item{symbol}{string}
 }
 \value{
-data.table
+\code{data.table}
 }
 \description{
 Get current average price for a symbol

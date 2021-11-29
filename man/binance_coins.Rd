@@ -7,7 +7,7 @@
 binance_coins()
 }
 \value{
-character vector
+character vector of coin names
 }
 \description{
 Get all currently valid coin names from Binance

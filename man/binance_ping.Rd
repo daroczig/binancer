@@ -7,7 +7,7 @@
 binance_ping()
 }
 \value{
-list
+"OK" string on success
 }
 \description{
 Test connectivity to the Rest API

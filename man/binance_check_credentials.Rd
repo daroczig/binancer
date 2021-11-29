@@ -7,7 +7,7 @@
 binance_check_credentials()
 }
 \value{
-fail on missing credentials
+No return values, but fails when credentials were not set.
 }
 \description{
 Check if Binance credentials were set previously

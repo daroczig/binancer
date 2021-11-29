@@ -25,7 +25,7 @@ binance_klines(
 \item{end_time}{optional POSIX timestamp}
 }
 \value{
-data.table
+\code{data.table} with open-high-low-close values
 }
 \description{
 Get kline/candlestick data from Binance

@@ -7,7 +7,7 @@
 binance_ticker_all_prices()
 }
 \value{
-data.table
+\code{data.table}
 }
 \description{
 Get latest Binance conversion rates and USD prices on all symbol pairs

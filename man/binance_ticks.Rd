@@ -18,7 +18,7 @@ binance_ticks(symbol, from_id, start_time, end_time, limit)
 \item{limit}{optional int}
 }
 \value{
-data.table
+\code{data.table}
 }
 \description{
 Get tick data from Binance

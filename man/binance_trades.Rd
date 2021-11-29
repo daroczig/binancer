@@ -12,7 +12,7 @@ binance_trades(symbol, limit)
 \item{limit}{optional int}
 }
 \value{
-data.table
+\code{data.table}
 }
 \description{
 Get last trades from Binance

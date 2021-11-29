@@ -10,7 +10,7 @@ binance_symbols(all = FALSE)
 \item{all}{optional bool include non-trading symbols}
 }
 \value{
-character vector
+character vector of symbol names
 }
 \description{
 Get all currently valid symbol names from Binance
