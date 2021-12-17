@@ -1,3 +1,5 @@
+as_time <- function(number) as.POSIXct(number, origin = "1970-01-01")
+
 test_that("Ping on Spot", {
     vcr::use_cassette("spot_ping", {
         response <- binance_ping()
@@ -11,7 +13,18 @@ test_that("Time on Spot", {
         response <- binance_time()
     })
 
-    expect_equal(response, as.POSIXct(1639747098, origin = "1970-01-01"))
+    expect_equal(response, as_time(1639747098))
+})
+
+test_that("Exchange info on Spot", {
+    vcr::use_cassette("spot_exchange_info", {
+        response <- binance_exchange_info()
+    })
+
+    expect_equal(
+        response$serverTime,
+        as_time(1639754298)
+    )
 })
 
 test_that("Klines on Spot", {
@@ -22,11 +35,11 @@ test_that("Klines on Spot", {
     expect_equal(response$symbol, "ETHUSDT")
     expect_equal(
         response$open_time,
-        as.POSIXct(1639699200, origin = "1970-01-01")
+        as_time(1639699200)
     )
     expect_equal(
         response$close_time,
-        as.POSIXct(1639785600, origin = "1970-01-01")
+        as_time(1639785600)
     )
     expect_equal(response$open, 3959.1, tolerance = 0.01)
     expect_equal(response$high, 3959.1, tolerance = 0.01)
