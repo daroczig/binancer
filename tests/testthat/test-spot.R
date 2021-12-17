@@ -55,3 +55,18 @@ test_that("Klines on Spot", {
     )
     expect_equal(response$taker_buy_quote_asset_volume, 411011816)
 })
+
+test_that("Ticks on Spot", {
+    vcr::use_cassette("spot_ticks_ethusdt_limit_2", {
+        response <- binance_ticks("ETHUSDT", limit = 2)
+    })
+
+    expect_equal(response$agg_trade_id, c(579794207, 579794208))
+    expect_equal(response$price, c(3911, 3911), tolerance = 0.01)
+    expect_equal(response$quantity, c(0.92, 0.09), tolerance = 0.01)
+    expect_equal(response$first_trade_id, c(710227286, 710227288))
+    expect_equal(response$last_trade_id, c(710227286, 710227288))
+    expect_equal(response$time, as_time(c(1639759382, 1639759382)))
+    expect_equal(response$buyer_maker, c(FALSE, FALSE))
+    expect_equal(response$best_price_match, c(TRUE, TRUE))
+})

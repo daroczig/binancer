@@ -1,0 +1,45 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.binance.com/api/v1/aggTrades?symbol=ETHUSDT&limit=2
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      content-type: application/json;charset=UTF-8
+      content-length: '237'
+      date: Fri, 17 Dec 2021 16:43:02 GMT
+      server: nginx
+      x-mbx-uuid: f18ad480-f11a-41f8-a01d-d5b47c6c865e
+      x-mbx-used-weight: '1'
+      x-mbx-used-weight-1m: '1'
+      strict-transport-security: max-age=31536000; includeSubdomains
+      x-frame-options: SAMEORIGIN
+      x-xss-protection: 1; mode=block
+      x-content-type-options: nosniff
+      content-security-policy: default-src 'self'
+      x-content-security-policy: default-src 'self'
+      x-webkit-csp: default-src 'self'
+      cache-control: no-cache, no-store, must-revalidate
+      pragma: no-cache
+      expires: '0'
+      access-control-allow-origin: '*'
+      access-control-allow-methods: GET, HEAD, OPTIONS
+      x-cache: Miss from cloudfront
+      via: 1.1 05aec04162b0fed6e9762cd1edd66a72.cloudfront.net (CloudFront)
+      x-amz-cf-pop: SFO5-C1
+      x-amz-cf-id: Ubkw3eaurWKWcgWjRmc-rGlqUnFn2eNzuazRiOk2YF-lD45O6zyhCg==
+    body:
+      encoding: UTF-8
+      file: no
+      string: '[{"a":579794207,"p":"3910.67000000","q":"0.91590000","f":710227286,"l":710227287,"T":1639759381993,"m":false,"M":true},{"a":579794208,"p":"3910.68000000","q":"0.09410000","f":710227288,"l":710227289,"T":1639759381993,"m":false,"M":true}]'
+  recorded_at: 2021-12-17 16:43:02 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
