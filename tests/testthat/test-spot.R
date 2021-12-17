@@ -130,3 +130,12 @@ test_that("Ticker book on Spot", {
     expect_equal(response$ask_price, 3866.44, tolerance = 0.01)
     expect_equal(response$ask_qty, 3.09, tolerance = 0.01)
 })
+
+test_that("Average Price on Spot", {
+    vcr::use_cassette("spot_avg_price_ethusdt", {
+        response <- binance_avg_price("ETHUSDT")
+    })
+
+    expect_equal(response$mins, 5)
+    expect_equal(response$price, 3862.3, tolerance = 0.001)
+})

@@ -1,0 +1,45 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.binance.com/api/v3/avgPrice?symbol=ETHUSDT
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      content-type: application/json;charset=UTF-8
+      content-length: '34'
+      date: Fri, 17 Dec 2021 18:24:29 GMT
+      server: nginx
+      x-mbx-uuid: f41179c9-ac61-46c9-ae1e-e431e6c5c8e4
+      x-mbx-used-weight: '1'
+      x-mbx-used-weight-1m: '1'
+      strict-transport-security: max-age=31536000; includeSubdomains
+      x-frame-options: SAMEORIGIN
+      x-xss-protection: 1; mode=block
+      x-content-type-options: nosniff
+      content-security-policy: default-src 'self'
+      x-content-security-policy: default-src 'self'
+      x-webkit-csp: default-src 'self'
+      cache-control: no-cache, no-store, must-revalidate
+      pragma: no-cache
+      expires: '0'
+      access-control-allow-origin: '*'
+      access-control-allow-methods: GET, HEAD, OPTIONS
+      x-cache: Miss from cloudfront
+      via: 1.1 c361075814ee65e6523d12c5af3e7995.cloudfront.net (CloudFront)
+      x-amz-cf-pop: SFO5-C1
+      x-amz-cf-id: AR3YbnqaEq2Qbb33uLX_dWbRlwqjE19i5XmeL6p8D6bB6Xp_PsXfCw==
+    body:
+      encoding: UTF-8
+      file: no
+      string: '{"mins":5,"price":"3862.30654683"}'
+  recorded_at: 2021-12-17 18:24:29 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
