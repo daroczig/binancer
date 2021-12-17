@@ -19,5 +19,6 @@ Imports:
   jsonlite
 URL: https://daroczig.github.io/binancer/
 Suggests:
+    vcr (>= 0.6.0),
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
