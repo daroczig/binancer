@@ -1,10 +1,23 @@
 BINANCE <- list(
-    TYPE = c('LIMIT', 'MARKET',
-             'STOP_LOSS', 'STOP_LOSS_LIMIT',
-             'TAKE_PROFIT', 'TAKE_PROFIT_LIMIT',
-             'LIMIT_MAKER'),
+    BASE = c(
+        'https://api.binance.com',
+        'https://fapi.binance.com'
+    ),
+    SPOT = list(
+        TIMEINFORCE = c('GTC', 'IOC', 'FOK'),
+        TYPE = c('LIMIT', 'MARKET',
+                 'STOP_LOSS', 'STOP_LOSS_LIMIT',
+                 'TAKE_PROFIT', 'TAKE_PROFIT_LIMIT',
+                 'LIMIT_MAKER')
+    ),
+    USDM = list(
+        TIMEINFORCE = c('GTC', 'IOC', 'FOK', 'GTX'),
+        TYPE = c('LIMIT', 'MARKET',
+                 'STOP', 'STOP_MARKET',
+                 'TAKE_PROFIT', 'TAKE_PROFIT_MARKET',
+                 'TRAILING_STOP_MARKET')
+    ),
     SIDE = c('BUY', 'SELL'),
-    TIMEINFORCE = c('GTC', 'IOC', 'FOK'),
     INTERVALS = c(
         '1m', '3m', '5m', '15m', '30m',
         '1h', '2h', '4h', '6h', '8h', '12h',
@@ -91,7 +104,7 @@ binance_sign <- function(params, time = timestamp()) {
 #' @keywords internal
 #' @importFrom httr headers add_headers content
 #' @importFrom utils assignInMyNamespace
-binance_query <- function(endpoint, method = 'GET',
+binance_query <- function(endpoint, base = 'https://api.binance.com', method = 'GET',
                           params = list(), body = NULL, sign = FALSE,
                           retry = method == 'GET', content_as = 'parsed') {
 
@@ -110,7 +123,7 @@ binance_query <- function(endpoint, method = 'GET',
     }
 
     res <- query(
-        base = 'https://api.binance.com',
+        base = base,
         path = endpoint,
         method = method,
         params = params,
@@ -867,8 +880,8 @@ binance_new_order <- function(symbol, side, type, time_in_force, quantity, price
     data.table(ord)
 }
 formals(binance_new_order)$side <- BINANCE$SIDE
-formals(binance_new_order)$type <- BINANCE$TYPE
-formals(binance_new_order)$time_in_force <- BINANCE$TIMEINFORCE
+formals(binance_new_order)$type <- BINANCE$SPOT$TYPE
+formals(binance_new_order)$time_in_force <- BINANCE$SPOT$TIMEINFORCE
 
 
 #' Query order on the Binance account
