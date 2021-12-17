@@ -109,3 +109,12 @@ test_that("Depth on Spot", {
         tolerance = 0.01
     )
 })
+
+test_that("Ticker price on Spot", {
+    vcr::use_cassette("spot_ticker_price_ethusdt", {
+        response <- binance_ticker_price("ETHUSDT")
+    })
+
+    expect_equal(response$symbol, "ETHUSDT")
+    expect_equal(response$price, 3866.44, tolerance = 0.01)
+})

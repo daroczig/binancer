@@ -380,6 +380,9 @@ binance_depth <- function(symbol, limit) {
 #' @param symbol optional string
 #' @return \code{data.table}
 #' @export
+#' @examples \dontrun{
+#' binance_ticker_price('ETHUSDT')
+#' }
 binance_ticker_price <- function(symbol) {
 
     # silence "no visible global function/variable definition" R CMD check
