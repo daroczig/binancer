@@ -125,9 +125,9 @@ test_that("Ticker book on Spot", {
     })
 
     expect_equal(response$symbol, "ETHUSDT")
-    expect_equal(response$bid_price, 3866.44, tolerance = 0.01)
+    expect_equal(response$bid_price, 3848.8, tolerance = 0.001)
     expect_equal(response$bid_qty, 0.084, tolerance = 0.01)
-    expect_equal(response$ask_price, 3866.44, tolerance = 0.01)
+    expect_equal(response$ask_price, 3848.8, tolerance = 0.001)
     expect_equal(response$ask_qty, 3.09, tolerance = 0.01)
 })
 
