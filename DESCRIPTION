@@ -9,7 +9,7 @@ Authors@R: c(
 Encoding: UTF-8
 Description: R client to the 'Binance' Public Rest API for data collection on cryptocurrencies, portfolio management and trading: <https://github.com/binance/binance-spot-api-docs/blob/master/rest-api.md>.
 License: AGPL
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Imports:
   data.table,
   httr,

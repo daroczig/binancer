@@ -6,6 +6,7 @@
 \usage{
 binance_query(
   endpoint,
+  base = "https://api.binance.com",
   method = c("GET", "POST", "PUT", "DELETE"),
   params = list(),
   body = NULL,
@@ -16,6 +17,8 @@ binance_query(
 }
 \arguments{
 \item{endpoint}{string}
+
+\item{base}{URL}
 
 \item{method}{HTTP request method}
 

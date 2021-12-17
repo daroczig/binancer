@@ -5,7 +5,7 @@
 \title{Make an API request with retries}
 \usage{
 query(
-  base,
+  base = c("https://api.binance.com", "https://fapi.binance.com"),
   path,
   method = c("GET", "POST", "PUT", "DELETE"),
   params = list(),

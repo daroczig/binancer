@@ -4,20 +4,22 @@
 \alias{binance_sign}
 \title{Sign the query string for Binance}
 \usage{
-binance_sign(params)
+binance_sign(params, time = timestamp())
 }
 \arguments{
 \item{params}{list}
+
+\item{time}{string}
 }
 \value{
-string
+list
 }
 \description{
 Sign the query string for Binance
 }
 \examples{
 \dontrun{
-signature(list(foo = 'bar', z = 4))
+binance_sign(list(foo = 'bar', z = 4))
 }
 }
 \keyword{internal}

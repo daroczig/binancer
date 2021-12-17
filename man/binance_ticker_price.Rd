@@ -15,3 +15,8 @@ binance_ticker_price(symbol)
 \description{
 Get last price for a symbol or all symbols
 }
+\examples{
+\dontrun{
+binance_ticker_price('ETHUSDT')
+}
+}
