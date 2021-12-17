@@ -13,3 +13,14 @@ test_that("Time on USDM", {
 
     expect_equal(response, as_time(1639784297))
 })
+
+test_that("Exchange info on USDM", {
+    vcr::use_cassette("usdm_v1_exchange_info", {
+        response <- usdm_v1_exchange_info()
+    })
+
+    expect_equal(
+        response$serverTime,
+        as_time(1639724963)
+    )
+})
