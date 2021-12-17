@@ -1,5 +1,3 @@
-as_time <- function(number) as.POSIXct(number, origin = "1970-01-01")
-
 test_that("Ping on Spot", {
     vcr::use_cassette("spot_ping", {
         response <- binance_ping()

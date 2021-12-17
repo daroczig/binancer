@@ -12,3 +12,5 @@ invisible(vcr::vcr_configure(
 ))
 
 vcr::check_cassette_names()
+
+as_time <- function(number) as.POSIXct(number, origin = "1970-01-01")
