@@ -18,3 +18,6 @@ Imports:
   logger,
   jsonlite
 URL: https://daroczig.github.io/binancer/
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
