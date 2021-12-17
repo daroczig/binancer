@@ -94,6 +94,13 @@ binance_sign <- function(params, time = timestamp()) {
     params
 }
 
+# Workaround: USDM Ping returns neither weight header
+get_weight <- function(response) {
+    header <- headers(response)
+    w1 <- as.integer(header$`x-mbx-used-weight`)
+    w2 <- as.integer(header$`x-mbx-used-weight-1m`)
+    c(w1, w2, 1L)[1]
+}
 
 #' Request the Binance API
 #' @param endpoint string
@@ -129,7 +136,7 @@ binance_query <- function(endpoint, base = 'https://api.binance.com', method = '
         params = params,
         config = config)
 
-    assignInMyNamespace('BINANCE_WEIGHT', as.integer(headers(res)$`x-mbx-used-weight`))
+    assignInMyNamespace('BINANCE_WEIGHT', get_weight(res))
     res <- content(res, as = content_as)
 
     if (content_as == 'parsed' & length(res) == 2 & !is.null(names(res))) {

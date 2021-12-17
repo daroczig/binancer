@@ -12,3 +12,12 @@ usdm_v1_ping <- function() {
     }
     res
 }
+
+#' Get the current server time from Binance USDM
+#' @export
+#' @return \code{POSIXct}
+usdm_v1_time <- function() {
+    res <- usdm_query("/fapi/v1/time")$serverTime
+    res <- as.POSIXct(res / 1e3, origin = "1970-01-01")
+    res
+}

@@ -1,0 +1,44 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://fapi.binance.com/fapi/v1/time
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      content-type: application/json
+      content-length: '28'
+      date: Fri, 17 Dec 2021 23:38:16 GMT
+      server: Tengine
+      x-mbx-used-weight-1m: '1'
+      x-response-time: 0ms
+      access-control-allow-origin: '*'
+      access-control-allow-methods: GET, POST, PUT, DELETE, OPTIONS
+      access-control-allow-credentials: 'true'
+      access-control-allow-headers: '*'
+      content-security-policy: default-src 'self'
+      cache-control: no-cache, no-store, must-revalidate
+      expires: '0'
+      pragma: no-cache
+      strict-transport-security: max-age=31536000; includeSubdomains
+      x-content-type-options: nosniff
+      x-frame-options: SAMEORIGIN
+      x-xss-protection: 1; mode=block
+      x-cache: Miss from cloudfront
+      via: 1.1 fa899decf29a8515a5481334de6baf5d.cloudfront.net (CloudFront)
+      x-amz-cf-pop: SFO5-C1
+      x-amz-cf-id: NoZMsnRYqUTKpGeZeFgTGStPzgkyM-HMi6XT-8X8ukGtQ_DWi0hvQw==
+    body:
+      encoding: UTF-8
+      file: no
+      string: '{"serverTime":1639784296987}'
+  recorded_at: 2021-12-17 23:38:17 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
