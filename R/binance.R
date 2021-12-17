@@ -1,7 +1,7 @@
 BINANCE <- list(
     BASE = c(
-        'https://api.binance.com',
-        'https://fapi.binance.com'
+        'https://api.binance.com',    # SPOT
+        'https://fapi.binance.com'    # USDM
     ),
     SPOT = list(
         TIMEINFORCE = c('GTC', 'IOC', 'FOK'),
