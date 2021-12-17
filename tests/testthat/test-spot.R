@@ -118,3 +118,15 @@ test_that("Ticker price on Spot", {
     expect_equal(response$symbol, "ETHUSDT")
     expect_equal(response$price, 3866.44, tolerance = 0.01)
 })
+
+test_that("Ticker book on Spot", {
+    vcr::use_cassette("spot_ticker_book_ethusdt", {
+        response <- binance_ticker_book("ETHUSDT")
+    })
+
+    expect_equal(response$symbol, "ETHUSDT")
+    expect_equal(response$bid_price, 3866.44, tolerance = 0.01)
+    expect_equal(response$bid_qty, 0.084, tolerance = 0.01)
+    expect_equal(response$ask_price, 3866.44, tolerance = 0.01)
+    expect_equal(response$ask_qty, 3.09, tolerance = 0.01)
+})

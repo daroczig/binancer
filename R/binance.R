@@ -407,6 +407,9 @@ binance_ticker_price <- function(symbol) {
 #' @return \code{data.table}
 #' @export
 #' @importFrom snakecase to_snake_case
+#' @examples \dontrun{
+#' binance_ticker_book('ETHUSDT')
+#' }
 binance_ticker_book <- function(symbol) {
 
     if (!missing(symbol)) {

@@ -1,0 +1,45 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.binance.com/api/v3/ticker/bookTicker?symbol=ETHUSDT
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      content-type: application/json;charset=UTF-8
+      content-length: '118'
+      date: Fri, 17 Dec 2021 17:55:53 GMT
+      server: nginx
+      x-mbx-uuid: 8ec69e91-5353-431e-93db-f2a3ac570b73
+      x-mbx-used-weight: '1'
+      x-mbx-used-weight-1m: '1'
+      strict-transport-security: max-age=31536000; includeSubdomains
+      x-frame-options: SAMEORIGIN
+      x-xss-protection: 1; mode=block
+      x-content-type-options: nosniff
+      content-security-policy: default-src 'self'
+      x-content-security-policy: default-src 'self'
+      x-webkit-csp: default-src 'self'
+      cache-control: no-cache, no-store, must-revalidate
+      pragma: no-cache
+      expires: '0'
+      access-control-allow-origin: '*'
+      access-control-allow-methods: GET, HEAD, OPTIONS
+      x-cache: Miss from cloudfront
+      via: 1.1 216f781ed7a0653429ac7a72888ca4c5.cloudfront.net (CloudFront)
+      x-amz-cf-pop: SFO5-C1
+      x-amz-cf-id: 3JM6LD41Aumf2wX4ODWF7SCr26luLMzJoZbBbEPqHOjVWObWeWrK-Q==
+    body:
+      encoding: UTF-8
+      file: no
+      string: '{"symbol":"ETHUSDT","bidPrice":"3847.76000000","bidQty":"0.08410000","askPrice":"3847.77000000","askQty":"3.08740000"}'
+  recorded_at: 2021-12-17 17:55:53 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
