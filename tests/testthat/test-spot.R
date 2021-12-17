@@ -70,3 +70,17 @@ test_that("Ticks on Spot", {
     expect_equal(response$buyer_maker, c(FALSE, FALSE))
     expect_equal(response$best_price_match, c(TRUE, TRUE))
 })
+
+test_that("Trades on Spot", {
+    vcr::use_cassette("spot_trades_ethusdt_limit_2", {
+        response <- binance_trades("ETHUSDT", limit = 2)
+    })
+
+    expect_equal(response$id, c(710243051, 710243052))
+    expect_equal(response$price, c(3911, 3911), tolerance = 0.01)
+    expect_equal(response$qty, c(0.5, 0.01), tolerance = 0.01)
+    expect_equal(response$quote_qty, c(1948.526, 48.449), tolerance = 0.01)
+    expect_equal(response$time, as_time(c(1639760356, 1639760356)))
+    expect_equal(response$is_buyer_maker, c(FALSE, TRUE))
+    expect_equal(response$is_best_match, c(TRUE, TRUE))
+})

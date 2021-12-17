@@ -1,0 +1,46 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.binance.com/api/v1/trades?symbol=ETHUSDT&limit=2
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      content-type: application/json;charset=UTF-8
+      content-length: '170'
+      date: Fri, 17 Dec 2021 16:59:16 GMT
+      server: nginx
+      x-mbx-uuid: 051877d7-4951-4906-a56b-bd5fc5a84c77
+      x-mbx-used-weight: '1'
+      x-mbx-used-weight-1m: '1'
+      content-encoding: gzip
+      strict-transport-security: max-age=31536000; includeSubdomains
+      x-frame-options: SAMEORIGIN
+      x-xss-protection: 1; mode=block
+      x-content-type-options: nosniff
+      content-security-policy: default-src 'self'
+      x-content-security-policy: default-src 'self'
+      x-webkit-csp: default-src 'self'
+      cache-control: no-cache, no-store, must-revalidate
+      pragma: no-cache
+      expires: '0'
+      access-control-allow-origin: '*'
+      access-control-allow-methods: GET, HEAD, OPTIONS
+      x-cache: Miss from cloudfront
+      via: 1.1 5fa120f79d5713714191c32768eca58d.cloudfront.net (CloudFront)
+      x-amz-cf-pop: SFO5-C1
+      x-amz-cf-id: 0taixQLuBlaKDhBNZtc-SU3elyZQ5DGWJgislc_V2aN6i94iHyEz0Q==
+    body:
+      encoding: UTF-8
+      file: no
+      string: '[{"id":710243051,"price":"3907.21000000","qty":"0.49870000","quoteQty":"1948.52562700","time":1639760356308,"isBuyerMaker":false,"isBestMatch":true},{"id":710243052,"price":"3907.20000000","qty":"0.01240000","quoteQty":"48.44928000","time":1639760356425,"isBuyerMaker":true,"isBestMatch":true}]'
+  recorded_at: 2021-12-17 16:59:16 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
