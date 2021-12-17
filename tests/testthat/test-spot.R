@@ -84,3 +84,28 @@ test_that("Trades on Spot", {
     expect_equal(response$is_buyer_maker, c(FALSE, TRUE))
     expect_equal(response$is_best_match, c(TRUE, TRUE))
 })
+
+test_that("Depth on Spot", {
+    vcr::use_cassette("spot_depth_ethusdt_limit_5", {
+        response <- binance_depth("ETHUSDT", limit = 5)
+    })
+
+    expect_equal(
+        response$bids$price,
+        c(3880.79, 3880.69, 3880.63, 3880.59, 3880.58)
+    )
+    expect_equal(
+        response$bids$quantity,
+        c(0.448, 0.026, 0.003, 0.182, 0.520),
+        tolerance = 0.001
+    )
+    expect_equal(
+        response$asks$price,
+        c(3880.80, 3880.83, 3880.84, 3880.85, 3881.01)
+    )
+    expect_equal(
+        response$asks$quantity,
+        c(4.60, 0.11, 0.11, 1.08, 0.19),
+        tolerance = 0.01
+    )
+})

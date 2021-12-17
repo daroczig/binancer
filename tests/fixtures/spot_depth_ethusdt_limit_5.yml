@@ -1,0 +1,46 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.binance.com/api/v1/depth?symbol=ETHUSDT&limit=5
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      content-type: application/json;charset=UTF-8
+      content-length: '160'
+      date: Fri, 17 Dec 2021 17:12:19 GMT
+      server: nginx
+      x-mbx-uuid: e1dca5fe-b5db-4eea-b3f9-abd19fea6092
+      x-mbx-used-weight: '1'
+      x-mbx-used-weight-1m: '1'
+      content-encoding: gzip
+      strict-transport-security: max-age=31536000; includeSubdomains
+      x-frame-options: SAMEORIGIN
+      x-xss-protection: 1; mode=block
+      x-content-type-options: nosniff
+      content-security-policy: default-src 'self'
+      x-content-security-policy: default-src 'self'
+      x-webkit-csp: default-src 'self'
+      cache-control: no-cache, no-store, must-revalidate
+      pragma: no-cache
+      expires: '0'
+      access-control-allow-origin: '*'
+      access-control-allow-methods: GET, HEAD, OPTIONS
+      x-cache: Miss from cloudfront
+      via: 1.1 2cd1423c218193e9646892449fb7844a.cloudfront.net (CloudFront)
+      x-amz-cf-pop: SFO5-C1
+      x-amz-cf-id: d2GM8gRzdnCva4G5h6YSYpXp2u5iNq60tweA2-EqvBf45UkK2oJdjw==
+    body:
+      encoding: UTF-8
+      file: no
+      string: '{"lastUpdateId":13304569353,"bids":[["3880.79000000","0.44760000"],["3880.69000000","0.02580000"],["3880.63000000","0.00300000"],["3880.59000000","0.18230000"],["3880.58000000","0.52010000"]],"asks":[["3880.80000000","4.60140000"],["3880.83000000","0.10710000"],["3880.84000000","0.11170000"],["3880.85000000","1.07750000"],["3881.01000000","0.19110000"]]}'
+  recorded_at: 2021-12-17 17:12:19 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0
