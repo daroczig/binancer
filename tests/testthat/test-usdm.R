@@ -11,7 +11,7 @@ test_that("Time on USDM", {
         response <- usdm_v1_time()
     })
 
-    expect_equal(response, as_time(1639784297))
+    expect_equal(response, as_timestamp(1639784297))
 })
 
 test_that("Exchange info on USDM", {
@@ -21,6 +21,6 @@ test_that("Exchange info on USDM", {
 
     expect_equal(
         response$serverTime,
-        as_time(1639724963)
+        as_timestamp(1639724963)
     )
 })

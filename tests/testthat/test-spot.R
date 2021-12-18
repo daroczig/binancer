@@ -11,7 +11,7 @@ test_that("Time on Spot", {
         response <- binance_time()
     })
 
-    expect_equal(response, as_time(1639747098))
+    expect_equal(response, as_timestamp(1639747098))
 })
 
 test_that("Exchange info on Spot", {
@@ -21,7 +21,7 @@ test_that("Exchange info on Spot", {
 
     expect_equal(
         response$serverTime,
-        as_time(1639754298)
+        as_timestamp(1639754298)
     )
 })
 
@@ -33,11 +33,11 @@ test_that("Klines on Spot", {
     expect_equal(response$symbol, "ETHUSDT")
     expect_equal(
         response$open_time,
-        as_time(1639699200)
+        as_timestamp(1639699200)
     )
     expect_equal(
         response$close_time,
-        as_time(1639785600)
+        as_timestamp(1639785600)
     )
     expect_equal(response$open, 3959.1, tolerance = 0.01)
     expect_equal(response$high, 3959.1, tolerance = 0.01)
@@ -64,7 +64,7 @@ test_that("Ticks on Spot", {
     expect_equal(response$quantity, c(0.92, 0.09), tolerance = 0.01)
     expect_equal(response$first_trade_id, c(710227286, 710227288))
     expect_equal(response$last_trade_id, c(710227286, 710227288))
-    expect_equal(response$time, as_time(c(1639759382, 1639759382)))
+    expect_equal(response$time, as_timestamp(c(1639759382, 1639759382)))
     expect_equal(response$buyer_maker, c(FALSE, FALSE))
     expect_equal(response$best_price_match, c(TRUE, TRUE))
 })
@@ -78,7 +78,7 @@ test_that("Trades on Spot", {
     expect_equal(response$price, c(3911, 3911), tolerance = 0.01)
     expect_equal(response$qty, c(0.5, 0.01), tolerance = 0.01)
     expect_equal(response$quote_qty, c(1948.526, 48.449), tolerance = 0.01)
-    expect_equal(response$time, as_time(c(1639760356, 1639760356)))
+    expect_equal(response$time, as_timestamp(c(1639760356, 1639760356)))
     expect_equal(response$is_buyer_maker, c(FALSE, TRUE))
     expect_equal(response$is_best_match, c(TRUE, TRUE))
 })
