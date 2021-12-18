@@ -23,4 +23,16 @@ test_that("Exchange info on USDM", {
         response$serverTime,
         as_timestamp(1639724963)
     )
+
+    expect_equal(
+        names(response$symbols),
+        c("symbol", "pair", "contractType", "deliveryDate", "onboardDate",
+          "status", "maintMarginPercent", "requiredMarginPercent", "baseAsset",
+          "quoteAsset", "marginAsset", "pricePrecision", "quantityPrecision",
+          "baseAssetPrecision", "quotePrecision", "underlyingType",
+          "underlyingSubType", "settlePlan", "triggerProtect", "liquidationFee",
+          "marketTakeBound", "filters", "orderTypes", "timeInForce")
+    )
+
+    expect_equal(length(response$symbols), 24)
 })
