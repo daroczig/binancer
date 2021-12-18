@@ -1,7 +1,7 @@
 BINANCE <- list(
-    BASE = c(
-        'https://api.binance.com',    # SPOT
-        'https://fapi.binance.com'    # USDM
+    BASE = list(
+        SPOT = 'https://api.binance.com',
+        USDM = 'https://fapi.binance.com'
     ),
     SPOT = list(
         TIMEINFORCE = c('GTC', 'IOC', 'FOK'),
@@ -111,7 +111,7 @@ get_weight <- function(response) {
 #' @keywords internal
 #' @importFrom httr headers add_headers content
 #' @importFrom utils assignInMyNamespace
-binance_query <- function(endpoint, base = 'https://api.binance.com', method = 'GET',
+binance_query <- function(endpoint, base = BINANCE$BASE$SPOT, method = 'GET',
                           params = list(), body = NULL, sign = FALSE,
                           retry = method == 'GET', content_as = 'parsed') {
 

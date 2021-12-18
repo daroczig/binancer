@@ -1,7 +1,7 @@
 as_timestamp <- function(number) as.POSIXct(number, origin = "1970-01-01")
 
 usdm_query <- function(endpoint, ...) {
-    binance_query(endpoint, ..., base = "https://fapi.binance.com")
+    binance_query(endpoint, ..., base = BINANCE$BASE$USDM)
 }
 
 #' Test connectivity to the USDM Rest API
