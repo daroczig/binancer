@@ -44,4 +44,3 @@ query <- function(base, path, method,
     res
 }
 formals(query)$method <- BINANCE$METHODS
-formals(query)$base <- unlist(BINANCE$BASE, use.names = FALSE)

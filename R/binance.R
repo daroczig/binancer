@@ -120,6 +120,7 @@ binance_query <- function(endpoint, base = BINANCE$BASE$SPOT, method = 'GET',
         Sys.sleep(61 - as.integer(format(Sys.time(), "%S")))
     }
 
+    base <- match.arg(base)
     method <- match.arg(method)
 
     if (isTRUE(sign)) {
@@ -147,6 +148,7 @@ binance_query <- function(endpoint, base = BINANCE$BASE$SPOT, method = 'GET',
 
     res
 }
+formals(binance_query)$base <- unlist(BINANCE$BASE, use.names = FALSE)
 formals(binance_query)$method <- BINANCE$METHODS
 
 
