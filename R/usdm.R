@@ -36,3 +36,21 @@ usdm_v1_exchange_info <- function() {
     res$symbols <- as.data.table(res$symbols)
     res
 }
+
+#' Get mark/index price for a symbol
+#' @param symbol string
+#' @return \code{data.table}
+#' @export
+#' @importFrom data.table as.data.table
+usdm_v1_premium_index <- function(symbol) {
+    nextFundingTime <- time <- NULL
+
+    params <- list(symbol = symbol)
+    res <- usdm_query("/fapi/v1/premiumIndex", params = params)
+    res <- as.data.table(res)
+    for (v in setdiff(names(res), c("symbol", "nextFundingTime", "time"))) {
+        res[, (v) := as.numeric(get(v))]
+    }
+    res[, nextFundingTime := as_timestamp(nextFundingTime)]
+    res[, time := as_timestamp(time)]
+}

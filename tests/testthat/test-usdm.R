@@ -36,3 +36,14 @@ test_that("Exchange info on USDM", {
 
     expect_equal(length(response$symbols), 24)
 })
+
+test_that("Premium index on USDM", {
+    vcr::use_cassette("usdm_v1_premium_index_btcusdt", {
+        response <- usdm_v1_premium_index("BTCUSDT")
+    })
+
+    expect_equal(response$symbol, "BTCUSDT")
+    expect_equal(response$markPrice, 46840.63)
+    expect_equal(response$indexPrice, 46849.34)
+    expect_equal(response$time, as_timestamp(1639846994000))
+})

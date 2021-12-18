@@ -1,0 +1,45 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      content-type: application/json
+      date: Sat, 18 Dec 2021 17:03:14 GMT
+      server: Tengine
+      vary: Accept-Encoding
+      x-mbx-used-weight-1m: '1'
+      x-response-time: 0ms
+      access-control-allow-origin: '*'
+      access-control-allow-methods: GET, POST, PUT, DELETE, OPTIONS
+      access-control-allow-credentials: 'true'
+      access-control-allow-headers: '*,clienttype,Content-Type,lang,x-ui-request-trace,bnc-uuid'
+      content-security-policy: default-src 'self'
+      cache-control: no-cache, no-store, must-revalidate
+      expires: '0'
+      pragma: no-cache
+      strict-transport-security: max-age=31536000; includeSubdomains
+      x-content-type-options: nosniff
+      x-frame-options: SAMEORIGIN
+      x-xss-protection: 1; mode=block
+      content-encoding: gzip
+      x-cache: Miss from cloudfront
+      via: 1.1 aae94205fef749bc8580cf140c626670.cloudfront.net (CloudFront)
+      x-amz-cf-pop: SFO5-C1
+      x-amz-cf-id: GZRHPuuH11bnTrZCZKRpxc4UfULqxqrJsCef5E3P0aJ0i5cseSkRTg==
+    body:
+      encoding: UTF-8
+      file: no
+      string: '{"symbol":"BTCUSDT","markPrice":"46840.63000000","indexPrice":"46849.34054739","estimatedSettlePrice":"46803.06104551","lastFundingRate":"0.00010000","interestRate":"0.00010000","nextFundingTime":1639872000000,"time":1639846994000}'
+  recorded_at: 2021-12-18 17:03:14 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0

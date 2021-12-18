@@ -6,7 +6,7 @@
 \usage{
 binance_query(
   endpoint,
-  base = BINANCE$BASE$SPOT,
+  base = c("https://api.binance.com", "https://fapi.binance.com"),
   method = c("GET", "POST", "PUT", "DELETE"),
   params = list(),
   body = NULL,
