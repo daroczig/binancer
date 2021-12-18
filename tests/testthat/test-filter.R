@@ -9,3 +9,26 @@ test_that("scale_filter", {
     expect_true(scale_filter(210.11, 10, 300, 1e-8))
     expect_true(scale_filter(210.111, 10, 300, 1e-8))
 })
+
+test_that("usdm_filter_check.UNKNOWN", {
+    filter <- binance_filter("UNKNOWN", list())
+    expect_error(usdm_filter_check("foo"))
+})
+
+test_that("usdm_filter_check.PRICE_FILTER", {
+    params <- data.table(
+        filterType = "PRICE_FILTER",
+        minPrice = 200,
+        maxPrice = 400,
+        tickSize = 0.01
+    )
+    filter <- binance_filter(params$filterType, params)
+
+    expect_true(usdm_filter_check(filter, 200))
+    expect_true(usdm_filter_check(filter, 400))
+    expect_true(usdm_filter_check(filter, 200.1))
+    expect_true(usdm_filter_check(filter, 200.01))
+    expect_false(usdm_filter_check(filter, 10))
+    expect_false(usdm_filter_check(filter, 500))
+    expect_false(usdm_filter_check(filter, 200.001))
+})
