@@ -1,0 +1,11 @@
+test_that("scale_filter", {
+    expect_true(scale_filter(200, 1, 200, 1))
+    expect_false(scale_filter(201, 1, 200, 1))
+    expect_true(scale_filter(1, 1, 200, 1))
+    expect_false(scale_filter(0, 1, 200, 1))
+    expect_false(scale_filter(200.5, 1, 200, 1))
+    expect_true(scale_filter(210.1, 10, 300, 0.1))
+    expect_false(scale_filter(210.11, 10, 300, 0.1))
+    expect_true(scale_filter(210.11, 10, 300, 1e-8))
+    expect_true(scale_filter(210.111, 10, 300, 1e-8))
+})
