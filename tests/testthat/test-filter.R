@@ -116,3 +116,16 @@ test_that("usdm_filter_check.PERCENT_PRICE", {
     expect_error(usdm_filter_check(filter, 1.9, 4, "FOO"))
     expect_error(usdm_filter_check(filter, "1.9", 4, "SELL"))
 })
+
+test_that("usdm_filter_check.MIN_NOTIONAL", {
+    params <- data.table(
+        filterType = "MIN_NOTIONAL",
+        notional = 10
+    )
+    filter <- binance_filter(params$filterType, params)
+
+    expect_true(usdm_filter_check(filter, 2, 5))
+    expect_true(usdm_filter_check(filter, 5, 2))
+    expect_false(usdm_filter_check(filter, 4, 2))
+    expect_error(usdm_filter_check(filter, "4", 2))
+})

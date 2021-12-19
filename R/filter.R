@@ -69,3 +69,12 @@ usdm_filter_check.PERCENT_PRICE <- function(self,
     (side == "BUY" && price <= mark_price * up) ||
         (side == "SELL" && price >= mark_price * down)
 }
+
+usdm_filter_check.MIN_NOTIONAL <- function(self, price, quantity) {
+    notional <- self$notional
+    assert_is_numeric(notional)
+    assert_is_numeric(price)
+    assert_is_numeric(quantity)
+
+    price * quantity >= notional
+}
