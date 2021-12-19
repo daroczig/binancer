@@ -1,3 +1,16 @@
+context <- usdm_order_context(
+    open_orders = data.table(
+        type = c(rep("TRAILING_STOP_MARKET", 4), rep("LIMIT", 4))
+    ),
+    mark_price = 4
+)
+
+test_that("usdm_order_context", {
+    expect_equal(order_number(context), 8)
+    expect_equal(algo_order_number(context), 4)
+    expect_equal(mark_price(context), 4)
+})
+
 test_that("validate_scale", {
     expect_true(validate_scale(200, 1, 200, 1))
     expect_false(validate_scale(201, 1, 200, 1))
@@ -12,7 +25,7 @@ test_that("validate_scale", {
 
 test_that("usdm_filter_check.UNKNOWN", {
     filter <- binance_filter("UNKNOWN", list())
-    expect_error(usdm_filter_check("foo"))
+    expect_error(usdm_filter_check(filter, "foo", "bar"))
 })
 
 test_that("usdm_filter_check.PRICE_FILTER", {
@@ -26,13 +39,26 @@ test_that("usdm_filter_check.PRICE_FILTER", {
 
     expect_equal(format(filter), "PRICE_FILTER(200, 400, 0.01)")
 
-    expect_true(usdm_filter_check(filter, 200))
-    expect_true(usdm_filter_check(filter, 400))
-    expect_true(usdm_filter_check(filter, 200.1))
-    expect_true(usdm_filter_check(filter, 200.01))
-    expect_false(usdm_filter_check(filter, 10))
-    expect_false(usdm_filter_check(filter, 500))
-    expect_false(usdm_filter_check(filter, 200.001))
+    order <- usdm_limit_order("BTCUSDT", 200, 1)
+    expect_true(usdm_filter_check(filter, order, context))
+
+    order <- usdm_limit_order("BTCUSDT", 400, 1)
+    expect_true(usdm_filter_check(filter, order, context))
+
+    order <- usdm_limit_order("BTCUSDT", 200.1, 1)
+    expect_true(usdm_filter_check(filter, order, context))
+
+    order <- usdm_limit_order("BTCUSDT", 200.01, 1)
+    expect_true(usdm_filter_check(filter, order, context))
+
+    order <- usdm_limit_order("BTCUSDT", 10, 1)
+    expect_false(usdm_filter_check(filter, order, context))
+
+    order <- usdm_limit_order("BTCUSDT", 500, 1)
+    expect_false(usdm_filter_check(filter, order, context))
+
+    order <- usdm_limit_order("BTCUSDT", 200.001, 1)
+    expect_false(usdm_filter_check(filter, order, context))
 
     params <- data.table(
         filterType = "PRICE_FILTER",
@@ -41,75 +67,84 @@ test_that("usdm_filter_check.PRICE_FILTER", {
         tickSize = 0.01
     )
     filter <- binance_filter(params$filterType, params)
-    expect_error(usdm_filter_check(filter, 200))
+    order <- usdm_limit_order("BTCUSDT", 200, 1)
+    expect_error(usdm_filter_check(filter, order, context))
 })
 
 test_that("usdm_filter_check.LOT_SIZE", {
     params <- data.table(
         filterType = "LOT_SIZE",
-        minQty = 200,
-        maxQty = 400,
-        stepSize = 0.01
+        minQty = 5,
+        maxQty = 10,
+        stepSize = 0.1
     )
     filter <- binance_filter(params$filterType, params)
 
-    expect_equal(format(filter), "LOT_SIZE(200, 400, 0.01)")
+    expect_equal(format(filter), "LOT_SIZE(5, 10, 0.1)")
 
-    expect_true(usdm_filter_check(filter, 200.01))
-    expect_false(usdm_filter_check(filter, 400.01))
+    order <- usdm_limit_order("BTCUSDT", 200, 5)
+    expect_true(usdm_filter_check(filter, order, context))
 
-    params <- data.table(
-        filterType = "LOT_SIZE",
-        minQty = 200,
-        maxQty = "400",
-        stepSize = 0.01
-    )
-    filter <- binance_filter(params$filterType, params)
-    expect_error(usdm_filter_check(filter, 200))
+    order <- usdm_limit_order("BTCUSDT", 200, 4)
+    expect_false(usdm_filter_check(filter, order, context))
 })
 
 test_that("usdm_filter_check.MARKET_LOT_SIZE", {
     params <- data.table(
         filterType = "MARKET_LOT_SIZE",
-        minQty = 200,
-        maxQty = 400,
-        stepSize = 0.01
+        minQty = 5,
+        maxQty = 10,
+        stepSize = 0.1
     )
     filter <- binance_filter(params$filterType, params)
 
-    expect_equal(format(filter), "MARKET_LOT_SIZE(200, 400, 0.01)")
+    expect_equal(format(filter), "MARKET_LOT_SIZE(5, 10, 0.1)")
 
-    expect_true(usdm_filter_check(filter, 200.01))
-    expect_false(usdm_filter_check(filter, 400.01))
+    order <- usdm_limit_order("BTCUSDT", 200, 10)
+    expect_true(usdm_filter_check(filter, order, context))
+
+    order <- usdm_limit_order("BTCUSDT", 200, 11)
+    expect_false(usdm_filter_check(filter, order, context))
 })
 
 test_that("usdm_filter_check.MAX_NUM_ORDERS", {
     params <- data.table(
         filterType = "MAX_NUM_ORDERS",
-        limit = 10
+        limit = 9
     )
     filter <- binance_filter(params$filterType, params)
 
-    expect_equal(format(filter), "MAX_NUM_ORDERS(10)")
+    expect_equal(format(filter), "MAX_NUM_ORDERS(9)")
 
-    expect_true(usdm_filter_check(filter, 9))
-    expect_true(usdm_filter_check(filter, 10))
-    expect_false(usdm_filter_check(filter, 11))
-    expect_error(usdm_filter_check(filter, "10"))
+    order <- usdm_limit_order("BTCUSDT", 400.01, 1)
+    expect_true(usdm_filter_check(filter, order, context))
+
+    params <- data.table(
+        filterType = "MAX_NUM_ORDERS",
+        limit = 8
+    )
+    filter <- binance_filter(params$filterType, params)
+    expect_false(usdm_filter_check(filter, order, context))
 })
 
 test_that("usdm_filter_check.MAX_NUM_ALGO_ORDERS", {
     params <- data.table(
         filterType = "MAX_NUM_ALGO_ORDERS",
-        limit = 10
+        limit = 5
     )
     filter <- binance_filter(params$filterType, params)
 
-    expect_equal(format(filter), "MAX_NUM_ALGO_ORDERS(10)")
+    expect_equal(format(filter), "MAX_NUM_ALGO_ORDERS(5)")
 
-    expect_true(usdm_filter_check(filter, 9))
-    expect_true(usdm_filter_check(filter, 10))
-    expect_false(usdm_filter_check(filter, 11))
+    order <- structure(list(), class = "TRAILING_STOP_MARKET")
+    expect_true(usdm_filter_check(filter, order, context))
+
+    params <- data.table(
+        filterType = "MAX_NUM_ALGO_ORDERS",
+        limit = 4
+    )
+    filter <- binance_filter(params$filterType, params)
+    expect_false(usdm_filter_check(filter, order, context))
 })
 
 test_that("usdm_filter_check.PERCENT_PRICE", {
@@ -123,12 +158,17 @@ test_that("usdm_filter_check.PERCENT_PRICE", {
 
     expect_equal(format(filter), "PERCENT_PRICE(0.5, 2)")
 
-    expect_true(usdm_filter_check(filter, 8, 4, "BUY"))
-    expect_false(usdm_filter_check(filter, 8.1, 4, "BUY"))
-    expect_true(usdm_filter_check(filter, 2, 4, "SELL"))
-    expect_false(usdm_filter_check(filter, 1.9, 4, "SELL"))
-    expect_error(usdm_filter_check(filter, 1.9, 4, "FOO"))
-    expect_error(usdm_filter_check(filter, "1.9", 4, "SELL"))
+    order <- usdm_limit_order("BTCUSDT", 8, 4)
+    expect_true(usdm_filter_check(filter, order, context))
+
+    order <- usdm_limit_order("BTCUSDT", 8.1, 4)
+    expect_false(usdm_filter_check(filter, order, context))
+
+    order <- usdm_limit_order("BTCUSDT", 2, 4, side = "SELL")
+    expect_true(usdm_filter_check(filter, order, context))
+
+    order <- usdm_limit_order("BTCUSDT", 1.9, 4, side = "SELL")
+    expect_false(usdm_filter_check(filter, order, context))
 })
 
 test_that("usdm_filter_check.MIN_NOTIONAL", {
@@ -140,8 +180,12 @@ test_that("usdm_filter_check.MIN_NOTIONAL", {
 
     expect_equal(format(filter), "MIN_NOTIONAL(10)")
 
-    expect_true(usdm_filter_check(filter, 2, 5))
-    expect_true(usdm_filter_check(filter, 5, 2))
-    expect_false(usdm_filter_check(filter, 4, 2))
-    expect_error(usdm_filter_check(filter, "4", 2))
+    order <- usdm_limit_order("BTCUSDT", 2, 5)
+    expect_true(usdm_filter_check(filter, order, context))
+
+    order <- usdm_limit_order("BTCUSDT", 5, 2)
+    expect_true(usdm_filter_check(filter, order, context))
+
+    order <- usdm_limit_order("BTCUSDT", 4, 2)
+    expect_false(usdm_filter_check(filter, order, context))
 })
