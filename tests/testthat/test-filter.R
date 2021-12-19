@@ -31,4 +31,13 @@ test_that("usdm_filter_check.PRICE_FILTER", {
     expect_false(usdm_filter_check(filter, 10))
     expect_false(usdm_filter_check(filter, 500))
     expect_false(usdm_filter_check(filter, 200.001))
+
+    params <- data.table(
+        filterType = "PRICE_FILTER",
+        minPrice = "200",
+        maxPrice = 400,
+        tickSize = 0.01
+    )
+    filter <- binance_filter(params$filterType, params)
+    expect_error(usdm_filter_check(filter, 200))
 })

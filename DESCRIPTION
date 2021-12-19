@@ -11,6 +11,7 @@ Description: R client to the 'Binance' Public Rest API for data collection on cr
 License: AGPL
 RoxygenNote: 7.1.2
 Imports:
+  assertive,
   data.table,
   httr,
   digest,
