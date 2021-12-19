@@ -35,6 +35,13 @@ test_that("Exchange info on USDM", {
     )
 
     expect_equal(length(response$symbols), 24)
+
+    filters <- usdm_v1_filters("BTCUSDT", response)
+
+    expect_equal(nrow(filters), 7)
+    expect_equal(ncol(filters), 12)
+    expect_true(is.character(filters$filterType))
+    expect_true(is.numeric(filters$minPrice))
 })
 
 test_that("Premium index on USDM", {

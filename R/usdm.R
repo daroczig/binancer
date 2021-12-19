@@ -37,6 +37,23 @@ usdm_v1_exchange_info <- function() {
     res
 }
 
+#' Get the filters of a symbol from Binance USDM
+#' @param symbol string
+#' @param info list
+#' @return \code{data.table}
+#' @export
+usdm_v1_filters <- function(symbol, info = usdm_v1_exchange_info()) {
+    filters <- NULL
+    symbol_q <- symbol
+    filters <- as.data.table(info$symbols[symbol == symbol_q, filters])
+    numeric_columns <- setdiff(names(filters), "filterType")
+    filters[
+       ,
+       (numeric_columns) := lapply(.SD, as.numeric),
+       .SDcols = numeric_columns
+    ]
+}
+
 #' Get mark/index price for a symbol
 #' @param symbol string
 #' @return \code{data.table}
