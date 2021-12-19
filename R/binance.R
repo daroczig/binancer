@@ -12,6 +12,7 @@ BINANCE <- list(
     ),
     USDM = list(
         TIMEINFORCE = c('GTC', 'IOC', 'FOK', 'GTX'),
+        POSITION_SIDE = c('LONG', 'SHORT'),
         TYPE = c('LIMIT', 'MARKET',
                  'STOP', 'STOP_MARKET',
                  'TAKE_PROFIT', 'TAKE_PROFIT_MARKET',

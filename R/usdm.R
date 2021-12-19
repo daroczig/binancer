@@ -54,3 +54,35 @@ usdm_v1_premium_index <- function(symbol) {
     res[, nextFundingTime := as_timestamp(nextFundingTime)]
     res[, time := as_timestamp(time)]
 }
+
+#' Open new order on the Binance USDM account
+#'
+#' This function serves as a low level entry for order classes.
+#' Do not use it directly.
+#'
+#' @param symbol string
+#' @param side enum
+#' @param type enum
+#' @return data.table
+#' @export
+usdm_v1_new_order <- function(symbol,
+                              side = BINANCE$SIDE,
+                              position_side = BINANCE$USDM$POSITION_SIDE,
+                              type = BINANCE$USDM$TYPE,
+                              ...) {
+    params <- list(
+        side = match.arg(side),
+        positionSide = match.arg(position_side),
+        type = match.arg(type),
+        ...
+    )
+
+    order <- usdm_query(
+        "/fapi/v1/order",
+        method = "POST",
+        params = params,
+        sign = TRUE
+    )
+
+    as.data.table(order)
+}
