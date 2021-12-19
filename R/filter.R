@@ -1,6 +1,6 @@
-# A filter for both of price and quantity
+# Validate both of price and quantity
 # This should resolve the problem such as 200.1 %% 0.1 == 0.1
-scale_filter <- function(x, min, max, step, digits = 8) {
+validate_scale <- function(x, min, max, step, digits = 8) {
     a <- x - min
     b <- a / step
     round(b - round(b), digits) == 0 &&
@@ -19,5 +19,5 @@ usdm_filter_check <- function(self, ...) {
 }
 
 usdm_filter_check.PRICE_FILTER <- function(self, price) {
-    scale_filter(price, self$minPrice, self$maxPrice, self$tickSize)
+    validate_scale(price, self$minPrice, self$maxPrice, self$tickSize)
 }
