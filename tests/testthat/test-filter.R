@@ -24,6 +24,8 @@ test_that("usdm_filter_check.PRICE_FILTER", {
     )
     filter <- binance_filter(params$filterType, params)
 
+    expect_equal(format(filter), "PRICE_FILTER(200, 400, 0.01)")
+
     expect_true(usdm_filter_check(filter, 200))
     expect_true(usdm_filter_check(filter, 400))
     expect_true(usdm_filter_check(filter, 200.1))
@@ -51,7 +53,10 @@ test_that("usdm_filter_check.LOT_SIZE", {
     )
     filter <- binance_filter(params$filterType, params)
 
+    expect_equal(format(filter), "LOT_SIZE(200, 400, 0.01)")
+
     expect_true(usdm_filter_check(filter, 200.01))
+    expect_false(usdm_filter_check(filter, 400.01))
 
     params <- data.table(
         filterType = "LOT_SIZE",
@@ -72,7 +77,10 @@ test_that("usdm_filter_check.MARKET_LOT_SIZE", {
     )
     filter <- binance_filter(params$filterType, params)
 
+    expect_equal(format(filter), "MARKET_LOT_SIZE(200, 400, 0.01)")
+
     expect_true(usdm_filter_check(filter, 200.01))
+    expect_false(usdm_filter_check(filter, 400.01))
 })
 
 test_that("usdm_filter_check.MAX_NUM_ORDERS", {
@@ -81,6 +89,8 @@ test_that("usdm_filter_check.MAX_NUM_ORDERS", {
         limit = 10
     )
     filter <- binance_filter(params$filterType, params)
+
+    expect_equal(format(filter), "MAX_NUM_ORDERS(10)")
 
     expect_true(usdm_filter_check(filter, 9))
     expect_true(usdm_filter_check(filter, 10))
@@ -94,6 +104,8 @@ test_that("usdm_filter_check.MAX_NUM_ALGO_ORDERS", {
         limit = 10
     )
     filter <- binance_filter(params$filterType, params)
+
+    expect_equal(format(filter), "MAX_NUM_ALGO_ORDERS(10)")
 
     expect_true(usdm_filter_check(filter, 9))
     expect_true(usdm_filter_check(filter, 10))
@@ -109,6 +121,8 @@ test_that("usdm_filter_check.PERCENT_PRICE", {
     )
     filter <- binance_filter(params$filterType, params)
 
+    expect_equal(format(filter), "PERCENT_PRICE(0.5, 2)")
+
     expect_true(usdm_filter_check(filter, 8, 4, "BUY"))
     expect_false(usdm_filter_check(filter, 8.1, 4, "BUY"))
     expect_true(usdm_filter_check(filter, 2, 4, "SELL"))
@@ -123,6 +137,8 @@ test_that("usdm_filter_check.MIN_NOTIONAL", {
         notional = 10
     )
     filter <- binance_filter(params$filterType, params)
+
+    expect_equal(format(filter), "MIN_NOTIONAL(10)")
 
     expect_true(usdm_filter_check(filter, 2, 5))
     expect_true(usdm_filter_check(filter, 5, 2))

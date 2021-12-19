@@ -16,6 +16,7 @@ Imports:
   httr,
   digest,
   snakecase,
+  stringr,
   logger,
   jsonlite
 URL: https://daroczig.github.io/binancer/
