@@ -52,3 +52,20 @@ usdm_filter_check.MAX_NUM_ORDERS <- function(self, number) {
 }
 
 usdm_filter_check.MAX_NUM_ALGO_ORDERS <- usdm_filter_check.MAX_NUM_ORDERS
+
+usdm_filter_check.PERCENT_PRICE <- function(self,
+                                            price,
+                                            mark_price,
+                                            side = c("BUY", "SELL")) {
+    side <- match.arg(side)
+
+    assert_is_numeric(price)
+    assert_is_numeric(mark_price)
+    down <- self$multiplierDown
+    assert_is_numeric(down)
+    up <- self$multiplierUp
+    assert_is_numeric(up)
+
+    (side == "BUY" && price <= mark_price * up) ||
+        (side == "SELL" && price >= mark_price * down)
+}

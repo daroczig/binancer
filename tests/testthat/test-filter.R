@@ -99,3 +99,20 @@ test_that("usdm_filter_check.MAX_NUM_ALGO_ORDERS", {
     expect_true(usdm_filter_check(filter, 10))
     expect_false(usdm_filter_check(filter, 11))
 })
+
+test_that("usdm_filter_check.PERCENT_PRICE", {
+    params <- data.table(
+        filterType = "PERCENT_PRICE",
+        multiplierDown = 0.5,
+        multiplierUp = 2,
+        multiplierDecimal = 4
+    )
+    filter <- binance_filter(params$filterType, params)
+
+    expect_true(usdm_filter_check(filter, 8, 4, "BUY"))
+    expect_false(usdm_filter_check(filter, 8.1, 4, "BUY"))
+    expect_true(usdm_filter_check(filter, 2, 4, "SELL"))
+    expect_false(usdm_filter_check(filter, 1.9, 4, "SELL"))
+    expect_error(usdm_filter_check(filter, 1.9, 4, "FOO"))
+    expect_error(usdm_filter_check(filter, "1.9", 4, "SELL"))
+})
