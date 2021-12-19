@@ -62,3 +62,15 @@ test_that("usdm_filter_check.LOT_SIZE", {
     filter <- binance_filter(params$filterType, params)
     expect_error(usdm_filter_check(filter, 200))
 })
+
+test_that("usdm_filter_check.MARKET_LOT_SIZE", {
+    params <- data.table(
+        filterType = "MARKET_LOT_SIZE",
+        minQty = 200,
+        maxQty = 400,
+        stepSize = 0.01
+    )
+    filter <- binance_filter(params$filterType, params)
+
+    expect_true(usdm_filter_check(filter, 200.01))
+})
