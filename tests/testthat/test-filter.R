@@ -74,3 +74,28 @@ test_that("usdm_filter_check.MARKET_LOT_SIZE", {
 
     expect_true(usdm_filter_check(filter, 200.01))
 })
+
+test_that("usdm_filter_check.MAX_NUM_ORDERS", {
+    params <- data.table(
+        filterType = "MAX_NUM_ORDERS",
+        limit = 10
+    )
+    filter <- binance_filter(params$filterType, params)
+
+    expect_true(usdm_filter_check(filter, 9))
+    expect_true(usdm_filter_check(filter, 10))
+    expect_false(usdm_filter_check(filter, 11))
+    expect_error(usdm_filter_check(filter, "10"))
+})
+
+test_that("usdm_filter_check.MAX_NUM_ALGO_ORDERS", {
+    params <- data.table(
+        filterType = "MAX_NUM_ALGO_ORDERS",
+        limit = 10
+    )
+    filter <- binance_filter(params$filterType, params)
+
+    expect_true(usdm_filter_check(filter, 9))
+    expect_true(usdm_filter_check(filter, 10))
+    expect_false(usdm_filter_check(filter, 11))
+})
