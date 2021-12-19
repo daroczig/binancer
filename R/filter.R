@@ -28,3 +28,13 @@ usdm_filter_check.PRICE_FILTER <- function(self, price) {
     assert_is_numeric(step)
     validate_scale(price, min, max, step)
 }
+
+usdm_filter_check.LOT_SIZE <- function(self, quantity) {
+    min <- self$minQty
+    assert_is_numeric(min)
+    max <- self$maxQty
+    assert_is_numeric(max)
+    step <- self$stepSize
+    assert_is_numeric(step)
+    validate_scale(quantity, min, max, step)
+}
