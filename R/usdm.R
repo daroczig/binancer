@@ -86,3 +86,22 @@ usdm_v1_new_order <- function(symbol,
 
     as.data.table(order)
 }
+
+#' Get all open USDM orders on a symbol.
+#'
+#' @param symbol string
+#' @return data.table
+#' @export
+usdm_v1_open_orders <- function(symbol) {
+    params <- list(
+        symbol = symbol
+    )
+
+    order <- usdm_query(
+        "/fapi/v1/openOrders",
+        params = params,
+        sign = TRUE
+    )
+
+    as.data.table(order)
+}
