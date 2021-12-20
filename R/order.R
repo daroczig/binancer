@@ -40,18 +40,18 @@ format.LIMIT <- function(self) {
     str_glue("LIMIT({self$symbol}, {self$side}, {self$position_side}, {self$price}, {self$quantity})")
 }
 
-usdm_filter_types <- function(self) {
-    UseMethod("usdm_filter_types")
+default_usdm_filters <- function(self) {
+    UseMethod("default_usdm_filters")
 }
 
-usdm_filter_types.LIMIT <- function(self) {
+default_usdm_filters.LIMIT <- function(self) {
     setdiff(BINANCE$USDM$FILTER, "MARKET_LOT_SIZE")
 }
 
 is_valid_usdm_order <- function(order,
                                 context,
                                 filters = usdm_v1_filters(order$symbol),
-                                types = usdm_filter_types(order)) {
+                                types = default_usdm_filters(order)) {
     filterType <- NULL
     filters <- filters[filterType %chin% types, ]
 
