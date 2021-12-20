@@ -61,4 +61,13 @@ test_that("Premium index on USDM", {
     expect_equal(response$markPrice, 46840.63)
     expect_equal(response$indexPrice, 46849.34)
     expect_equal(response$time, as_timestamp(1639846994000))
+    expect_equal(nrow(response), 1)
+    expect_equal(ncol(response), 8)
+
+    vcr::use_cassette("usdm_v1_premium_index", {
+        response <- usdm_v1_premium_index()
+    })
+
+    expect_equal(nrow(response), 145)
+    expect_equal(ncol(response), 8)
 })

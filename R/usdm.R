@@ -63,19 +63,36 @@ as_filters_table <- function(filters) {
 }
 
 #' Get mark/index price for a symbol
-#' @param symbol string
+#' @param symbol optional string
 #' @return \code{data.table}
 #' @export
 #' @importFrom data.table as.data.table
 usdm_v1_premium_index <- function(symbol) {
-    nextFundingTime <- time <- NULL
+    .SD <- nextFundingTime <- time <- NULL
 
-    params <- list(symbol = symbol)
-    res <- usdm_query("/fapi/v1/premiumIndex", params = params)
-    res <- as.data.table(res)
-    for (v in setdiff(names(res), c("symbol", "nextFundingTime", "time"))) {
-        res[, (v) := as.numeric(get(v))]
+    params <- list()
+
+    if (!missing(symbol)) {
+        params$symbol <- symbol
     }
+
+    res <- usdm_query("/fapi/v1/premiumIndex", params = params)
+
+    if (missing(symbol)) {
+        res <- rbindlist(res)
+    } else {
+        res <- as.data.table(res)
+    }
+
+    numeric_columns <- setdiff(
+        names(res),
+        c("symbol", "nextFundingTime", "time")
+    )
+    res[
+        ,
+        (numeric_columns) := lapply(.SD, as.numeric),
+        .SDcols = numeric_columns
+    ]
     res[, nextFundingTime := as_timestamp(nextFundingTime)]
     res[, time := as_timestamp(time)]
 }

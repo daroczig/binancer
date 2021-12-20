@@ -7,7 +7,7 @@
 usdm_v1_premium_index(symbol)
 }
 \arguments{
-\item{symbol}{string}
+\item{symbol}{optional string}
 }
 \value{
 \code{data.table}
