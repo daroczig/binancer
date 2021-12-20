@@ -131,7 +131,7 @@ usdm_v1_open_orders <- function(symbol) {
         sign = TRUE
     )
 
-    as.data.table(order)
+    rbindlist(order)
 }
 
 #' Get positions of a symbol or all symbols on USDM.
