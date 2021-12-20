@@ -1,4 +1,5 @@
 #' @importFrom assertive assert_is_numeric
+#' @importFrom data.table %chin%
 #' @importFrom stringr str_glue
 
 algo_order_type <- c(
@@ -11,7 +12,7 @@ algo_order_type <- c(
 
 is_buy <- function(self) identical(self$side, "BUY")
 is_sell <- function(self) identical(self$side, "SELL")
-is_algo_order <- function(self) is(self, algo_order_type)
+is_algo_order <- function(self) inherits(self, algo_order_type)
 
 usdm_limit_order <- function(symbol,
                              price,
@@ -37,4 +38,29 @@ usdm_limit_order <- function(symbol,
 
 format.LIMIT <- function(self) {
     str_glue("LIMIT({self$symbol}, {self$side}, {self$position_side}, {self$price}, {self$quantity})")
+}
+
+usdm_filter_types <- function(self) {
+    UseMethod("usdm_filter_types")
+}
+
+usdm_filter_types.LIMIT <- function(self) {
+    setdiff(BINANCE$USDM$FILTER, "MARKET_LOT_SIZE")
+}
+
+is_valid_usdm_order <- function(order,
+                                context,
+                                filters = usdm_v1_filters(order$symbol),
+                                types = usdm_filter_types(order)) {
+    filterType <- NULL
+    filters <- filters[filterType %chin% types, ]
+
+    results <- apply(filters, 1, function(row) {
+        row <- as.list(row)
+        row <- as_filters_table(row)
+        filter <- binance_filter(row$filterType, row)
+        usdm_filter_check(filter, order, context)
+    })
+
+    all(results)
 }

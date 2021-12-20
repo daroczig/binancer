@@ -45,12 +45,18 @@ usdm_v1_exchange_info <- function() {
 usdm_v1_filters <- function(symbol, info = usdm_v1_exchange_info()) {
     filters <- NULL
     symbol_q <- symbol
-    filters <- as.data.table(info$symbols[symbol == symbol_q, filters])
+    as_filters_table(info$symbols[symbol == symbol_q, filters])
+
+}
+
+as_filters_table <- function(filters) {
+    .SD <- NULL
+    filters <- as.data.table(filters)
     numeric_columns <- setdiff(names(filters), "filterType")
     filters[
-       ,
-       (numeric_columns) := lapply(.SD, as.numeric),
-       .SDcols = numeric_columns
+        ,
+        (numeric_columns) := lapply(.SD, as.numeric),
+        .SDcols = numeric_columns
     ]
 }
 
@@ -79,7 +85,9 @@ usdm_v1_premium_index <- function(symbol) {
 #'
 #' @param symbol string
 #' @param side enum
+#' @param position_side enum
 #' @param type enum
+#' @param ... list
 #' @return data.table
 #' @export
 usdm_v1_new_order <- function(symbol,

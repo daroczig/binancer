@@ -11,6 +11,9 @@ BINANCE <- list(
                  'LIMIT_MAKER')
     ),
     USDM = list(
+        FILTER = c("PRICE_FILTER", "LOT_SIZE", "MARKET_LOT_SIZE",
+                   "MAX_NUM_ORDERS", "MAX_NUM_ALGO_ORDERS",
+                   "MIN_NOTIONAL", "PERCENT_PRICE"),
         TIMEINFORCE = c('GTC', 'IOC', 'FOK', 'GTX'),
         POSITION_SIDE = c('LONG', 'SHORT'),
         TYPE = c('LIMIT', 'MARKET',

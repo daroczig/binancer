@@ -32,6 +32,7 @@ order_number <- function(context) {
 }
 
 algo_order_number <- function(context) {
+    type <- NULL
     nrow(context$open_orders[type %chin% algo_order_type, ])
 }
 
@@ -134,7 +135,7 @@ format.MIN_NOTIONAL <- function(self) {
 usdm_filter_check.MIN_NOTIONAL <- function(self, order, context) {
     notional <- self$notional
     assert_is_numeric(notional)
-    ref_price <- if (is(order, "LIMIT")) {
+    ref_price <- if (inherits(order, "LIMIT")) {
                      order$price
                  } else {
                      mark_price(context)

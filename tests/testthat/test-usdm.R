@@ -42,6 +42,14 @@ test_that("Exchange info on USDM", {
     expect_equal(ncol(filters), 12)
     expect_true(is.character(filters$filterType))
     expect_true(is.numeric(filters$minPrice))
+
+    context <- usdm_order_context(data.table(type = c("LIMIT")), 46000)
+    expect_true(
+        is_valid_usdm_order(usdm_limit_order("BTCUSDT", 556.72, 0.01), context)
+    )
+    expect_false(
+        is_valid_usdm_order(usdm_limit_order("BTCUSDT", 556, 0.01), context)
+    )
 })
 
 test_that("Premium index on USDM", {
