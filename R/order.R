@@ -93,6 +93,25 @@ open_short_limit <- function(symbol, price, quantity, time_in_force = "GTC") {
     )
 }
 
+#' Close short position at a limited price
+#'
+#' @param symbol string
+#' @param price numeric
+#' @param quantity numeric
+#' @param time_in_force enum
+#' @return data.table
+#' @export
+close_short_limit <- function(symbol, price, quantity, time_in_force = "GTC") {
+    usdm_limit_order(
+        symbol,
+        price,
+        quantity,
+        time_in_force = time_in_force,
+        side = "BUY",
+        position_side = "SHORT"
+    )
+}
+
 format.LIMIT <- function(self) {
     str_glue("LIMIT({self$symbol}, {self$side}, {self$position_side}, {self$price}, {self$quantity})")
 }
