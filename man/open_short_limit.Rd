@@ -2,7 +2,7 @@
 % Please edit documentation in R/order.R
 \name{open_short_limit}
 \alias{open_short_limit}
-\title{Create an open short limit order object}
+\title{Open short position at limited price}
 \usage{
 open_short_limit(symbol, price, quantity, time_in_force = "GTC")
 }
@@ -19,5 +19,5 @@ open_short_limit(symbol, price, quantity, time_in_force = "GTC")
 data.table
 }
 \description{
-Create an open short limit order object
+Open short position at limited price
 }

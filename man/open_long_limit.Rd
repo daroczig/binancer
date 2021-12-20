@@ -2,7 +2,7 @@
 % Please edit documentation in R/order.R
 \name{open_long_limit}
 \alias{open_long_limit}
-\title{Create an open long limit order object}
+\title{Open long position at limited price}
 \usage{
 open_long_limit(symbol, price, quantity, time_in_force = "GTC")
 }
@@ -19,5 +19,5 @@ open_long_limit(symbol, price, quantity, time_in_force = "GTC")
 data.table
 }
 \description{
-Create an open long limit order object
+Open long position at limited price
 }
