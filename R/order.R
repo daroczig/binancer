@@ -112,12 +112,96 @@ format.LIMIT <- function(self) {
     str_glue("LIMIT({self$symbol}, {self$side}, {self$position_side}, {self$price}, {self$quantity})")
 }
 
+usdm_market_order <- function(symbol,
+                              quantity,
+                              side = BINANCE$SIDE,
+                              position_side = BINANCE$USDM$POSITION_SIDE) {
+    structure(
+        list(
+            symbol = symbol,
+            quantity = quantity,
+            side = match.arg(side),
+            position_side = match.arg(position_side)
+        ),
+        class = "MARKET"
+    )
+}
+
+#' Open long position at market price
+#'
+#' @param symbol string
+#' @param quantity numeric
+#' @return data.table
+#' @export
+open_long_market <- function(symbol, quantity) {
+    usdm_market_order(
+        symbol,
+        quantity,
+        side = "BUY",
+        position_side = "LONG"
+    )
+}
+
+#' Close long position at market price
+#'
+#' @param symbol string
+#' @param quantity numeric
+#' @return data.table
+#' @export
+close_long_market <- function(symbol, quantity) {
+    usdm_market_order(
+        symbol,
+        quantity,
+        side = "SELL",
+        position_side = "LONG"
+    )
+}
+
+#' Open short position at market price
+#'
+#' @param symbol string
+#' @param quantity numeric
+#' @return data.table
+#' @export
+open_short_market <- function(symbol, quantity) {
+    usdm_market_order(
+        symbol,
+        quantity,
+        side = "SELL",
+        position_side = "SHORT"
+    )
+}
+
+#' Close short position at market price
+#'
+#' @param symbol string
+#' @param quantity numeric
+#' @return data.table
+#' @export
+close_short_market <- function(symbol, quantity) {
+    usdm_market_order(
+        symbol,
+        quantity,
+        side = "BUY",
+        position_side = "SHORT"
+    )
+}
+
 default_usdm_filters <- function(self) {
     UseMethod("default_usdm_filters")
 }
 
 default_usdm_filters.LIMIT <- function(self) {
     setdiff(BINANCE$USDM$FILTER, "MARKET_LOT_SIZE")
+}
+
+default_usdm_filters.MARKET <- function(self) {
+    c(
+        "MARKET_LOT_SIZE",
+        "MAX_NUM_ORDERS",
+        "MAX_NUM_ALGO_ORDERS",
+        "MIN_NOTIONAL"
+    )
 }
 
 is_valid_usdm_order <- function(order,
@@ -156,5 +240,16 @@ execute_usdm_order.LIMIT <- function(order) {
         price = format(order$price, scientific = FALSE),
         quantity = format(order$quantity, scientific = FALSE),
         timeInForce = order$time_in_force
+    )
+}
+
+#' @export
+execute_usdm_order.MARKET <- function(order) {
+    usdm_v1_new_order(
+        symbol = order$symbol,
+        side = order$side,
+        position_side = order$position_side,
+        type = "MARKET",
+        quantity = format(order$quantity, scientific = FALSE)
     )
 }
