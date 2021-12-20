@@ -115,7 +115,7 @@ usdm_v1_new_order <- function(symbol,
     as.data.table(order)
 }
 
-#' Get all open USDM orders on a symbol.
+#' Get all open orders of a symbol on USDM.
 #'
 #' @param symbol string
 #' @return data.table

@@ -2,7 +2,7 @@
 % Please edit documentation in R/usdm.R
 \name{usdm_v1_open_orders}
 \alias{usdm_v1_open_orders}
-\title{Get all open USDM orders on a symbol.}
+\title{Get all open orders of a symbol on USDM.}
 \usage{
 usdm_v1_open_orders(symbol)
 }
@@ -13,5 +13,5 @@ usdm_v1_open_orders(symbol)
 data.table
 }
 \description{
-Get all open USDM orders on a symbol.
+Get all open orders of a symbol on USDM.
 }
