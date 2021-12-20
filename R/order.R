@@ -55,6 +55,25 @@ open_long_limit <- function(symbol, price, quantity, time_in_force = "GTC") {
     )
 }
 
+#' Close long position at limited price
+#'
+#' @param symbol string
+#' @param price numeric
+#' @param quantity numeric
+#' @param time_in_force enum
+#' @return data.table
+#' @export
+close_long_limit <- function(symbol, price, quantity, time_in_force = "GTC") {
+    usdm_limit_order(
+        symbol,
+        price,
+        quantity,
+        time_in_force = time_in_force,
+        side = "SELL",
+        position_side = "LONG"
+    )
+}
+
 #' Open short position at limited price
 #'
 #' @param symbol string
