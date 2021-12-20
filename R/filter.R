@@ -38,6 +38,7 @@ algo_order_number <- function(context) {
 }
 
 mark_price <- function(context, symbol) {
+    markPrice <- NULL
     symbol_q <- symbol
     context$premium_index[symbol == symbol_q, markPrice]
 }
