@@ -141,34 +141,24 @@ is_valid_usdm_order <- function(order,
     all(results)
 }
 
-floor2 <- function(x, u) {
-    y <- 10^u
-    floor(x * y) / y
-}
-
-as_monetary_string <- function(x, digits) {
-    format(floor2(x, digits), scientific = FALSE)
-}
-
 #' Execute an order on USDM
 #'
 #' @param order string
-#' @param ... list
 #' @return data.table
 #' @export
-execute_usdm_order <- function(order, ...) {
+execute_usdm_order <- function(order) {
     UseMethod("execute_usdm_order")
 }
 
 #' @export
-execute_usdm_order.LIMIT <- function(order, digits = 8, ...) {
+execute_usdm_order.LIMIT <- function(order) {
     usdm_v1_new_order(
         symbol = order$symbol,
         side = order$side,
         position_side = order$position_side,
         type = "LIMIT",
-        price = as_monetary_string(order$price, digits),
-        quantity = as_monetary_string(order$quantity, digits),
+        price = format(order$price, scientific = FALSE),
+        quantity = format(order$quantity, scientific = FALSE),
         timeInForce = order$time_in_force
     )
 }

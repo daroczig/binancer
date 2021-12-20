@@ -4,12 +4,10 @@
 \alias{execute_usdm_order}
 \title{Execute an order on USDM}
 \usage{
-execute_usdm_order(order, ...)
+execute_usdm_order(order)
 }
 \arguments{
 \item{order}{string}
-
-\item{...}{list}
 }
 \value{
 data.table
