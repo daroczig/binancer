@@ -1,4 +1,3 @@
-#' @importFrom assertive assert_is_numeric
 #' @importFrom data.table %chin%
 #' @importFrom stringr str_glue
 
@@ -20,9 +19,6 @@ usdm_limit_order <- function(symbol,
                              side = BINANCE$SIDE,
                              position_side = BINANCE$USDM$POSITION_SIDE,
                              time_in_force = BINANCE$USDM$TIMEINFORCE) {
-    assert_is_numeric(price)
-    assert_is_numeric(quantity)
-
     structure(
         list(
             symbol = symbol,
