@@ -26,12 +26,14 @@ test_that("Exchange info on USDM", {
 
     expect_equal(
         names(response$symbols),
-        c("symbol", "pair", "contractType", "deliveryDate", "onboardDate",
-          "status", "maintMarginPercent", "requiredMarginPercent", "baseAsset",
-          "quoteAsset", "marginAsset", "pricePrecision", "quantityPrecision",
-          "baseAssetPrecision", "quotePrecision", "underlyingType",
-          "underlyingSubType", "settlePlan", "triggerProtect", "liquidationFee",
-          "marketTakeBound", "filters", "orderTypes", "timeInForce")
+        c(
+            "symbol", "pair", "contractType", "deliveryDate", "onboardDate",
+            "status", "maintMarginPercent", "requiredMarginPercent", "baseAsset",
+            "quoteAsset", "marginAsset", "pricePrecision", "quantityPrecision",
+            "baseAssetPrecision", "quotePrecision", "underlyingType",
+            "underlyingSubType", "settlePlan", "triggerProtect", "liquidationFee",
+            "marketTakeBound", "filters", "orderTypes", "timeInForce"
+        )
     )
 
     expect_equal(length(response$symbols), 24)
@@ -43,7 +45,11 @@ test_that("Exchange info on USDM", {
     expect_true(is.character(filters$filterType))
     expect_true(is.numeric(filters$minPrice))
 
-    context <- usdm_order_context(data.table(type = c("LIMIT")), 46000)
+    context <- usdm_order_context(
+        data.table(type = c("LIMIT")),
+        data.table(symbol = c("BTCUSDT"), markPrice = c(556.72))
+    )
+
     expect_true(
         is_valid_usdm_order(usdm_limit_order("BTCUSDT", 556.72, 0.01), context)
     )

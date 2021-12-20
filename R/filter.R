@@ -17,11 +17,12 @@ validate_scale <- function(x, min, max, step, digits = 8) {
         x >= min && x <= max
 }
 
-usdm_order_context <- function(open_orders, mark_price) {
+usdm_order_context <- function(open_orders = usdm_v1_open_orders(),
+                               premium_index = usdm_v1_premium_index()) {
     structure(
         list(
             open_orders = open_orders,
-            mark_price = mark_price
+            premium_index = premium_index
         ),
         class = "usdm_order_context"
     )
@@ -36,7 +37,10 @@ algo_order_number <- function(context) {
     nrow(context$open_orders[type %chin% algo_order_type, ])
 }
 
-mark_price <- function(context) context$mark_price
+mark_price <- function(context, symbol) {
+    symbol_q <- symbol
+    context$premium_index[symbol == symbol_q, markPrice]
+}
 
 binance_filter <- function(type, params) {
     structure(
@@ -122,9 +126,11 @@ usdm_filter_check.PERCENT_PRICE <- function(self, order, context) {
     up <- self$multiplierUp
     assert_is_numeric(up)
 
+    mark_price <- mark_price(context, order$symbol)
+
     log_if_false(self, order, function() {
-        (is_buy(order) && order$price <= mark_price(context) * up) ||
-            (is_sell(order) && order$price >= mark_price(context) * down)
+        (is_buy(order) && order$price <= mark_price * up) ||
+            (is_sell(order) && order$price >= mark_price * down)
     })
 }
 
@@ -136,10 +142,10 @@ usdm_filter_check.MIN_NOTIONAL <- function(self, order, context) {
     notional <- self$notional
     assert_is_numeric(notional)
     ref_price <- if (inherits(order, "LIMIT")) {
-                     order$price
-                 } else {
-                     mark_price(context)
-                 }
+        order$price
+    } else {
+        mark_price(context, order$symbol)
+    }
 
     log_if_false(self, order, function() {
         ref_price * order$quantity >= notional

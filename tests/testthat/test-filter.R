@@ -2,13 +2,16 @@ context <- usdm_order_context(
     open_orders = data.table(
         type = c(rep("TRAILING_STOP_MARKET", 4), rep("LIMIT", 4))
     ),
-    mark_price = 4
+    premium_index = data.table(
+        symbol = c("BTCUSDT"),
+        markPrice = c(4)
+    )
 )
 
 test_that("usdm_order_context", {
     expect_equal(order_number(context), 8)
     expect_equal(algo_order_number(context), 4)
-    expect_equal(mark_price(context), 4)
+    expect_equal(mark_price(context, list(symbol = "BTCUSDT")), 4)
 })
 
 test_that("validate_scale", {
