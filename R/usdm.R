@@ -1,3 +1,5 @@
+#' @importFrom data.table rbindlist
+
 as_timestamp <- function(number) as.POSIXct(number, origin = "1970-01-01")
 
 usdm_query <- function(endpoint, ...) {
@@ -130,4 +132,24 @@ usdm_v1_open_orders <- function(symbol) {
     )
 
     as.data.table(order)
+}
+
+#' Get positions of a symbol or all symbols on USDM.
+#' @param symbol optional string
+#' @return data.table
+#' @export
+usdm_v2_position_risks <- function(symbol) {
+    params <- list()
+
+    if (!missing(symbol)) {
+        params$symbol <- symbol
+    }
+
+    rbindlist(
+        usdm_query(
+            "/fapi/v2/positionRisk",
+            params = params,
+            sign = TRUE
+        )
+    )
 }
