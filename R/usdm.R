@@ -170,3 +170,21 @@ usdm_v2_position_risks <- function(symbol) {
         )
     )
 }
+
+#' Convert columns of positions into numeric.
+#' @param positions data.table
+#' @return data.table
+#' @export
+convert_position_risks <- function(positions) {
+    .SD <- isAutoAddMargin <- NULL
+
+    numeric_columns <- c(
+        "positionAmt", "entryPrice", "markPrice", "unRealizedProfit",
+        "liquidationPrice", "leverage", "maxNotionalValue", "isolatedMargin",
+        "notional", "isolatedWallet"
+    )
+    positions[,
+        (numeric_columns) := lapply(.SD, as.numeric),
+        .SDcols = numeric_columns
+    ]
+}
