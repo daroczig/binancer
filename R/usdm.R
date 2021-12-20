@@ -96,6 +96,7 @@ usdm_v1_new_order <- function(symbol,
                               type = BINANCE$USDM$TYPE,
                               ...) {
     params <- list(
+        symbol = symbol,
         side = match.arg(side),
         positionSide = match.arg(position_side),
         type = match.arg(type),
