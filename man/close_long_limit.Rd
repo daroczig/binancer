@@ -2,7 +2,7 @@
 % Please edit documentation in R/order.R
 \name{close_long_limit}
 \alias{close_long_limit}
-\title{Close long position at limited price}
+\title{Close long position at a limited price}
 \usage{
 close_long_limit(symbol, price, quantity, time_in_force = "GTC")
 }
@@ -19,5 +19,5 @@ close_long_limit(symbol, price, quantity, time_in_force = "GTC")
 data.table
 }
 \description{
-Close long position at limited price
+Close long position at a limited price
 }
