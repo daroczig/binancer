@@ -198,3 +198,22 @@ usdm_v2_account <- function() {
     account$positions <- rbindlist(account$positions)
     account
 }
+
+#' Change user's initial leverage of specific symbol market.
+#' @param symbol string
+#' @param leverage integer
+#' @return list
+#' @export
+usdm_v1_change_initial_leverage <- function(symbol, leverage) {
+    params <- list(
+        symbol = symbol,
+        leverage = leverage
+    )
+
+    usdm_query(
+        "/fapi/v1/leverage",
+        method = "POST",
+        params = params,
+        sign = TRUE
+    )
+}
