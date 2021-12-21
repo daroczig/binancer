@@ -217,3 +217,23 @@ usdm_v1_change_initial_leverage <- function(symbol, leverage) {
         sign = TRUE
     )
 }
+
+#' Change the margin type of specific symbol market.
+#' @param symbol string
+#' @param type enum
+#' @return list
+#' @export
+usdm_v1_change_margin_type <- function(symbol,
+                                       type = c("ISOLATED", "CROSSED")) {
+    params <- list(
+        symbol = symbol,
+        marginType = match.arg(type)
+    )
+
+    usdm_query(
+        "/fapi/v1/marginType",
+        method = "POST",
+        params = params,
+        sign = TRUE
+    )
+}
