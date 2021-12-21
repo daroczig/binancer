@@ -188,3 +188,13 @@ convert_position_risks <- function(positions) {
         .SDcols = numeric_columns
     ]
 }
+
+#' Get current account information on USDM.
+#' @return list
+#' @export
+usdm_v2_account <- function() {
+    account <- usdm_query("/fapi/v2/account", sign = TRUE)
+    account$assets <- rbindlist(account$assets)
+    account$positions <- rbindlist(account$positions)
+    account
+}
