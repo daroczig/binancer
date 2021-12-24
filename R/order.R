@@ -108,8 +108,9 @@ close_short_limit <- function(symbol, price, quantity, time_in_force = "GTC") {
     )
 }
 
-format.LIMIT <- function(self) {
-    str_glue("LIMIT({self$symbol}, {self$side}, {self$position_side}, {self$price}, {self$quantity})")
+#' @export
+format.LIMIT <- function(x, ...) {
+    str_glue("LIMIT({x$symbol}, {x$side}, {x$position_side}, {x$price}, {x$quantity})")
 }
 
 usdm_market_order <- function(symbol,
@@ -126,6 +127,12 @@ usdm_market_order <- function(symbol,
         class = "MARKET"
     )
 }
+
+#' @export
+format.MARKET <- function(x, ...) {
+    str_glue("MARKET({x$symbol}, {x$side}, {x$position_side}, {x$quantity})")
+}
+
 
 #' Open long position at market price
 #'

@@ -16,3 +16,23 @@ test_that("is_algo_order", {
         is_algo_order(structure(list(), class = "TRAILING_STOP_MARKET"))
     )
 })
+
+test_that("format", {
+    order <- open_long_limit("BTCUSDT", 5, 120)
+    expect_equal(format(order), "LIMIT(BTCUSDT, BUY, LONG, 5, 120)")
+    order <- open_short_limit("BTCUSDT", 5, 120)
+    expect_equal(format(order), "LIMIT(BTCUSDT, SELL, SHORT, 5, 120)")
+    order <- close_long_limit("BTCUSDT", 5, 120)
+    expect_equal(format(order), "LIMIT(BTCUSDT, SELL, LONG, 5, 120)")
+    order <- close_short_limit("BTCUSDT", 5, 120)
+    expect_equal(format(order), "LIMIT(BTCUSDT, BUY, SHORT, 5, 120)")
+
+    order <- open_long_market("BTCUSDT", 120)
+    expect_equal(format(order), "MARKET(BTCUSDT, BUY, LONG, 120)")
+    order <- open_short_market("BTCUSDT", 120)
+    expect_equal(format(order), "MARKET(BTCUSDT, SELL, SHORT, 120)")
+    order <- close_long_market("BTCUSDT", 120)
+    expect_equal(format(order), "MARKET(BTCUSDT, SELL, LONG, 120)")
+    order <- close_short_market("BTCUSDT", 120)
+    expect_equal(format(order), "MARKET(BTCUSDT, BUY, SHORT, 120)")
+})

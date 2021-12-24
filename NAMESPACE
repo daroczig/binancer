@@ -2,6 +2,8 @@
 
 S3method(execute_usdm_order,LIMIT)
 S3method(execute_usdm_order,MARKET)
+S3method(format,LIMIT)
+S3method(format,MARKET)
 export(binance_account)
 export(binance_all_orders)
 export(binance_avg_price)
