@@ -242,3 +242,24 @@ usdm_v1_change_margin_type <- function(symbol,
         sign = TRUE
     )
 }
+
+#' Cancel an active order by its order id.
+#' @param symbol string
+#' @param order_id integer
+#' @return data.table
+#' @export
+usdm_v1_cancel_order_by_id <- function(symbol, order_id) {
+    params <- list(
+        symbol = symbol,
+        orderId = order_id
+    )
+
+    order <- usdm_query(
+        "/fapi/v1/order",
+        method = "DELETE",
+        params = params,
+        sign = TRUE
+    )
+
+    as.data.table(order)
+}
