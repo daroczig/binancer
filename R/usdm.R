@@ -134,13 +134,18 @@ usdm_v1_new_order <- function(symbol,
 
 #' Get all open orders of a symbol on USDM.
 #'
-#' @param symbol string
+#' Get all open orders on a symbol. Careful when accessing this with no symbol.
+#' Weight: 1 for a single symbol; 40 when the symbol parameter is omitted.
+#'
+#' @param symbol optional string
 #' @return data.table
 #' @export
 usdm_v1_open_orders <- function(symbol) {
-    params <- list(
-        symbol = symbol
-    )
+    params <- list()
+
+    if (!missing(symbol)) {
+        params$symbol <- symbol
+    }
 
     order <- usdm_query(
         "/fapi/v1/openOrders",

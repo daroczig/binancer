@@ -7,11 +7,12 @@
 usdm_v1_open_orders(symbol)
 }
 \arguments{
-\item{symbol}{string}
+\item{symbol}{optional string}
 }
 \value{
 data.table
 }
 \description{
-Get all open orders of a symbol on USDM.
+Get all open orders on a symbol. Careful when accessing this with no symbol.
+Weight: 1 for a single symbol; 40 when the symbol parameter is omitted.
 }
