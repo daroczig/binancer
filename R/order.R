@@ -312,3 +312,56 @@ execute_usdm_order.TAKE_PROFIT_MARKET <- function(order) {
         closePosition = tolower(format(order$close_position))
     )
 }
+
+usdm_stop_market_all <- function(symbol,
+                                 stop_price,
+                                 side = BINANCE$SIDE,
+                                 position_side = BINANCE$USDM$POSITION_SIDE) {
+    structure(
+        list(
+            symbol = symbol,
+            stop_price = stop_price,
+            side = match.arg(side),
+            position_side = match.arg(position_side),
+            close_position = TRUE
+        ),
+        class = "STOP_MARKET"
+    )
+}
+
+#' @export
+format.STOP_MARKET <- function(x, ...) {
+    str_glue("STOP_MARKET({x$symbol}, {x$side}, {x$position_side}, {x$stop_price}, {x$close_position})")
+}
+
+#' Stop all loss from a long position at market price
+#'
+#' @param symbol string
+#' @param stop_price numeric
+#' @return data.table
+#' @export
+long_stop_market_all <- function(symbol, stop_price) {
+    usdm_stop_market_all(symbol, stop_price, "SELL", "LONG")
+}
+
+#' Stop all loss from a short position at market price
+#'
+#' @param symbol string
+#' @param stop_price numeric
+#' @return data.table
+#' @export
+short_stop_market_all <- function(symbol, stop_price) {
+    usdm_stop_market_all(symbol, stop_price, "BUY", "SHORT")
+}
+
+#' @export
+execute_usdm_order.STOP_MARKET <- function(order) {
+    usdm_v1_new_order(
+        symbol = order$symbol,
+        side = order$side,
+        position_side = order$position_side,
+        type = "STOP_MARKET",
+        stopPrice = format(order$stop_price, scientific = FALSE),
+        closePosition = tolower(format(order$close_position))
+    )
+}
