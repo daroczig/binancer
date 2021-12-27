@@ -35,4 +35,9 @@ test_that("format", {
     expect_equal(format(order), "MARKET(BTCUSDT, SELL, LONG, 120)")
     order <- close_short_market("BTCUSDT", 120)
     expect_equal(format(order), "MARKET(BTCUSDT, BUY, SHORT, 120)")
+
+    order <- long_take_profit_market_all("BTCUSDT", 120)
+    expect_equal(format(order), "TAKE_PROFIT_MARKET(BTCUSDT, SELL, LONG, 120, TRUE)")
+    order <- short_take_profit_market_all("BTCUSDT", 120)
+    expect_equal(format(order), "TAKE_PROFIT_MARKET(BTCUSDT, BUY, SHORT, 120, TRUE)")
 })
