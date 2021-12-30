@@ -263,3 +263,24 @@ usdm_v1_cancel_order_by_id <- function(symbol, order_id) {
 
     as.data.table(order)
 }
+
+#' Cancel an active order by its client order id.
+#' @param symbol string
+#' @param client_order_id string
+#' @return data.table
+#' @export
+usdm_v1_cancel_order_by_client_order_id <- function(symbol, client_order_id) {
+    params <- list(
+        symbol = symbol,
+        origClientOrderId = client_order_id
+    )
+
+    order <- usdm_query(
+        "/fapi/v1/order",
+        method = "DELETE",
+        params = params,
+        sign = TRUE
+    )
+
+    as.data.table(order)
+}
