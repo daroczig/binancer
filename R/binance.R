@@ -80,15 +80,23 @@ binance_check_credentials <- function() {
 
 #' Sign the query string for Binance
 #' @param params list
-#' @param time string
+#' @param time optional string
 #' @return list
 #' @keywords internal
 #' @importFrom digest hmac
 #' @examples \dontrun{
 #' binance_sign(list(foo = 'bar', z = 4))
 #' }
-binance_sign <- function(params, time = timestamp()) {
+binance_sign <- function(params,
+                         time = timestamp()) {
     params$timestamp <- time
+
+    recv_window <- getOption("binancer.recv_window")
+
+    if (!is.null(recv_window)) {
+        params$recvWindow <- recv_window
+    }
+
     params$signature <- hmac(
         key = binance_secret(),
         object = paste(
