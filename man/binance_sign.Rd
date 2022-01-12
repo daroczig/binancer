@@ -9,7 +9,7 @@ binance_sign(params, time = timestamp())
 \arguments{
 \item{params}{list}
 
-\item{time}{string}
+\item{time}{optional string}
 }
 \value{
 list
