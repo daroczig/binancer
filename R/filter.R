@@ -1,4 +1,3 @@
-#' @importFrom assertive assert_is_numeric
 #' @importFrom data.table %chin%
 #' @importFrom logger log_warn
 #' @importFrom stringr str_glue
@@ -6,11 +5,6 @@
 # Validate both of price and quantity
 # This should resolve the problem such as 200.1 %% 0.1 == 0.1
 validate_scale <- function(x, min, max, step, digits = 8) {
-    assert_is_numeric(x)
-    assert_is_numeric(min)
-    assert_is_numeric(max)
-    assert_is_numeric(step)
-
     a <- x - min
     b <- a / step
     round(b - round(b), digits) == 0 &&
@@ -96,7 +90,6 @@ format.MAX_NUM_ORDERS <- function(self) {
 
 order_number_check <- function(self, number) {
     limit <- self$limit
-    assert_is_numeric(limit)
 
     number < limit
 }
@@ -123,9 +116,7 @@ format.PERCENT_PRICE <- function(self) {
 
 usdm_filter_check.PERCENT_PRICE <- function(self, order, context) {
     down <- self$multiplierDown
-    assert_is_numeric(down)
     up <- self$multiplierUp
-    assert_is_numeric(up)
 
     mark_price <- mark_price(context, order$symbol)
 
@@ -141,7 +132,6 @@ format.MIN_NOTIONAL <- function(self) {
 
 usdm_filter_check.MIN_NOTIONAL <- function(self, order, context) {
     notional <- self$notional
-    assert_is_numeric(notional)
     ref_price <- if (inherits(order, "LIMIT")) {
         order$price
     } else {
