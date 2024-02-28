@@ -433,28 +433,50 @@ binance_ticker_all_prices <- function() {
     # silence "no visible global function/variable definition" R CMD check
     price <- from <- to <- to_usd <- from_usd <- symbol <- NULL
 
-    prices <- binance_query(endpoint = 'api/v1/ticker/allPrices')
-    prices <- rbindlist(prices)
-    prices[, price := as.numeric(price)]
-
-    # not sure what's this
-    prices <- prices[symbol != '123456']
+    prices <- binance_ticker_price()
 
     # split from/to
-    prices[, from := sub('(BTC|ETH|BNB|USDT|TUSD|PAX|USDC|XRP|USDS)$', '', symbol)]
-    prices[, to := sub('.*(BTC|ETH|BNB|USDT|TUSD|PAX|USDC|XRP|USDS)$', '\\1', symbol)]
+    prices <- merge(
+        prices,
+        binance_exchange_info()$symbols[, .(symbol, from = baseAsset, to = quoteAsset)],
+        by = 'symbol', all.x = TRUE, all.y = FALSE)
 
-    # add computed price in USD
-    prices[to == 'BTC', to_usd := prices[symbol == 'BTCUSDT', price]]
-    prices[to == 'ETH', to_usd := prices[symbol == 'ETHUSDT', price]]
-    prices[to == 'BNB', to_usd := prices[symbol == 'BNBUSDT', price]]
-    prices[to == 'XRP', to_usd := prices[symbol == 'XRPUSDT', price]]
-    prices[to == 'USDT' | to == 'TUSD' | to == 'PAX' | to == 'USDC' | to == 'USDS', to_usd := 1]
+    # prices of seasoned stablecoins
+    prices[to %in% c('USDT'), to_usd := 1]
+    prices[from %in% c('USDT'), to_usd := 1/price]
+    # recursive resolve prices
+    while (prices[, any(is.na(to_usd))]) {
+        lookup <- prices[!is.na(to_usd)][, .(price = mean(to_usd)), by = .(symbol = to)]
+        ## fall back to previously looked up/double conversions
+        lookup <- rbind(
+            lookup,
+            prices[!from %in% lookup$symbol & !is.na(to_usd)][
+              , .(price = mean(price * to_usd)), by = .(symbol = from)])
+        for (s in
+             intersect(
+                 ## missing symbols
+                 prices[is.na(to_usd), unique(to)],
+                 ## symbols with known data
+                 lookup[, symbol]
+                 )) {
+            prices[is.na(to_usd) & to == s, to_usd := lookup[symbol == s, price]]
+            prices[is.na(to_usd) & from == s, to_usd := lookup[symbol == s, price]]
+        }
+    }
 
-    prices[to == 'USDT' | to == 'TUSD' | to == 'PAX' | to == 'USDC' | to == 'USDS', from_usd := price]
-    prices[to != 'USDT' & to != 'TUSD' & to != 'PAX' & to != 'USDC' & to != 'USDS', from_usd := price * to_usd]
+    # from price should be always based on USDT when available
+    prices <- merge(
+        prices,
+        prices[to == 'USDT', .(from, from_usd = price)],
+        by = 'from', all.x = TRUE, all.y = FALSE)
+    # when direct USDT conversion not available, use avg of all lookups
+    lookup <- prices[is.na(from_usd), .(price = mean(price * to_usd)), by = from]
+    for (s in lookup[, from]) {
+        prices[from == s & is.na(from_usd), from_usd := lookup[from == s, price]]
+    }
 
     prices[, list(symbol, price, from, from_usd, to, to_usd)]
+
 }
 
 
