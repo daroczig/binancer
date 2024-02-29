@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://daroczig.github.io/binancer/404.html</loc>
+  </url>
+  <url>
+    <loc>https://daroczig.github.io/binancer/authors.html</loc>
+  </url>
+  <url>
     <loc>https://daroczig.github.io/binancer/index.html</loc>
   </url>
   <url>
@@ -95,6 +101,9 @@
   </url>
   <url>
     <loc>https://daroczig.github.io/binancer/reference/binance_trades.html</loc>
+  </url>
+  <url>
+    <loc>https://daroczig.github.io/binancer/reference/index.html</loc>
   </url>
   <url>
     <loc>https://daroczig.github.io/binancer/reference/query.html</loc>
