@@ -575,7 +575,7 @@ binance_filters <- function(symbol) {
     symb <- symbol
     filters <- as.data.table(binance_exchange_info()$symbols[symbol == symb, filters][[1]])
 
-    for (v in setdiff(names(filters), c('filterType', 'avgPriceMins', 'applyToMarket', 'limit', 'maxNumAlgoOrders'))) {
+    for (v in setdiff(names(filters), c('filterType', 'avgPriceMins', 'applyMinToMarket', 'limit', 'maxNumAlgoOrders'))) {
         filters[, (v) := as.numeric(get(v))]
     }
 
@@ -742,7 +742,7 @@ binance_mytrades <- function(symbol, limit, from_id, start_time, end_time) {
 binance_new_order <- function(symbol, side, type, time_in_force, quantity, price, stop_price, iceberg_qty, test = TRUE) {
 
     # silence "no visible global function/variable definition" R CMD check
-    filterType <- minQty <- maxQty <- stepSize <- applyToMarket <- avgPriceMins <- limit <- NULL
+    filterType <- minQty <- maxQty <- stepSize <- applyMinToMarket <- avgPriceMins <- limit <- NULL
     minNotional <- minPrice <- maxPrice <- tickSize <- multiplierDown <- multiplierUp <- NULL
 
     side <- match.arg(side)
@@ -779,16 +779,16 @@ binance_new_order <- function(symbol, side, type, time_in_force, quantity, price
               quantity <= filters[filterType == 'LOT_SIZE', maxQty])
     # work around the limitation of %% (e.g. 200.1 %% 0.1 = 0.1 !!)
     quot <- (quantity - filters[filterType == 'LOT_SIZE', minQty]) / filters[filterType == 'LOT_SIZE', stepSize]
-    stopifnot(abs(quot - round(quot)) < 1e-10)
+    stopifnot(abs(quot - round(quot)) < abs(quot) * .Machine$double.eps)
 
     if (type == 'MARKET') {
         stopifnot(quantity >= filters[filterType == 'MARKET_LOT_SIZE', minQty],
                   quantity <= filters[filterType == 'MARKET_LOT_SIZE', maxQty])
         # work around the limitation of %% (e.g. 200.1 %% 0.1 = 0.1 !!)
-        quot <- (quantity - filters[filterType == 'MARKET_LOT_SIZE', minQty]) / filters[filterType == 'MARKET_LOT_SIZE', stepSize]
-        stopifnot(abs(quot - round(quot)) < 1e-10)
+        quot <- (quantity - filters[filterType == 'LOT_SIZE', minQty]) / filters[filterType == 'LOT_SIZE', stepSize]
+        stopifnot(abs(quot - round(quot)) < abs(quot) * .Machine$double.eps) # it should be bounded by (|a|+|b|)/2*MachineEpsilon, but approximated by abs(quot)*MachineEpsilon
 
-        if (isTRUE(filters[filterType == 'MIN_NOTIONAL', applyToMarket])) {
+        if (isTRUE(filters[filterType == 'MIN_NOTIONAL', applyMinToMarket])) {
             if (filters[filterType == 'MIN_NOTIONAL', avgPriceMins] == 0) {
                 ref_price <- binance_ticker_price(symbol)$price
             } else {
@@ -808,22 +808,22 @@ binance_new_order <- function(symbol, side, type, time_in_force, quantity, price
         if (filters[filterType == 'PRICE_FILTER', tickSize] > 0) {
             # work around the limitation of %% (e.g. 200.1 %% 0.1 = 0.1 !!)
             quot <- (price - filters[filterType == 'PRICE_FILTER', minPrice]) / filters[filterType == 'PRICE_FILTER', tickSize]
-            stopifnot(abs(quot - round(quot)) < 1e-10)
+            stopifnot(abs(quot - round(quot)) < abs(quot) * .Machine$double.eps)
         }
 
-        if (filters[filterType == 'PERCENT_PRICE', avgPriceMins] == 0) {
+        if (filters[filterType == 'NOTIONAL', avgPriceMins] == 0) {
             ref_price <- binance_ticker_price(symbol)$price
         } else {
             ref_price <- binance_avg_price(symbol)
-            stopifnot(ref_price$mins == filters[filterType == 'PERCENT_PRICE', avgPriceMins])
+            stopifnot(ref_price$mins == filters[filterType == 'NOTIONAL', avgPriceMins])
             ref_price <- ref_price$price
         }
         stopifnot(
-            price >= ref_price * filters[filterType == 'PERCENT_PRICE', multiplierDown],
-            price <= ref_price * filters[filterType == 'PERCENT_PRICE', multiplierUp]
+            price >= ref_price * filters[filterType == 'PERCENT_PRICE_BY_SIDE', 'askMultiplierDown'],
+            price <= ref_price * filters[filterType == 'PERCENT_PRICE_BY_SIDE', 'askMultiplierUp']
         )
 
-        stopifnot(price * quantity >= filters[filterType == 'MIN_NOTIONAL', minNotional])
+        stopifnot(price * quantity >= filters[filterType == 'NOTIONAL', minNotional])
 
         params$price = price
     }
@@ -836,7 +836,7 @@ binance_new_order <- function(symbol, side, type, time_in_force, quantity, price
         if (filters[filterType == 'PRICE_FILTER', tickSize] > 0) {
             # work around the limitation of %% (e.g. 200.1 %% 0.1 = 0.1 !!)
             quot <- (stop_price - filters[filterType == 'PRICE_FILTER', minPrice]) / filters[filterType == 'PRICE_FILTER', tickSize]
-            stopifnot(abs(quot - round(quot)) < 1e-10)
+            stopifnot(abs(quot - round(quot)) < abs(quot) * .Machine$double.eps)
         }
         params$stopPrice = stop_price
     }
@@ -849,7 +849,7 @@ binance_new_order <- function(symbol, side, type, time_in_force, quantity, price
                       iceberg_qty <= filters[filterType == 'LOT_SIZE', maxQty])
             # work around the limitation of %% (e.g. 200.1 %% 0.1 = 0.1 !!)
             quot <- (iceberg_qty - filters[filterType == 'LOT_SIZE', minQty]) / filters[filterType == 'LOT_SIZE', stepSize]
-            stopifnot(abs(quot - round(quot)) < 1e-10)
+            stopifnot(abs(quot - round(quot)) < abs(quot) * .Machine$double.eps)
         }
         params$icebergQty = iceberg_qty
     }
