@@ -15,3 +15,8 @@ binance_ticker_book(symbol)
 \description{
 Get last bids and asks for a symbol or all symbols
 }
+\examples{
+\dontrun{
+binance_ticker_book('ETHUSDT')
+}
+}

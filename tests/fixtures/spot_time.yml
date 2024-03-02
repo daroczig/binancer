@@ -1,0 +1,45 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.binance.com/api/v1/time
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      content-type: application/json;charset=UTF-8
+      content-length: '28'
+      date: Fri, 17 Dec 2021 13:18:17 GMT
+      server: nginx
+      x-mbx-uuid: 7e997bff-7134-4d74-8c56-ef81320e92c3
+      x-mbx-used-weight: '2'
+      x-mbx-used-weight-1m: '2'
+      strict-transport-security: max-age=31536000; includeSubdomains
+      x-frame-options: SAMEORIGIN
+      x-xss-protection: 1; mode=block
+      x-content-type-options: nosniff
+      content-security-policy: default-src 'self'
+      x-content-security-policy: default-src 'self'
+      x-webkit-csp: default-src 'self'
+      cache-control: no-cache, no-store, must-revalidate
+      pragma: no-cache
+      expires: '0'
+      access-control-allow-origin: '*'
+      access-control-allow-methods: GET, HEAD, OPTIONS
+      x-cache: Miss from cloudfront
+      via: 1.1 05aec04162b0fed6e9762cd1edd66a72.cloudfront.net (CloudFront)
+      x-amz-cf-pop: SFO5-C1
+      x-amz-cf-id: 4CrrgRvWd1GnJdsrzJXtWJxOdeTddBJ9vpEwWE5fYhSkXfiAXQ1f6A==
+    body:
+      encoding: UTF-8
+      file: no
+      string: '{"serverTime":1639747097620}'
+  recorded_at: 2021-12-17 13:18:17 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0

@@ -1,0 +1,45 @@
+http_interactions:
+- request:
+    method: get
+    uri: https://api.binance.com/api/v1/klines?symbol=ETHUSDT&interval=1d&limit=1
+    body:
+      encoding: ''
+      string: ''
+    headers:
+      Accept: application/json, text/xml, application/xml, */*
+  response:
+    status:
+      status_code: 200
+      category: Success
+      reason: OK
+      message: 'Success: (200) OK'
+    headers:
+      content-type: application/json;charset=UTF-8
+      content-length: '184'
+      date: Fri, 17 Dec 2021 13:24:50 GMT
+      server: nginx
+      x-mbx-uuid: 7e997bff-7134-4d74-8c56-ef81320e92c3
+      x-mbx-used-weight: '1'
+      x-mbx-used-weight-1m: '1'
+      strict-transport-security: max-age=31536000; includeSubdomains
+      x-frame-options: SAMEORIGIN
+      x-xss-protection: 1; mode=block
+      x-content-type-options: nosniff
+      content-security-policy: default-src 'self'
+      x-content-security-policy: default-src 'self'
+      x-webkit-csp: default-src 'self'
+      cache-control: no-cache, no-store, must-revalidate
+      pragma: no-cache
+      expires: '0'
+      access-control-allow-origin: '*'
+      access-control-allow-methods: GET, HEAD, OPTIONS
+      x-cache: Miss from cloudfront
+      via: 1.1 2d57951832cb6c4e7185686912c96bb9.cloudfront.net (CloudFront)
+      x-amz-cf-pop: SFO5-C1
+      x-amz-cf-id: rsVORgOs3iuJh_6eTuXWSo3EqIvjhEGpn319S74vOpSSXpT_-t3k9A==
+    body:
+      encoding: UTF-8
+      file: no
+      string: '[[1639699200000,"3959.11000000","3994.10000000","3796.00000000","3820.87000000","210422.85360000",1639785599999,"819993474.31887900",470771,"105358.22610000","411011816.12338600","0"]]'
+  recorded_at: 2021-12-17 13:24:50 GMT
+  recorded_with: vcr/1.0.2, webmockr/0.8.0

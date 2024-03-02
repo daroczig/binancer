@@ -1,10 +1,27 @@
 BINANCE <- list(
-    TYPE = c('LIMIT', 'MARKET',
-             'STOP_LOSS', 'STOP_LOSS_LIMIT',
-             'TAKE_PROFIT', 'TAKE_PROFIT_LIMIT',
-             'LIMIT_MAKER'),
+    BASE = list(
+        SPOT = 'https://api.binance.com',
+        USDM = 'https://fapi.binance.com'
+    ),
+    SPOT = list(
+        TIMEINFORCE = c('GTC', 'IOC', 'FOK'),
+        TYPE = c('LIMIT', 'MARKET',
+                 'STOP_LOSS', 'STOP_LOSS_LIMIT',
+                 'TAKE_PROFIT', 'TAKE_PROFIT_LIMIT',
+                 'LIMIT_MAKER')
+    ),
+    USDM = list(
+        FILTER = c("PRICE_FILTER", "LOT_SIZE", "MARKET_LOT_SIZE",
+                   "MAX_NUM_ORDERS", "MAX_NUM_ALGO_ORDERS",
+                   "MIN_NOTIONAL", "PERCENT_PRICE"),
+        TIMEINFORCE = c('GTC', 'IOC', 'FOK', 'GTX'),
+        POSITION_SIDE = c('LONG', 'SHORT'),
+        TYPE = c('LIMIT', 'MARKET',
+                 'STOP', 'STOP_MARKET',
+                 'TAKE_PROFIT', 'TAKE_PROFIT_MARKET',
+                 'TRAILING_STOP_MARKET')
+    ),
     SIDE = c('BUY', 'SELL'),
-    TIMEINFORCE = c('GTC', 'IOC', 'FOK'),
     INTERVALS = c(
         '1m', '3m', '5m', '15m', '30m',
         '1h', '2h', '4h', '6h', '8h', '12h',
@@ -63,14 +80,23 @@ binance_check_credentials <- function() {
 
 #' Sign the query string for Binance
 #' @param params list
-#' @return string
+#' @param time optional string
+#' @return list
 #' @keywords internal
 #' @importFrom digest hmac
 #' @examples \dontrun{
-#' signature(list(foo = 'bar', z = 4))
+#' binance_sign(list(foo = 'bar', z = 4))
 #' }
-binance_sign <- function(params) {
-    params$timestamp <- timestamp()
+binance_sign <- function(params,
+                         time = timestamp()) {
+    params$timestamp <- time
+
+    recv_window <- getOption("binancer.recv_window")
+
+    if (!is.null(recv_window)) {
+        params$recvWindow <- recv_window
+    }
+
     params$signature <- hmac(
         key = binance_secret(),
         object = paste(
@@ -80,6 +106,13 @@ binance_sign <- function(params) {
     params
 }
 
+# Workaround: USDM Ping returns neither weight header
+get_weight <- function(response) {
+    header <- headers(response)
+    w1 <- as.integer(header$`x-mbx-used-weight`)
+    w2 <- as.integer(header$`x-mbx-used-weight-1m`)
+    c(w1, w2, 1L)[1]
+}
 
 #' Request the Binance API
 #' @param endpoint string
@@ -90,7 +123,7 @@ binance_sign <- function(params) {
 #' @keywords internal
 #' @importFrom httr headers add_headers content
 #' @importFrom utils assignInMyNamespace
-binance_query <- function(endpoint, method = 'GET',
+binance_query <- function(endpoint, base = BINANCE$BASE$SPOT, method = 'GET',
                           params = list(), body = NULL, sign = FALSE,
                           retry = method == 'GET', content_as = 'parsed') {
 
@@ -99,6 +132,7 @@ binance_query <- function(endpoint, method = 'GET',
         Sys.sleep(61 - as.integer(format(Sys.time(), "%S")))
     }
 
+    base <- match.arg(base)
     method <- match.arg(method)
 
     if (isTRUE(sign)) {
@@ -109,13 +143,13 @@ binance_query <- function(endpoint, method = 'GET',
     }
 
     res <- query(
-        base = 'https://api.binance.com',
+        base = base,
         path = endpoint,
         method = method,
         params = params,
         config = config)
 
-    assignInMyNamespace('BINANCE_WEIGHT', as.integer(headers(res)$`x-mbx-used-weight`))
+    assignInMyNamespace('BINANCE_WEIGHT', get_weight(res))
     res <- content(res, as = content_as)
 
     if (content_as == 'parsed' & length(res) == 2 & !is.null(names(res))) {
@@ -126,6 +160,7 @@ binance_query <- function(endpoint, method = 'GET',
 
     res
 }
+formals(binance_query)$base <- unlist(BINANCE$BASE, use.names = FALSE)
 formals(binance_query)$method <- BINANCE$METHODS
 
 
@@ -379,6 +414,9 @@ binance_depth <- function(symbol, limit) {
 #' @param symbol optional string
 #' @return \code{data.table}
 #' @export
+#' @examples \dontrun{
+#' binance_ticker_price('ETHUSDT')
+#' }
 binance_ticker_price <- function(symbol) {
 
     # silence "no visible global function/variable definition" R CMD check
@@ -403,6 +441,9 @@ binance_ticker_price <- function(symbol) {
 #' @return \code{data.table}
 #' @export
 #' @importFrom snakecase to_snake_case
+#' @examples \dontrun{
+#' binance_ticker_book('ETHUSDT')
+#' }
 binance_ticker_book <- function(symbol) {
 
     if (!missing(symbol)) {
@@ -882,8 +923,8 @@ binance_new_order <- function(symbol, side, type, time_in_force, quantity, price
     data.table(ord)
 }
 formals(binance_new_order)$side <- BINANCE$SIDE
-formals(binance_new_order)$type <- BINANCE$TYPE
-formals(binance_new_order)$time_in_force <- BINANCE$TIMEINFORCE
+formals(binance_new_order)$type <- BINANCE$SPOT$TYPE
+formals(binance_new_order)$time_in_force <- BINANCE$SPOT$TIMEINFORCE
 
 
 #' Query order on the Binance account
